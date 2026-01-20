@@ -1,0 +1,1 @@
+https://www.figma.com/design/8cPRnxEoZEiffivWIjJBrI/WhiteLabel---Development?node-id=11084-12100&m=dev

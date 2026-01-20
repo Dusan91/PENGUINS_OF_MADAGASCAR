@@ -1,0 +1,40 @@
+name: Jira + Figma → Code
+
+steps:
+  - id: Skipper_start
+    agent: Skipper
+    input:
+      jira_task: inputs/jira-task.md
+      figma_notes: inputs/figma-notes.md
+
+  - id: analysis
+    agent: Kowalski
+    input:
+      jira_task: inputs/jira-task.md
+
+  - id: research
+    agent: Rico
+    input:
+      repository_path: ~/Desktop/Hermes/whitelabel
+
+  - id: synthesis
+    agent: Kowalski
+    input:
+      jira_task: inputs/jira-task.md
+      rico_report: research.output
+
+  - id: planning
+    agent: Skipper
+    input:
+      recommendation: synthesis.output
+
+  - id: coding
+    agent: Private
+    parallel: true
+
+  - id: testing
+    agent: Melman
+    input:
+      code_diff: coding.output
+      jira_task: inputs/jira-task.md
+      guardrails: rules/guardrails.md

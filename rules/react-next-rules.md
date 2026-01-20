@@ -1,0 +1,5 @@
+- Do not mix server and client components
+- Respect the app/ or pages/ structure
+- Do not introduce new state managers unless necessary
+- Prefer existing hooks
+- Tailwind / CSS Modules / styled-components → use what already exists
