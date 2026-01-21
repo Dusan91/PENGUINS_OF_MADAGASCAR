@@ -5,13 +5,13 @@ steps:
     agent: Skipper
     input:
       jira_task: inputs/jira-task.md
-      jira_task: inputs/jira-task.md
       user_command: inputs/user-command.md
 
   - id: analysis
     agent: Kowalski
     input:
       jira_task: inputs/jira-task.md
+      user_command: inputs/user-command.md
 
   - id: research
     agent: Rico
@@ -22,12 +22,14 @@ steps:
     agent: Kowalski
     input:
       jira_task: inputs/jira-task.md
+      user_command: inputs/user-command.md
       rico_report: research.output
 
   - id: planning
     agent: Skipper
     input:
       recommendation: synthesis.output
+      user_command: inputs/user-command.md
 
   - id: coding
     agent: Private
@@ -38,4 +40,5 @@ steps:
     input:
       code_diff: coding.output
       jira_task: inputs/jira-task.md
+      user_command: inputs/user-command.md
       guardrails: rules/guardrails.md

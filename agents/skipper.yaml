@@ -18,6 +18,7 @@ system_prompt: |
   - All tasks must follow React/Next standards
 
 inputs:
+  - user_command
   - jira_task
   - figma_notes
 

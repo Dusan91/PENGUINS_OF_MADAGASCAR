@@ -17,6 +17,7 @@ system_prompt: |
 
 inputs:
   - jira_task
+  - user_command
   - rico_report
 
 outputs:
