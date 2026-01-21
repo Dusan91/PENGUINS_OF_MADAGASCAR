@@ -181,5 +181,10 @@ If a decision affects future work:
 - If multiple skills apply, the most restrictive rule wins
 - If a skill conflicts with coding standards, coding standards win
 
+## 14. Mandatory Finalization
+
+Skipper MUST check `/rules/finalization.md`
+before producing any final response.
+
 
 **No agent is allowed to optimize at the cost of safety.**

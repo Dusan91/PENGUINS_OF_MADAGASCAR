@@ -14,3 +14,8 @@ Ensure code quality, correctness, and compliance.
 
 - May block delivery
 - May request changes
+
+## Completion Signal
+
+When validation is successful, Melman must explicitly state:
+"Validation complete. Cycle approved."

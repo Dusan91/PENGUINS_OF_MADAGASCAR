@@ -5,7 +5,8 @@ steps:
     agent: Skipper
     input:
       jira_task: inputs/jira-task.md
-      figma_notes: inputs/figma-notes.md
+      jira_task: inputs/jira-task.md
+      user_command: inputs/user-command.md
 
   - id: analysis
     agent: Kowalski
