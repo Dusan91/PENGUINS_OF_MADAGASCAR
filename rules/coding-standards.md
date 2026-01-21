@@ -169,4 +169,17 @@ These standards exist to ensure that:
 * the codebase remains stable
 * humans remain in control
 
+## 12. Memory Rule
+
+If a decision affects future work:
+- it MUST be written to /memory/decisions.md
+- it MUST be logged in audit
+
+## 13. Skill Resolution Rule
+
+- Each agent MUST follow skills defined for their role
+- If multiple skills apply, the most restrictive rule wins
+- If a skill conflicts with coding standards, coding standards win
+
+
 **No agent is allowed to optimize at the cost of safety.**

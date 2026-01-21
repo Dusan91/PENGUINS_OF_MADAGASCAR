@@ -20,6 +20,16 @@ Rules:
 Input sources:
 - Jira task: ./inputs/jira-task.md
 - Figma notes: ./inputs/figma-notes.md
+- User command (optional): ./user-command.md
+
+Instruction priority order:
+
+1. System & Rules (/rules)
+2. User Command (user-command.md)
+3. Jira Task (jira-task.md)
+4. Figma Notes (figma-notes.md)
+
+If instructions conflict, higher priority always wins.
 
 Confirm understanding and wait for workflow command.
 
