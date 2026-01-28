@@ -20,11 +20,11 @@ Rules:
 Input sources:
 - Jira task: ~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/inputs/jira-task.md
 - Figma notes: ~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/inputs/figma-notes.md
-- User command (optional): ~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/user-command.md
+- User command (optional): ~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/inputs/user-command.md
 
 Instruction priority order:
 
-1. System & Rules (~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/rules/rules)
+1. System & Rules (~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/rules)
 2. User Command (user-command.md)
 3. Jira Task (jira-task.md)
 4. Figma Notes (figma-notes.md)

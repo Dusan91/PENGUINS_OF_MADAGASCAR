@@ -186,5 +186,44 @@ If a decision affects future work:
 Skipper MUST check `/rules/finalization.md`
 before producing any final response.
 
+## 15. Input Interpretation Rules
+
+### 15.1 Task Mode Detection
+
+Before any execution, agents MUST inspect the following input files:
+
+- `/inputs/jira-task.md`
+- `/inputs/figma-notes.md`
+- `/inputs/user-command.md`
+
+### 15.2 Feature Mode
+
+If `jira-task.md` exists AND is not empty  
+OR `figma-notes.md` exists AND is not empty  
+
+THEN:
+- The task is treated as a **Feature / Product Task**
+- Jira and Figma are authoritative sources
+- `user-command.md` is considered supplemental only
+
+### 15.3 Refactor Mode (Explicit)
+
+If `jira-task.md` does NOT exist OR is empty  
+AND `figma-notes.md` does NOT exist OR is empty  
+
+THEN:
+- The task is classified as **Refactor / Improvement**
+- Instructions MUST be taken exclusively from `user-command.md`
+- Only files explicitly listed in `user-command.md` may be modified
+- No product, UX, or behavior assumptions are allowed
+- Scope expansion is forbidden without Skipper approval
+
+### 15.4 Silence Rule
+
+Empty or missing inputs MUST NOT be interpreted as permission to invent tasks.
+
+If `user-command.md` is missing or unclear in Refactor Mode:
+- Execution MUST stop
+- A blocking audit event MUST be logged
 
 **No agent is allowed to optimize at the cost of safety.**

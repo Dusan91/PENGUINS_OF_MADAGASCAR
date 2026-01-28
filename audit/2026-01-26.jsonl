@@ -1,0 +1,1 @@
+{"timestamp": "2026-01-26T12:54:00Z", "workflow": "jira_figma_to_code", "agent": "Skipper", "model": "big-pickle", "fallback_used": false, "action": "WORKFLOW_START", "input_ref": "user-command.md,jira-task.md,figma-notes.md", "output_summary": "Starting Jira+Figma to Code workflow for User Account Notifications page", "severity": "INFO"}

@@ -1,0 +1,37 @@
+name: Refactor → Code
+
+steps:
+  - id: skipper_start
+    agent: Skipper
+    input:
+      user_command: inputs/user-command.md
+
+  - id: analysis
+    agent: Kowalski
+    input:
+      user_command: inputs/user-command.md
+
+  - id: research
+    agent: Rico
+    input:
+      repository_path: project_root
+      refactor_targets: inputs/user-command.md
+
+  - id: planning
+    agent: Skipper
+    input:
+      recommendation: analysis.output
+      user_command: inputs/user-command.md
+
+  - id: coding
+    agent: Private
+    parallel: true
+    input:
+      user_command: inputs/user-command.md
+
+  - id: testing
+    agent: Melman
+    input:
+      code_diff: coding.output
+      user_command: inputs/user-command.md
+      coding_standards: rules/coding-standards.md
