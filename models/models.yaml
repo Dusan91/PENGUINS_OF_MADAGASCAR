@@ -1,23 +1,23 @@
 mode: cloud-only
 
 models:
-  Skipper:
+  skipper:
     provider: openai
     model: gpt-4.1
 
-  Kowalski:
+  kowalski:
     provider: openai
-    model: big-pickle   # tmp
+    model: sonet
 
   rico:
     provider: openai
     model: gpt-4.1-mini
 
-  vojnik_strong:
+  private_strong:
     provider: openai
     model: gpt-4.1
 
-  vojnik_fast:
+  private_fast:
     provider: openai
     model: gpt-4.1-mini
 
