@@ -1,0 +1,9 @@
+name: Maurice → Code Review
+
+steps:
+  - id: review
+    agent: Maurice
+    input:
+      code_diff: audit/code-diff.patch
+      coding_standards: rules/coding-standards.md
+      user_command: inputs/user-command.md
