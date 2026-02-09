@@ -1,11 +1,13 @@
 # Finalization Rule
 
 ## Purpose
+
 Define the mandatory behavior when a full task execution cycle is completed.
 
 ## Definition of "Cycle Completed"
 
 A cycle is considered completed when:
+
 - Kowalski has delivered a final analysis
 - Rico has completed repository discovery
 - Privates have completed implementation
@@ -13,7 +15,7 @@ A cycle is considered completed when:
 
 ## Constraints
 
-- The phrase must be exact: `Smile and wave 🐧`
+- The phrase must be exact: `Smile and wave boys, smile and wave 🐧🐧🐧🐧🦒🐒`
 - No additional text is allowed after this line
 - This rule applies to all tasks unless explicitly disabled
 
@@ -28,6 +30,7 @@ When a cycle is completed, Skipper MUST:
 
 1. Provide a concise summary of what was done
 2. Confirm whether all rules and standards were followed
-3. Output the following line as the FINAL line of the response:
+3. Reference the following media as the final output:
 
-Smile and wave 🐧
+
+Smile and wave boys, smile and wave 🐧🐧🐧🐧🦒🐒

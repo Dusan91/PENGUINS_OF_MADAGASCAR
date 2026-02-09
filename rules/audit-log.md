@@ -146,12 +146,4 @@ With an audit log:
 
 ---
 
-## Audit Requirement
-
-On cycle completion, an audit entry must be created:
-- type: FINALIZATION
-- status: SUCCESS
-- message: Smile and wave
-
-
 **The audit log is a mandatory part of a serious AI team.**

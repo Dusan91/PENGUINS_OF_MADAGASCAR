@@ -4,6 +4,13 @@ steps:
   - id: review
     agent: Maurice
     input:
-      code_diff: audit/code-diff.patch
+      code_diff: code_diff
       coding_standards: rules/coding-standards.md
       user_command: inputs/user-command.md
+
+  - id: review_finalization
+    agent: Skipper
+    requires:
+      - review
+    rules:
+      - rules/finalization.md

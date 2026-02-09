@@ -35,3 +35,13 @@ steps:
       code_diff: coding.output
       user_command: inputs/user-command.md
       coding_standards: rules/coding-standards.md
+
+  - id: finalization
+    agent: Skipper
+    requires:
+      - analysis
+      - research
+      - coding
+      - testing
+    rules:
+      - rules/finalization.md

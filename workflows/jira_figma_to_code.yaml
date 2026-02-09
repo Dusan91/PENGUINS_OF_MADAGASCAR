@@ -42,3 +42,14 @@ steps:
       jira_task: inputs/jira-task.md
       user_command: inputs/user-command.md
       guardrails: rules/guardrails.md
+
+  - id: finalization
+    agent: Skipper
+    requires:
+      - analysis
+      - research
+      - synthesis
+      - coding
+      - testing
+    rules:
+      - rules/finalization.md

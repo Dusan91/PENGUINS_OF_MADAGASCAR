@@ -1,0 +1,19 @@
+Timestamp: 2026-02-06T00:00:00Z
+Event: BLOCKING_MISSING_RULES
+Agent: Skipper (orchestrator)
+Description: Required rule files missing from rules directory. Workflow cannot proceed until rules are provided.
+Missing files:
+- rules/coding-standards.md
+- rules/finalization.md
+
+Related inputs:
+- inputs/user-command.md -> /Users/dusanmilenkovic/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/inputs/user-command.md
+- workflow: workflows/refactor_to_code.yaml -> /Users/dusanmilenkovic/Desktop/ai_agents/PENGUINS_OF_MADAGASCARD/workflows/refactor_to_code.yaml
+
+Action: STOPPED workflow execution and awaiting user instruction to proceed.
+Suggested next steps:
+1) Provide the missing rule files in /Users/dusanmilenkovic/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/rules/
+2) Authorize creation of minimal skeleton rule files (coding-standards.md and finalization.md) so the workflow can continue
+3) If these rules are intentionally absent, instruct the agent to proceed without them (not recommended)
+
+Audit: This file is an authoritative blocking audit required by the multi-agent protocol.

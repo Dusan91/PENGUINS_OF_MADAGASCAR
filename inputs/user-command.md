@@ -2,13 +2,14 @@ THIS IS ONLY IN WEB-SHELL PROJECT, DONT TOUCH OTHER PROJECTS
 DONT ADD NEW LYBS OR CHANGE ANYTHING ELSE, IF THERE IS CHANGE NOTIFY ME !
 DONT COMMIT !
 
-Refactor this files
-`packages/shared/src/domain/auth/sign-up.service.ts`
-all files inside `apps/web-shell/src/presentation/components/auth/components/signup` folder 
-
-I want to use react-query
-Change files where it need to be done
-
+Zelim da refaktorisem ovaj fajl `apps/web-shell/src/app/[locale]/profile/wallet/deposit/page.tsx`
+Sekcija `Bank transfer form (frontend mock)` Nije uradjena po dizajnu 
+isprati design iz figma-notes.md fajla.
+Koristi iste stilove, raspored polja, ikone i slicno. 
+Za reference uzimaj druge stvari iz projekta 
+Korisit react-query, zod i react-form-hooks
 Dont install nothing new, ask me if you need to
-dont change anything else, jsut this file 
 
+THIS IS ONLY IN WEB-SHELL PROJECT, DONT TOUCH OTHER PROJECTS
+DONT ADD NEW LYBS OR CHANGE ANYTHING ELSE, IF THERE IS CHANGE NOTIFY ME !
+DONT COMMIT !

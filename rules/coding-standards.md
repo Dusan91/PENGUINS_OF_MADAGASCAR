@@ -226,4 +226,11 @@ If `user-command.md` is missing or unclear in Refactor Mode:
 - Execution MUST stop
 - A blocking audit event MUST be logged
 
+## 16. TypeScript Rules
+
+- DO NOT use `any` type unless there is no alternative.
+- Prefer explicit types, generics, or unknown + type guards over `any`.
+- If `any` is used, it MUST be documented in comments with justification.
+- AI agents MUST detect `any` usage in new code and warn Skipper.
+
 **No agent is allowed to optimize at the cost of safety.**
