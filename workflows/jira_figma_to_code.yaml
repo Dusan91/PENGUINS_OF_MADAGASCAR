@@ -1,55 +1,208 @@
-name: Jira + Figma → Code
+name: Jira + Figma → Code (Multi-Agent)
+
+# ─────────────────────────────────────────────
+# HOW THIS WORKS
+# Each step is an ISOLATED Task tool call.
+# Agents do NOT share context — they only see
+# what is explicitly passed via `input`.
+# Output of each agent is written to a scratchpad
+# file in /tmp/penguins/ so the next agent can
+# read it without inheriting full history.
+# ─────────────────────────────────────────────
+
+scratchpad_dir: /tmp/penguins
 
 steps:
-  - id: Skipper_start
-    agent: Skipper
+  # ── STEP 1 ──────────────────────────────────
+  - id: rico_discovery
+    agent: explore # fast codebase explorer
+    isolated: true # fresh context — no history
     input:
       jira_task: inputs/jira-task.md
+      figma_notes: inputs/figma-notes.md
       user_command: inputs/user-command.md
-
-  - id: analysis
-    agent: Kowalski
-    input:
-      jira_task: inputs/jira-task.md
-      user_command: inputs/user-command.md
-
-  - id: research
-    agent: Rico
-    input:
       repository_path: ~/Desktop/Hermes/whitelabel
+    task: |
+      You are Rico. Your ONLY job is discovery — no opinions, no plans, no architecture.
+      Read the jira task, figma notes, and user command to understand WHAT needs to be built.
+      Then explore the repository and return a structured findings report:
 
-  - id: synthesis
-    agent: Kowalski
+        1. Files relevant to the task (paths + why)
+        2. Existing components, hooks, utils that could be reused
+        3. Current implementation of affected areas (paste key snippets)
+        4. Patterns used in the codebase:
+           - State management (jotai, legendapp, zustand, etc.)
+           - Data fetching (react-query, SWR, etc.)
+           - Component structure (client/server boundaries, folder conventions)
+           - Naming conventions
+        5. Any constraints or gotchas (protected areas, auth boundaries, etc.)
+
+      Write your findings to: /tmp/penguins/rico_findings.md
+      Return ONLY the path to the output file.
+    output: /tmp/penguins/rico_findings.md
+
+  # ── STEP 2 ──────────────────────────────────
+  - id: kowalski_analysis
+    agent: general
+    isolated: true
+    depends_on: [rico_discovery]
+    input:
+      jira_task: inputs/jira-task.md
+      figma_notes: inputs/figma-notes.md
+      user_command: inputs/user-command.md
+      rico_findings: /tmp/penguins/rico_findings.md
+      rules:
+        - rules/coding-standards.md
+        - rules/guardrails.md
+        - rules/refactor-policy.md
+        - rules/react-next-rules.md
+        - rules/protected-areas.md
+    task: |
+      You are Kowalski. Your ONLY job is analysis — no implementation, no final decisions.
+      Read:
+        - Jira task: inputs/jira-task.md
+        - Figma notes: inputs/figma-notes.md
+        - User command: inputs/user-command.md
+        - Rico's findings: /tmp/penguins/rico_findings.md
+        - All rules listed in input.rules
+
+      Produce a synthesis + solution options document:
+        1. What exactly needs to be built (distilled from Jira + Figma)
+        2. What already exists that can be reused (from Rico's findings)
+        3. Solution options A / B / C with trade-offs for each
+        4. Your recommendation (one option) with rationale
+        5. Risks and edge cases
+        6. Compliance check — does any option violate guardrails?
+
+      Write your analysis to: /tmp/penguins/kowalski_analysis.md
+      Return ONLY the path to the output file.
+    output: /tmp/penguins/kowalski_analysis.md
+
+  # ── STEP 3 ──────────────────────────────────
+  - id: skipper_planning
+    agent: general
+    isolated: true
+    depends_on: [kowalski_analysis]
     input:
       jira_task: inputs/jira-task.md
       user_command: inputs/user-command.md
-      rico_report: research.output
-
-  - id: planning
-    agent: Skipper
-    input:
-      recommendation: synthesis.output
-      user_command: inputs/user-command.md
-
-  - id: coding
-    agent: Private
-    parallel: true
-
-  - id: testing
-    agent: Melman
-    input:
-      code_diff: coding.output
-      jira_task: inputs/jira-task.md
-      user_command: inputs/user-command.md
+      kowalski_analysis: /tmp/penguins/kowalski_analysis.md
       guardrails: rules/guardrails.md
+      finalization_rules: rules/finalization.md
+    task: |
+      You are Skipper. Your ONLY job is to make the final implementation decision
+      and produce an actionable plan for Private.
+      Read:
+        - Jira task: inputs/jira-task.md
+        - User command: inputs/user-command.md
+        - Kowalski's analysis: /tmp/penguins/kowalski_analysis.md
+        - Guardrails: rules/guardrails.md
 
-  - id: finalization
-    agent: Skipper
-    requires:
-      - analysis
-      - research
-      - synthesis
-      - coding
-      - testing
-    rules:
-      - rules/finalization.md
+      Output an implementation plan at /tmp/penguins/skipper_plan.md:
+        1. Which solution option is approved (A, B, or C) and why
+        2. Exact list of files Private is authorized to CREATE or MODIFY
+        3. Exact list of files Private must NOT touch
+        4. Step-by-step implementation tasks for Private (numbered, unambiguous)
+        5. Confirm no guardrail violations
+        6. Any special instructions (e.g. client/server boundaries, naming rules)
+
+      Return ONLY the path to the output file.
+    output: /tmp/penguins/skipper_plan.md
+
+  # ── STEP 4 ──────────────────────────────────
+  - id: private_implementation
+    agent: general
+    isolated: true
+    depends_on: [skipper_planning]
+    input:
+      rico_findings: /tmp/penguins/rico_findings.md
+      skipper_plan: /tmp/penguins/skipper_plan.md
+      rules:
+        - rules/coding-standards.md
+        - rules/react-next-rules.md
+    task: |
+      You are Private. Your ONLY job is implementation — no decisions, no planning.
+      Read:
+        - Rico's findings (reusable code, patterns): /tmp/penguins/rico_findings.md
+        - Skipper's plan (what to build, authorized files): /tmp/penguins/skipper_plan.md
+
+      STRICT RULES:
+        - Only create or modify files explicitly listed in skipper_plan.md
+        - Follow Skipper's steps exactly — do not improvise
+        - Reuse existing components/hooks/utils found by Rico where possible
+        - Respect client/server boundaries
+        - If you encounter something unexpected, STOP and write a blocker
+          to /tmp/penguins/private_blockers.md instead of guessing
+
+      After implementation write a diff summary to /tmp/penguins/private_diff.md:
+        - Each file created/changed: what was done and why
+        - How it maps to Skipper's numbered steps
+        - Any blockers encountered
+
+      Return ONLY the path to the output file.
+    output: /tmp/penguins/private_diff.md
+
+  # ── STEP 5 ──────────────────────────────────
+  - id: melman_validation
+    agent: general
+    isolated: true
+    depends_on: [private_implementation]
+    input:
+      jira_task: inputs/jira-task.md
+      private_diff: /tmp/penguins/private_diff.md
+      skipper_plan: /tmp/penguins/skipper_plan.md
+      rules:
+        - rules/coding-standards.md
+        - rules/guardrails.md
+        - rules/react-next-rules.md
+        - rules/protected-areas.md
+    task: |
+      You are Melman. Your ONLY job is validation — you are paranoid by nature.
+      Read:
+        - Jira task (requirements): inputs/jira-task.md
+        - What Private implemented: /tmp/penguins/private_diff.md
+        - What Skipper approved: /tmp/penguins/skipper_plan.md
+        - All rules listed in input.rules
+
+      Check ALL of the following:
+        1. Does the implementation fulfill the Jira requirements?
+        2. Does it match Skipper's approved plan?
+        3. Are there any guardrail violations?
+        4. Were any unauthorized files modified?
+        5. Are client/server boundaries respected?
+        6. Any new TypeScript or lint errors introduced?
+        7. Any edge cases or missing error handling?
+        8. Are existing patterns and conventions followed?
+
+      Write validation report to /tmp/penguins/melman_report.md:
+        - PASS or FAIL (must be first line)
+        - List of issues found (if FAIL)
+        - List of checks that passed
+
+      Return ONLY the path to the output file.
+    output: /tmp/penguins/melman_report.md
+
+  # ── STEP 6 ──────────────────────────────────
+  - id: skipper_finalization
+    agent: general
+    isolated: true
+    depends_on: [melman_validation]
+    input:
+      rico_findings: /tmp/penguins/rico_findings.md
+      kowalski_analysis: /tmp/penguins/kowalski_analysis.md
+      skipper_plan: /tmp/penguins/skipper_plan.md
+      private_diff: /tmp/penguins/private_diff.md
+      melman_report: /tmp/penguins/melman_report.md
+      audit_dir: audit/
+      finalization_rules: rules/finalization.md
+    task: |
+      You are Skipper. Final review and audit log.
+      Read all inputs. Then:
+
+        1. Write an audit log entry to audit/<today_date>.jsonl
+        2. Provide a concise summary of what was built
+        3. Confirm whether all rules and standards were followed
+        4. If Melman reported FAIL — list what still needs fixing before delivery
+
+      End with exactly:
+      Smile and wave boys, smile and wave 🐧🐧🐧🐧🦒🐒

@@ -1,47 +1,181 @@
-name: Refactor → Code
+name: Refactor → Code (Multi-Agent)
+
+# ─────────────────────────────────────────────
+# HOW THIS WORKS
+# Each step is a ISOLATED Task tool call.
+# Agents do NOT share context — they only see
+# what is explicitly passed to them via `input`.
+# Output of each agent is written to a temp
+# scratchpad file in /tmp/penguins/ so the next
+# agent can read it without inheriting history.
+# ─────────────────────────────────────────────
+
+scratchpad_dir: /tmp/penguins
 
 steps:
-  - id: skipper_start
-    agent: Skipper
+  # ── STEP 1 ──────────────────────────────────
+  - id: rico_discovery
+    agent: rico # anthropic/claude-sonnet-4-5 — fast codebase explorer
+    isolated: true # fresh context — no history
     input:
       user_command: inputs/user-command.md
-
-  - id: analysis
-    agent: Kowalski
-    input:
-      user_command: inputs/user-command.md
-
-  - id: research
-    agent: Rico
-    input:
       repository_path: project_root
-      refactor_targets: inputs/user-command.md
+    task: |
+      You are Rico. Your ONLY job is discovery — no opinions, no plans.
+      Read the user command from inputs/user-command.md.
+      Explore the repository and return a structured findings report:
 
-  - id: planning
-    agent: Skipper
+        1. Files relevant to the task (paths + why)
+        2. Current implementation of affected code (paste key snippets)
+        3. Patterns used in the codebase (state management, data fetching, component structure)
+        4. Any constraints or gotchas you found
+
+      Write your findings to: /tmp/penguins/rico_findings.md
+      Return ONLY the path to the output file.
+    output: /tmp/penguins/rico_findings.md
+
+  # ── STEP 2 ──────────────────────────────────
+  - id: kowalski_analysis
+    agent: kowalski # openai/gpt-5.4 — analyst
+    isolated: true
+    depends_on: [rico_discovery]
     input:
-      recommendation: analysis.output
       user_command: inputs/user-command.md
+      rico_findings: /tmp/penguins/rico_findings.md # ← only this, not full history
+      rules:
+        - rules/coding-standards.md
+        - rules/guardrails.md
+        - rules/refactor-policy.md
+        - rules/react-next-rules.md
+        - rules/protected-areas.md
+    task: |
+      You are Kowalski. Your ONLY job is analysis and planning — no implementation.
+      Read:
+        - User command: inputs/user-command.md
+        - Rico's findings: /tmp/penguins/rico_findings.md
+        - All rules listed in input.rules
 
-  - id: coding
-    agent: Private
-    parallel: true
+      Produce a detailed implementation plan:
+        1. Exact files to change (path + what changes)
+        2. Exact files NOT to touch and why
+        3. Step-by-step implementation order with rationale
+        4. Risk assessment (what could break)
+        5. Compliance check against guardrails.md
+
+      Write your plan to: /tmp/penguins/kowalski_plan.md
+      Return ONLY the path to the output file.
+    output: /tmp/penguins/kowalski_plan.md
+
+  # ── STEP 3 ──────────────────────────────────
+  - id: skipper_approval
+    agent: skipper # openai/gpt-5.4 — orchestrator/approver
+    isolated: true
+    depends_on: [kowalski_analysis]
     input:
       user_command: inputs/user-command.md
+      kowalski_plan: /tmp/penguins/kowalski_plan.md
+      guardrails: rules/guardrails.md
+    task: |
+      You are Skipper. Your ONLY job is to APPROVE or REJECT Kowalski's plan.
+      Read:
+        - User command: inputs/user-command.md
+        - Kowalski's plan: /tmp/penguins/kowalski_plan.md
+        - Guardrails: rules/guardrails.md
 
-  - id: testing
-    agent: Melman
+      Output a decision file at /tmp/penguins/skipper_decision.md:
+        - APPROVED or REJECTED (must be first line)
+        - If REJECTED: exact reason + what Kowalski must fix
+        - If APPROVED: confirm scope, confirm no guardrail violations
+        - List of files Private is authorized to modify
+
+      Return ONLY the path to the output file.
+    output: /tmp/penguins/skipper_decision.md
+
+  # ── STEP 4 ──────────────────────────────────
+  - id: private_implementation
+    agent: private # openai/gpt-5.4 — implementer
+    isolated: true
+    depends_on: [skipper_approval]
     input:
-      code_diff: coding.output
-      user_command: inputs/user-command.md
-      coding_standards: rules/coding-standards.md
+      kowalski_plan: /tmp/penguins/kowalski_plan.md
+      skipper_decision: /tmp/penguins/skipper_decision.md
+      rules:
+        - rules/coding-standards.md
+        - rules/react-next-rules.md
+    task: |
+      You are Private. Your ONLY job is implementation — no decisions, no planning.
+      Read:
+        - Kowalski's plan: /tmp/penguins/kowalski_plan.md
+        - Skipper's approved file list: /tmp/penguins/skipper_decision.md
 
-  - id: finalization
-    agent: Skipper
-    requires:
-      - analysis
-      - research
-      - coding
-      - testing
-    rules:
-      - rules/finalization.md
+      RULES:
+        - Only modify files explicitly listed in skipper_decision.md
+        - Follow the plan exactly — do not improvise
+        - If you encounter something unexpected, STOP and write a blocker
+          to /tmp/penguins/private_blockers.md instead of guessing
+
+      After implementation write a diff summary to /tmp/penguins/private_diff.md:
+        - Each file changed: what was changed and why
+        - Any blockers encountered
+
+      Return ONLY the path to the output file.
+    output: /tmp/penguins/private_diff.md
+
+  # ── STEP 5 ──────────────────────────────────
+  - id: melman_validation
+    agent: melman # openai/gpt-5.4-mini — QA validator
+    isolated: true
+    depends_on: [private_implementation]
+    input:
+      private_diff: /tmp/penguins/private_diff.md
+      kowalski_plan: /tmp/penguins/kowalski_plan.md
+      rules:
+        - rules/coding-standards.md
+        - rules/guardrails.md
+        - rules/react-next-rules.md
+        - rules/protected-areas.md
+    task: |
+      You are Melman. Your ONLY job is validation — you are paranoid by nature.
+      Read:
+        - What Private implemented: /tmp/penguins/private_diff.md
+        - What Kowalski planned: /tmp/penguins/kowalski_plan.md
+        - All rules listed in input.rules
+
+      Check:
+        1. Does the implementation match the plan?
+        2. Are there any guardrail violations?
+        3. Are there any new TypeScript/lint errors introduced?
+        4. Are there any files changed that were NOT in Skipper's approved list?
+        5. Any edge cases missed?
+
+      Write validation report to /tmp/penguins/melman_report.md:
+        - PASS or FAIL (must be first line)
+        - List of issues found (if any)
+        - List of checks that passed
+
+      Return ONLY the path to the output file.
+    output: /tmp/penguins/melman_report.md
+
+  # ── STEP 6 ──────────────────────────────────
+  - id: skipper_finalization
+    agent: skipper # openai/gpt-5.4 — final audit
+    isolated: true
+    depends_on: [melman_validation]
+    input:
+      rico_findings: /tmp/penguins/rico_findings.md
+      kowalski_plan: /tmp/penguins/kowalski_plan.md
+      private_diff: /tmp/penguins/private_diff.md
+      melman_report: /tmp/penguins/melman_report.md
+      audit_dir: audit/
+      finalization_rules: rules/finalization.md
+    task: |
+      You are Skipper. Final review and audit log.
+      Read all inputs. Then:
+
+        1. Write an audit log entry to audit/<today_date>.jsonl
+        2. Provide a concise summary of what was done
+        3. Confirm whether all rules and standards were followed
+        4. If Melman reported FAIL — describe what still needs fixing
+
+      End with exactly:
+      Smile and wave boys, smile and wave 🐧🐧🐧🐧🦒🐒
