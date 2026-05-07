@@ -1,0 +1,112 @@
+name: Tiered Workflow (Smart Routing)
+
+description: |
+  Automatically routes tasks to appropriate workflow based on size/complexity.
+
+  Tiers:
+  - small: Direct Private execution (no agents)
+  - medium: Rico + Private + Melman
+  - large: Full parallel workflow
+
+scratchpad_dir: /tmp/penguins
+
+tiers:
+  small:
+    description: Single file changes, simple fixes
+    triggers:
+      - files_count: { max: 1 }
+      - no_figma: true
+      - no_jira: true
+    workflow: direct
+    steps:
+      - id: private_direct
+        agent: private
+        task: |
+          Execute the task from inputs/user-command.md directly.
+          Write diff to /tmp/penguins/private_diff.md
+          Return path to output.
+
+  medium:
+    description: Multiple files, no Figma, moderate complexity
+    triggers:
+      - files_count: { min: 2, max: 5 }
+      - no_figma: true
+    workflow: refactor_v2
+    steps:
+      - id: rico_quick
+        agent: rico
+        parallel_group: medium_discovery
+        task: |
+          Quick discovery. Read user-command.md.
+          Find only the files explicitly mentioned.
+          Output: /tmp/penguins/rico_findings.md
+
+      - id: private_medium
+        agent: private
+        depends_on: [rico_quick]
+        task: |
+          Read rico_findings + user_command.
+          Implement the change.
+          Output: /tmp/penguins/private_diff.md
+
+      - id: melman_medium
+        agent: melman
+        depends_on: [private_medium]
+        task: |
+          Validate private_diff against rules.
+          Output: /tmp/penguins/melman_report.md
+
+  large:
+    description: Figma designs, many files, complex features
+    triggers:
+      - figma_exists: true
+      - files_count: { min: 6 }
+      - jira_exists: true
+    workflow: jira_figma_to_code_v2
+    # Uses full jira_figma_to_code_v2.yaml workflow
+
+task_classifier:
+  rules:
+    - name: is_large
+      condition: "figma_exists AND (files_count >= 6 OR jira_exists)"
+      tier: large
+    - name: is_medium
+      condition: "files_count >= 2 AND NOT figma_exists"
+      tier: medium
+    - name: is_small
+      condition: "files_count <= 1 AND NOT figma_exists AND NOT jira_exists"
+      tier: small
+
+  defaults:
+    small_if_unclear: true
+
+classifier_input:
+  jira_task: inputs/jira-task.md
+  figma_notes: inputs/figma-notes.md
+  user_command: inputs/user-command.md
+
+classifier_task: |
+  Analyze the inputs and determine task tier:
+
+  LARGE if:
+    - figma-notes.md exists
+    - OR jira-task.md exists with complex requirements
+    - OR more than 5 files need to be modified
+
+  MEDIUM if:
+    - 2-5 files need to be modified
+    - No Figma design required
+
+  SMALL if:
+    - 1 or fewer files
+    - No Figma, no Jira
+    - Simple fix or refactor
+
+  Output ONLY:
+  - "tier: small" OR "tier: medium" OR "tier: large"
+  - One line only, no explanation
+
+workflow_mapping:
+  small: tiered_small
+  medium: tiered_medium
+  large: jira_figma_to_code_v2

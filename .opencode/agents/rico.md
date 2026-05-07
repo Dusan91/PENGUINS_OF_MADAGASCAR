@@ -1,7 +1,7 @@
 ---
 description: Code researcher — explores the codebase, reports facts about files, patterns, and constraints. No opinions, no plans.
 mode: subagent
-model: github-copilot/claude-sonnet-4.5
+model: github-copilot/claude-sonnet-4.6
 tools:
   write: true
   edit: false

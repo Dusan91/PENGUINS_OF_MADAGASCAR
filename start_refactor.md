@@ -2,7 +2,7 @@
 
 Execute the refactor workflow:
 
-- Workflow: ~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/workflows/refactor_to_code.yaml
+- Workflow: ~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/workflows/refactor_v2.yaml
 - User command: ~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/inputs/user-command.md
 - Rules directory: ~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/rules/
 - Penguins root: ~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/
