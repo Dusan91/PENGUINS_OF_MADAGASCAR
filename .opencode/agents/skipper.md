@@ -31,7 +31,9 @@ When invoked, you receive a workflow file path and a user command. You MUST:
 - NEVER skip a step
 - NEVER execute steps yourself — always delegate to the correct agent via Task tool
 - Each Task tool call must include the full task description from the workflow step
-- Wait for each step to complete before starting the next (sequential, not parallel)
+- When a workflow step has `parallel_group`, launch ALL agents in that group simultaneously using multiple Task tool calls in a single message — do NOT wait for one before starting the other
+- Wait for ALL members of a parallel_group to complete before moving to the next step
+- Steps without `parallel_group` run sequentially
 - If a step produces a REJECTED or FAIL result — STOP, report the blocker, do NOT continue
 - All scratchpad files go to /tmp/penguins/
 
@@ -54,7 +56,7 @@ For this step you do NOT invoke a subagent — you are Skipper. Read Kowalski's 
 
 After melman_validation, YOU:
 1. Read all scratchpad files
-2. Write an audit log entry to `audit/<YYYY-MM-DD>.jsonl` in the PENGUINS_OF_MADAGASCAR directory
+2. Write an audit log entry to `audit/<YYYY-MM-DD>.json` in the PENGUINS_OF_MADAGASCAR directory as a pretty-printed JSON object (indent: 2)
 3. Output a concise summary of what was done
 4. Confirm rules compliance
 

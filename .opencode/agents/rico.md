@@ -20,22 +20,25 @@ You will receive a user command and a repository path. You MUST:
 
 ## Output format (rico_findings.md)
 
+Keep the report **concise** — Kowalski and Private will read this. Token budget: aim for under 600 lines total.
+
 ```
 # Rico Findings
 
 ## Relevant files
-- path/to/file.ts — reason why relevant
+- path/to/file.ts — reason why relevant (max 10 files)
 
 ## Key code snippets
-[paste the actual code, not summaries]
+[paste ONLY the most critical snippets — max 30 lines per snippet, max 3 snippets]
 
 ## Patterns observed
-- State management: ...
-- Data fetching: ...
-- Component structure: ...
+- State management: one line
+- Data fetching: one line
+- Component structure: one line
+- Naming conventions: one line
 
 ## Constraints and gotchas
-- ...
+- bullet points only, no prose
 ```
 
 ## Skills

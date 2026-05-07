@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-04-06T13:20:00Z",
+  "task_id": "sportsbook-url-sync-league",
+  "tier": "medium",
+  "workflow": "refactor_v2",
+  "agents_used": [
+    "rico (via explore)",
+    "kowalski",
+    "private (direct)",
+    "melman (direct)"
+  ],
+  "files_created": [
+    "apps/web-shell/src/hooks/use-sportsbook-url-sync.hook.ts",
+    "apps/web-shell/src/components/adapters/sportsbook-url-sync-bridge.tsx"
+  ],
+  "files_modified": [
+    "apps/web-shell/src/app/[locale]/sportsbook/prematch/page.tsx",
+    "apps/web-shell/src/app/[locale]/sportsbook/live/page.tsx"
+  ],
+  "packages_touched": [],
+  "melman_result": "PASS",
+  "jira_ac_covered": [
+    "league URL ?leagueId=xxx",
+    "URL→state on mount",
+    "state→URL reactive",
+    "direct entry stable",
+    "internal redirect stable"
+  ],
+  "jira_ac_blocked": [
+    "group URL ?groupId=xxx (accordionLeague$ not exported)",
+    "accordion auto-expansion (blocked)"
+  ],
+  "blocker": "accordionLeague$ is not publicly exported from @wh-label/betting. Group URL and accordion expansion require user approval to either (a) export accordionLeague$ from packages/betting/src/hooks/logic/filter/index.ts, or (b) accept league-only delivery.",
+  "guardrails_violated": [],
+  "new_dependencies": [],
+  "no_commit": true,
+  "summary": "Implemented bidirectional ?leagueId URL↔leagueSelectionAtom sync on prematch and live sportsbook pages. Partial delivery — league URLs fully functional, group/accordion URLs blocked pending user decision on packages/betting scope."
+}

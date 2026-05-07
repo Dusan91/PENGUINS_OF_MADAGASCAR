@@ -1,0 +1,28 @@
+{
+  "timestamp": "2026-03-30T00:00:00Z",
+  "workflow": "jira_figma_to_code_v2",
+  "task": "Add TournamentMock component to casino page (web-shell) — wrap existing UpcomingTournament presentation component following BannerMock/MenuMock pattern",
+  "agents": [
+    "rico",
+    "kowalski",
+    "skipper",
+    "private",
+    "melman",
+    "skipper"
+  ],
+  "files_changed": [
+    "packages/casino/src/mocks/tournament.tsx",
+    "packages/casino/src/mocks/config.schema.ts",
+    "packages/casino/src/mocks/index.ts",
+    "apps/web-shell/src/app/[locale]/casino/page.tsx"
+  ],
+  "skipper_decision": "APPROVED",
+  "melman_result": "PASS",
+  "guardrails_violated": false,
+  "new_libraries": false,
+  "commits_made": false,
+  "summary": "Created TournamentMock component at packages/casino/src/mocks/tournament.tsx following the exact same pattern as BannerMock/MenuMock/FilterMock (h1 header + config panel with react-hook-form + zod + useQuery). Wraps existing UpcomingTournament presentation component (not modified). Added tournamentShowImage boolean toggle to shared ConfigSchema. Exported TournamentMock from mocks/index.ts. Rendered <TournamentMock /> on casino page. All required data fields present: title, prize, minBet, currency, startsAt (countdown-ready Date), onRulesClick, image (toggled via config). Melman PASS with one minor non-blocking cosmetic note (indentation drift in config.schema.ts). No protected areas touched, no new libraries, no auth/payment/API contract changes.",
+  "rules_followed": true,
+  "protected_areas_touched": false,
+  "melman_minor_notes": "config.schema.ts zodResolverValues indentation changed from 6-space to 2-space during editing; zod import quote changed from double to single. Cosmetic only, functionality unaffected."
+}

@@ -36,28 +36,21 @@ steps:
     agent: kowalski
     isolated: true
     parallel_group: discovery
-    input:
-      user_command: inputs/user-command.md
-      rules:
-        - rules/coding-standards.md
-        - rules/guardrails.md
-        - rules/refactor-policy.md
-        - rules/react-next-rules.md
-        - rules/protected-areas.md
-    task: |
-      You are Kowalski. Your ONLY job is analysis and planning — no implementation.
+     input:
+       user_command: inputs/user-command.md
+     task: |
+       You are Kowalski. Your ONLY job is analysis and planning — no implementation.
 
-      Read:
-        - User command: inputs/user-command.md
-        - Rico's findings: /tmp/penguins/rico_findings.md
-        - All rules listed in input.rules
+       Read:
+         - User command: inputs/user-command.md
+         - Rico's findings: /tmp/penguins/rico_findings.md
 
-      Produce a detailed implementation plan to /tmp/penguins/kowalski_plan.md:
-        1. Exact files to change (path + what changes)
-        2. Exact files NOT to touch and why
-        3. Step-by-step implementation order with rationale
-        4. Risk assessment (what could break)
-        5. Compliance check against guardrails.md
+       Produce a concise implementation plan to /tmp/penguins/kowalski_plan.md:
+         1. Exact files to change (path + what changes)
+         2. Exact files NOT to touch and why
+         3. Step-by-step implementation order with rationale
+         4. Risk assessment (what could break)
+         5. Compliance check against guardrails
 
       Return ONLY the path to the output file: /tmp/penguins/kowalski_plan.md
     output: /tmp/penguins/kowalski_plan.md
@@ -70,10 +63,9 @@ steps:
     isolated: true
     depends_on: [discovery]
     parallel_group: null
-    input:
-      user_command: inputs/user-command.md
-      kowalski_plan: /tmp/penguins/kowalski_plan.md
-      guardrails: rules/guardrails.md
+     input:
+       user_command: inputs/user-command.md
+       kowalski_plan: /tmp/penguins/kowalski_plan.md
     task: |
       You are Skipper. Your ONLY job is to APPROVE or REJECT Kowalski's plan.
 
@@ -98,13 +90,10 @@ steps:
     agent: private
     isolated: true
     depends_on: [skipper_approval]
-    input:
-      rico_findings: /tmp/penguins/rico_findings.md
-      kowalski_plan: /tmp/penguins/kowalski_plan.md
-      skipper_decision: /tmp/penguins/skipper_decision.md
-      rules:
-        - rules/coding-standards.md
-        - rules/react-next-rules.md
+     input:
+       rico_findings: /tmp/penguins/rico_findings.md
+       kowalski_plan: /tmp/penguins/kowalski_plan.md
+       skipper_decision: /tmp/penguins/skipper_decision.md
     task: |
       You are Private. Your ONLY job is implementation — no decisions, no planning.
 
@@ -133,15 +122,10 @@ steps:
     agent: melman
     isolated: true
     depends_on: [private_implementation]
-    input:
-      private_diff: /tmp/penguins/private_diff.md
-      kowalski_plan: /tmp/penguins/kowalski_plan.md
-      skipper_decision: /tmp/penguins/skipper_decision.md
-      rules:
-        - rules/coding-standards.md
-        - rules/guardrails.md
-        - rules/react-next-rules.md
-        - rules/protected-areas.md
+     input:
+       private_diff: /tmp/penguins/private_diff.md
+       kowalski_plan: /tmp/penguins/kowalski_plan.md
+       skipper_decision: /tmp/penguins/skipper_decision.md
     task: |
       You are Melman. Your ONLY job is validation — you are paranoid by nature.
 
@@ -184,7 +168,7 @@ steps:
       You are Skipper. Final review and audit log.
       Read all inputs. Then:
 
-        1. Write an audit log entry to audit/<today_date>.jsonl
+        1. Write an audit log entry to audit/<today_date>.json
         2. Provide a concise summary of what was done
         3. Confirm whether all rules and standards were followed
         4. If Melman reported FAIL — describe what still needs fixing

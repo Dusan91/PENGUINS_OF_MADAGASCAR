@@ -45,32 +45,26 @@ steps:
     agent: kowalski
     isolated: true
     parallel_group: discovery
-    input:
-      jira_task: inputs/jira-task.md
-      figma_notes: inputs/figma-notes.md
-      user_command: inputs/user-command.md
-      rules:
-        - rules/coding-standards.md
-        - rules/guardrails.md
-        - rules/refactor-policy.md
-        - rules/react-next-rules.md
-        - rules/protected-areas.md
-    task: |
-      You are Kowalski. Your ONLY job is analysis — no implementation, no final decisions.
+     input:
+       jira_task: inputs/jira-task.md
+       figma_notes: inputs/figma-notes.md
+       user_command: inputs/user-command.md
+     task: |
+       You are Kowalski. Your ONLY job is analysis — no implementation, no final decisions.
+       DO NOT fetch Figma URLs directly. Rico handles Figma discovery.
+       Use figma_notes.md only as plain text context.
 
-      Read:
-        - Jira task: inputs/jira-task.md
-        - Figma notes: inputs/figma-notes.md
-        - User command: inputs/user-command.md
-        - All rules listed in input.rules
+       Read:
+         - Jira task: inputs/jira-task.md
+         - Figma notes: inputs/figma-notes.md
+         - User command: inputs/user-command.md
 
-      Produce a synthesis + solution options document to /tmp/penguins/kowalski_analysis.md:
-        1. What exactly needs to be built (distilled from Jira + Figma)
-        2. What already exists that can be reused
-        3. Solution options A / B / C with trade-offs for each
-        4. Your recommendation (one option) with rationale
-        5. Risks and edge cases
-        6. Compliance check — does any option violate guardrails?
+       Produce a concise synthesis document to /tmp/penguins/kowalski_analysis.md:
+         1. What exactly needs to be built (2-3 sentences max)
+         2. What already exists that can be reused (bullet points)
+         3. Recommended approach with rationale (one option only — no A/B/C)
+         4. Risks and edge cases (bullet points)
+         5. Compliance check — any guardrail violations?
 
       Return ONLY the path to the output file: /tmp/penguins/kowalski_analysis.md
     output: /tmp/penguins/kowalski_analysis.md
@@ -83,12 +77,10 @@ steps:
     isolated: true
     depends_on: [discovery]
     parallel_group: null
-    input:
-      jira_task: inputs/jira-task.md
-      user_command: inputs/user-command.md
-      kowalski_analysis: /tmp/penguins/kowalski_analysis.md
-      guardrails: rules/guardrails.md
-      finalization_rules: rules/finalization.md
+      input:
+       jira_task: inputs/jira-task.md
+       user_command: inputs/user-command.md
+       kowalski_analysis: /tmp/penguins/kowalski_analysis.md
     task: |
       You are Skipper. Your ONLY job is to make the final implementation decision
       and produce an actionable plan for Private.
@@ -117,12 +109,9 @@ steps:
     agent: private
     isolated: true
     parallel_group: execution
-    input:
-      rico_findings: /tmp/penguins/rico_findings.md
-      skipper_plan: /tmp/penguins/skipper_plan.md
-      rules:
-        - rules/coding-standards.md
-        - rules/react-next-rules.md
+     input:
+       rico_findings: /tmp/penguins/rico_findings.md
+       skipper_plan: /tmp/penguins/skipper_plan.md
     task: |
       You are Private. Your ONLY job is implementation — no decisions, no planning.
 
@@ -150,13 +139,8 @@ steps:
     agent: melman
     isolated: true
     parallel_group: execution
-    input:
-      skipper_plan: /tmp/penguins/skipper_plan.md
-      rules:
-        - rules/coding-standards.md
-        - rules/guardrails.md
-        - rules/react-next-rules.md
-        - rules/protected-areas.md
+     input:
+       skipper_plan: /tmp/penguins/skipper_plan.md
     task: |
       You are Melman. Prepare validation checklist while Private implements.
 
@@ -237,7 +221,7 @@ steps:
       You are Skipper. Final review and audit log.
       Read all inputs. Then:
 
-        1. Write an audit log entry to audit/<today_date>.jsonl
+        1. Write an audit log entry to audit/<today_date>.json
         2. Provide a concise summary of what was built
         3. Confirm whether all rules and standards were followed
         4. If Melman reported FAIL — list what still needs fixing before delivery
