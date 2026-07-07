@@ -1,0 +1,47 @@
+{
+  "date": "2026-05-13",
+  "task": "2",
+  "workflow": "tiered → large (jira_figma_to_code_v2)",
+  "tier": "large",
+  "jira_task": "Settings button in desktop header — language + theme dropdown panel",
+  "figma_node": "14620-140974",
+  "melman_result": "PASS",
+  "changes": [
+    {
+      "file": "apps/web-shell/src/components/settings-panel.tsx",
+      "action": "create",
+      "description": "New SettingsPanel component: Settings gear button + Popover with language and theme single-select sections, check icon on selected item, bg-accent highlight"
+    },
+    {
+      "file": "packages/betting/src/components/layouts/header/components/desktop-header/desktop-header.tsx",
+      "action": "modify",
+      "description": "Added settingsPanel prop, rendered in right side of header after search controls"
+    },
+    {
+      "file": "packages/betting/src/components/layouts/header/header.tsx",
+      "action": "modify",
+      "description": "Added settingsPanel prop; passes to DesktopHeader only (not MobileHeader, settings is desktop-only feature)"
+    },
+    {
+      "file": "packages/betting/src/components/layouts/main-layout.tsx",
+      "action": "modify",
+      "description": "Added settingsPanel prop, threaded to Header"
+    },
+    {
+      "file": "apps/web-shell/src/app/[locale]/layout.tsx",
+      "action": "modify",
+      "description": "Imported SettingsPanel, injected settingsPanel={<SettingsPanel />} into MainLayout"
+    }
+  ],
+  "guardrails": {
+    "protected_paths": "none touched",
+    "new_libraries": "none added",
+    "commits": "none",
+    "scope": "web-shell + betting layout (prop threading only)"
+  },
+  "decisions": [
+    "settingsPanel injected only to DesktopHeader (not MobileHeader) — Settings panel is a desktop feature per Figma",
+    "Flag SVGs imported from @/assets/ (correct path, not @/presentation/assets/ which was wrong in lang-selector.tsx)",
+    "Popover closes on item selection (setOpen(false)) for better UX"
+  ]
+}

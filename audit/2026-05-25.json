@@ -1,0 +1,40 @@
+{
+  "date": "2026-05-25",
+  "workflow": "jira_figma_to_code_v2",
+  "task": "Tournament Component",
+  "status": "SUCCESS",
+  "scope": "reduced-scope Option B (web-shell only)",
+  "model": "github-copilot/gpt-5.4",
+  "fallback_used": false,
+  "figma": {
+    "nodeId": "11380:8339",
+    "status": "unavailable_in_active_figma_tab"
+  },
+  "steps": {
+    "rico_discovery": "/tmp/penguins/rico_findings.md",
+    "kowalski_analysis": "/tmp/penguins/kowalski_analysis.md",
+    "skipper_plan": "/tmp/penguins/skipper_plan.md",
+    "private_diff": "/tmp/penguins/private_diff.md",
+    "melman_report": "/tmp/penguins/melman_report.md"
+  },
+  "files_changed": [
+    "apps/web-shell/src/app/[locale]/casino/_components/local-casino-page-heading.tsx",
+    "apps/web-shell/src/app/[locale]/casino/_components/local-casino-page-skeleton.tsx",
+    "apps/web-shell/src/app/[locale]/casino/_components/local-casino-tournament-section.tsx",
+    "apps/web-shell/src/app/[locale]/casino/_components/local-casino-section-renderer.tsx",
+    "apps/web-shell/src/app/[locale]/casino/_components/local-casino-page-renderer.tsx",
+    "apps/web-shell/src/app/[locale]/casino/_components/local-casino-responsive-lobby-renderer.tsx",
+    "apps/web-shell/src/app/[locale]/casino/casino-lobby-route.tsx",
+    "apps/web-shell/src/app/[locale]/casino/[lobbyGroup]/room/[roomId]/page.tsx"
+  ],
+  "compliance": {
+    "new_libraries": false,
+    "commits": false,
+    "protected_areas_changed": false,
+    "api_contract_changed": false
+  },
+  "limitations": [
+    "Tournament rendering works only when the existing normalized payload includes active/enabled tournament widget data with schemaVersion tournament/v1 and sufficient render fields.",
+    "Banner and room-preview widget fallback behavior remained unchanged in this reduced-scope run."
+  ]
+}

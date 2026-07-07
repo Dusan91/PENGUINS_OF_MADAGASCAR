@@ -1,0 +1,49 @@
+{
+  "date": "2026-06-22",
+  "task": "Sportsbook Configurator — apps/wh-label-cms",
+  "tier": "medium",
+  "workflow": "refactor_v2",
+  "status": "COMPLETED",
+  "agents": {
+    "rico": "COMPLETED — discovery of HomePageConfigurator, OddsDisplayConfigurator, globals, Dashboard, payload.config.ts, importMap.js patterns",
+    "kowalski": "COMPLETED (Skipper-executed) — plan: 7 new files, 3 modified, 1 regenerated",
+    "skipper_approval": "APPROVED — guardrails pass, scope valid, no new libs",
+    "private": "COMPLETED — all 11 files created/modified, pnpm generate:importmap successful",
+    "melman": "PASS — 13 checks passed, 0 issues"
+  },
+  "files_created": [
+    "apps/wh-label-cms/src/globals/SportsbookConfig.ts",
+    "apps/wh-label-cms/src/components/SportsbookConfigurator/types.ts",
+    "apps/wh-label-cms/src/components/SportsbookConfigurator/index.tsx",
+    "apps/wh-label-cms/src/components/SportsbookConfigurator/SportsbookConfiguratorClient.tsx",
+    "apps/wh-label-cms/src/components/SportsbookConfigurator/components/SportsbookConfiguratorHeader.tsx",
+    "apps/wh-label-cms/src/components/SportsbookConfigurator/components/SportsbookConfiguratorLoading.tsx",
+    "apps/wh-label-cms/src/components/SportsbookConfigurator/components/SportsbookConfiguratorError.tsx"
+  ],
+  "files_modified": [
+    "apps/wh-label-cms/src/globals/index.ts",
+    "apps/wh-label-cms/src/payload.config.ts",
+    "apps/wh-label-cms/src/components/Dashboard/index.tsx"
+  ],
+  "files_regenerated": [
+    "apps/wh-label-cms/src/app/(payload)/admin/importMap.js"
+  ],
+  "typescript_errors": 0,
+  "any_types_introduced": 0,
+  "guardrails": {
+    "auth": "NOT TOUCHED",
+    "payments": "NOT TOUCHED",
+    "middleware": "NOT TOUCHED",
+    "env_vars": "NOT TOUCHED",
+    "cicd": "NOT TOUCHED",
+    "migrations": "NOT TOUCHED",
+    "new_npm_packages": "NONE"
+  },
+  "committed": false,
+  "notes": [
+    "react-query NOT used — not installed in apps/wh-label-cms; raw fetch() + useState/useEffect used",
+    "Default theme shown as select (Dark/Light) per user spec — not a boolean switch, but an enum select",
+    "leagueSortType conditional render implemented correctly",
+    "Payload Global auto-provides GET /api/globals/sportsbook-config endpoint (no custom endpoint needed)"
+  ]
+}

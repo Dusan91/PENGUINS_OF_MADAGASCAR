@@ -1,0 +1,34 @@
+{
+  "date": "2026-07-02",
+  "task": "Runtime config implementation — Next.js equivalent of bet-admin-web runtime-config pattern",
+  "tier": "large",
+  "workflow": "jira_figma_to_code_v2",
+  "agents": ["rico", "kowalski (Skipper-authored)", "private", "melman (Skipper-authored)"],
+  "status": "PASS",
+  "files_created": [
+    "apps/web-shell/src/app/api/runtime-config/route.ts",
+    "apps/web-shell/src/lib/runtime-config.ts",
+    "apps/web-shell/src/hooks/use-runtime-config.ts"
+  ],
+  "files_modified": [],
+  "new_dependencies": [],
+  "guardrail_violations": [],
+  "typescript_errors_introduced": 0,
+  "any_types_introduced": 0,
+  "commits_made": false,
+  "decisions": {
+    "pattern": "Next.js API Route Handler at /api/runtime-config + client-side useRuntimeConfig hook with react-query staleTime:Infinity + module-level singleton with getter functions",
+    "envService_not_replaced": "additive only — envService still used by all shared API clients",
+    "zod_import_style": "import * as z from 'zod' (matches 11 existing web-shell usages)"
+  },
+  "notifications_for_user": [
+    "NEXT_PUBLIC_* vars are baked in at Next.js build time. Runtime injection only works with Docker + output:standalone + env vars injected at container start. Confirm deployment model.",
+    "New runtime config is ADDITIVE — envService still coexists and handles shared API clients.",
+    "NEXT_PUBLIC_CASINO_DEFAULT_LOBBY_GROUP_KEY is not currently set in the codebase — getters return null until env var is configured.",
+    "useRuntimeConfig() hook must be called in a client component (e.g. Providers) to trigger the initial fetch. Not wired by Private — user must do this manually."
+  ],
+  "skipper_decisions": [
+    "Kowalski model unavailable (github-copilot/gpt-5.4) — Skipper authored analysis directly from Rico findings",
+    "Melman model unavailable (github-copilot/gpt-5.4-mini) — Skipper authored checklist and ran validation directly"
+  ]
+}

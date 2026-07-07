@@ -175,6 +175,10 @@ If a decision affects future work:
 - it MUST be written to /memory/decisions.md
 - it MUST be logged in audit
 
+If a task reveals a mistake, failed approach, or non-obvious constraint:
+- it MUST be written to /memory/lessons-learned.md
+- format: date, what failed, why it failed, what to do instead, affected areas
+
 ## 13. Skill Resolution Rule
 
 - Each agent MUST follow skills defined for their role

@@ -1,0 +1,56 @@
+{
+  "date": "2026-05-13",
+  "workflow": "tiered → large (jira_figma_to_code_v2)",
+  "tier": "large",
+  "jira_task": "Add theme selector (Dark/Light) in mobile Side Menu + fix LangSelector bug",
+  "figma_node": "16481-30567",
+  "melman_result": "PASS",
+  "changes": [
+    {
+      "file": "packages/betting/src/components/layouts/lang-selector.tsx",
+      "action": "fix",
+      "description": "Fixed @/navigation import → @wh-label/shared/components/navigation"
+    },
+    {
+      "file": "apps/web-shell/src/components/theme-selector.tsx",
+      "action": "create",
+      "description": "New ThemeSelector component using next-themes useTheme, styled like LangSelector"
+    },
+    {
+      "file": "packages/betting/src/components/layouts/sidebar-menu/sidebar-menu.tsx",
+      "action": "modify",
+      "description": "Added themeSelector prop, render ThemeSelector above LangSelector at bottom of drawer"
+    },
+    {
+      "file": "packages/betting/src/components/layouts/header/components/mobile-header/mobile-header.tsx",
+      "action": "modify",
+      "description": "Added themeSelector prop threading to SidebarMenu"
+    },
+    {
+      "file": "packages/betting/src/components/layouts/header/header.tsx",
+      "action": "modify",
+      "description": "Added themeSelector prop threading through headerProps"
+    },
+    {
+      "file": "packages/betting/src/components/layouts/main-layout.tsx",
+      "action": "modify",
+      "description": "Added themeSelector prop, passed to Header"
+    },
+    {
+      "file": "apps/web-shell/src/app/[locale]/layout.tsx",
+      "action": "modify",
+      "description": "Injected ThemeSelector into MainLayout"
+    }
+  ],
+  "guardrails": {
+    "protected_paths": "none touched",
+    "new_libraries": "none added",
+    "commits": "none",
+    "scope": "web-shell only"
+  },
+  "decisions": [
+    "ThemeSelector created in apps/web-shell (not betting package) because next-themes is only a web-shell dependency",
+    "Injected via themeSelector prop chain rather than hardcoding in betting package",
+    "LangSelector bug fixed by correcting module resolution alias"
+  ]
+}

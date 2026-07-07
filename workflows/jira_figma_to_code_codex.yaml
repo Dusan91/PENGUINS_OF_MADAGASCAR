@@ -1,0 +1,241 @@
+name: Jira + Figma → Code (Codex v1)
+
+scratchpad_dir: /tmp/penguins
+
+description: |
+  CODEX WORKFLOW — Replaces Private agent with OpenAI Codex CLI for implementation.
+  Rico and Kowalski run in parallel for discovery + analysis.
+  Skipper decides → Codex implements (via bash) → Melman validates.
+
+  Prerequisites:
+    - Codex CLI installed: npm install -g @openai/codex
+    - OpenAI API key set: export OPENAI_API_KEY=...
+    - Run from repository root: cd ~/Desktop/Hermes/whitelabel
+
+steps:
+  # ═══════════════════════════════════════════════════
+  # PARALLEL GROUP 1: Discovery + Analysis
+  # ═══════════════════════════════════════════════════
+  - id: rico_discovery
+    agent: rico
+    isolated: true
+    parallel_group: discovery
+    input:
+      jira_task: inputs/jira-task.md
+      figma_notes: inputs/figma-notes.md
+      user_command: inputs/user-command.md
+      repository_path: ~/Desktop/Hermes/whitelabel
+    task: |
+      You are Rico. Your ONLY job is discovery — no opinions, no plans, no architecture.
+
+      Read the jira task, figma notes, and user command to understand WHAT needs to be built.
+
+      Then explore the repository and return a structured findings report to /tmp/penguins/rico_findings.md:
+
+        1. Files relevant to the task (paths + why)
+        2. Existing components, hooks, utils that could be reused
+        3. Current implementation of affected areas (paste key snippets)
+        4. Patterns used in the codebase:
+           - State management (jotai, legendapp, zustand, etc.)
+           - Data fetching (react-query, SWR, etc.)
+           - Component structure (client/server boundaries, folder conventions)
+           - Naming conventions
+        5. Any constraints or gotchas (protected areas, auth boundaries, etc.)
+        6. If figma-notes.md exists, use Figma tools to get design context
+
+      Return ONLY the path to the output file: /tmp/penguins/rico_findings.md
+    output: /tmp/penguins/rico_findings.md
+
+  - id: kowalski_analysis
+    agent: kowalski
+    isolated: true
+    parallel_group: discovery
+    input:
+      jira_task: inputs/jira-task.md
+      figma_notes: inputs/figma-notes.md
+      user_command: inputs/user-command.md
+    task: |
+      You are Kowalski. Your ONLY job is analysis — no implementation, no final decisions.
+      DO NOT fetch Figma URLs directly. Rico handles Figma discovery.
+      Use figma_notes.md only as plain text context.
+
+      Read:
+        - Jira task: inputs/jira-task.md
+        - Figma notes: inputs/figma-notes.md
+        - User command: inputs/user-command.md
+
+      Produce a concise synthesis document to /tmp/penguins/kowalski_analysis.md:
+        1. What exactly needs to be built (2-3 sentences max)
+        2. What already exists that can be reused (bullet points)
+        3. Recommended approach with rationale (one option only — no A/B/C)
+        4. Risks and edge cases (bullet points)
+        5. Compliance check — any guardrail violations?
+
+      Return ONLY the path to the output file: /tmp/penguins/kowalski_analysis.md
+    output: /tmp/penguins/kowalski_analysis.md
+
+  # ═══════════════════════════════════════════════════
+  # STEP 3: Skipper decides
+  # ═══════════════════════════════════════════════════
+  - id: skipper_decision
+    agent: skipper
+    isolated: true
+    depends_on: [discovery]
+    parallel_group: null
+    input:
+      jira_task: inputs/jira-task.md
+      user_command: inputs/user-command.md
+      kowalski_analysis: /tmp/penguins/kowalski_analysis.md
+      rico_findings: /tmp/penguins/rico_findings.md
+    task: |
+      You are Skipper. Your ONLY job is to make the final implementation decision
+      and produce an actionable plan for Codex CLI.
+
+      Read:
+        - Jira task: inputs/jira-task.md
+        - User command: inputs/user-command.md
+        - Kowalski's analysis: /tmp/penguins/kowalski_analysis.md
+        - Rico's findings: /tmp/penguins/rico_findings.md
+        - Guardrails: rules/guardrails.md
+
+      Output an implementation plan at /tmp/penguins/skipper_plan.md:
+        1. Approved solution and rationale
+        2. Exact list of files Codex is authorized to CREATE or MODIFY (absolute paths)
+        3. Exact list of files Codex must NOT touch
+        4. Step-by-step implementation tasks (numbered, unambiguous, self-contained)
+           — each step must be clear enough for Codex CLI to execute without context
+        5. Confirm no guardrail violations
+        6. Special instructions (client/server boundaries, naming rules, reuse directives)
+
+      IMPORTANT: Steps must be written as precise coding instructions, not high-level goals.
+      Codex CLI will receive these steps one by one via bash prompt.
+
+      Return ONLY the path to the output file: /tmp/penguins/skipper_plan.md
+    output: /tmp/penguins/skipper_plan.md
+
+  # ═══════════════════════════════════════════════════
+  # STEP 4: Codex implements (via bash)
+  # ═══════════════════════════════════════════════════
+  - id: codex_implementation
+    agent: skipper
+    isolated: true
+    depends_on: [skipper_decision]
+    parallel_group: null
+    input:
+      rico_findings: /tmp/penguins/rico_findings.md
+      skipper_plan: /tmp/penguins/skipper_plan.md
+    task: |
+      You are Skipper acting as Codex executor. Your job is to invoke Codex CLI
+      to implement the plan produced in skipper_plan.md.
+
+      Steps:
+        1. Read /tmp/penguins/skipper_plan.md carefully
+        2. Read /tmp/penguins/rico_findings.md for context on existing code
+        3. Navigate to the repository root: ~/Desktop/Hermes/whitelabel
+        4. For each numbered implementation step in skipper_plan.md, run:
+
+             codex --approval-mode full-auto "<step description>"
+
+           Pass each step as a clear, self-contained prompt to Codex.
+           Include relevant file paths and context inline in the prompt.
+
+        5. After all steps are complete, write a diff summary to /tmp/penguins/codex_diff.md:
+           - Each file created/changed: what was done
+           - How it maps to skipper_plan.md steps
+           - Any errors or unexpected results from Codex CLI
+
+        STRICT RULES:
+          - Do NOT modify files not listed in skipper_plan.md
+          - If Codex produces output touching protected paths (/auth, /payments,
+            /middleware.ts, /config), STOP and log a blocker to /tmp/penguins/codex_blockers.md
+          - If a Codex step fails 2 times, log it as a blocker and skip it
+
+      Return ONLY the path to the output file: /tmp/penguins/codex_diff.md
+    output: /tmp/penguins/codex_diff.md
+
+  # ═══════════════════════════════════════════════════
+  # STEP 5: Melman validates
+  # ═══════════════════════════════════════════════════
+  - id: melman_validation
+    agent: melman
+    isolated: true
+    depends_on: [codex_implementation]
+    parallel_group: null
+    input:
+      jira_task: inputs/jira-task.md
+      codex_diff: /tmp/penguins/codex_diff.md
+      skipper_plan: /tmp/penguins/skipper_plan.md
+      rules:
+        - rules/coding-standards.md
+        - rules/guardrails.md
+        - rules/react-next-rules.md
+        - rules/protected-areas.md
+    task: |
+      You are Melman. Your ONLY job is validation — you are paranoid by nature.
+
+      Read:
+        - Jira task (requirements): inputs/jira-task.md
+        - What Codex implemented: /tmp/penguins/codex_diff.md
+        - What Skipper approved: /tmp/penguins/skipper_plan.md
+        - All rules listed in input.rules
+        - Blockers (if any): /tmp/penguins/codex_blockers.md
+
+      Check ALL of the following:
+        1. Does the implementation fulfill the Jira requirements?
+        2. Does it match Skipper's approved plan?
+        3. Are there any guardrail violations?
+        4. Were any unauthorized files modified?
+        5. Are client/server boundaries respected?
+        6. Any new TypeScript or lint errors introduced?
+        7. Any edge cases or missing error handling?
+        8. Are existing patterns and conventions followed?
+        9. Did Codex introduce any unexpected code (hallucinations, unused imports, etc.)?
+
+      Write validation report to /tmp/penguins/melman_report.md:
+        - PASS or FAIL (must be first line)
+        - List of issues found (if FAIL)
+        - List of checks that passed
+
+      Return ONLY the path to the output file: /tmp/penguins/melman_report.md
+    output: /tmp/penguins/melman_report.md
+
+  # ═══════════════════════════════════════════════════
+  # STEP 6: Skipper finalizes
+  # ═══════════════════════════════════════════════════
+  - id: skipper_finalization
+    agent: skipper
+    isolated: true
+    depends_on: [melman_validation]
+    input:
+      rico_findings: /tmp/penguins/rico_findings.md
+      kowalski_analysis: /tmp/penguins/kowalski_analysis.md
+      skipper_plan: /tmp/penguins/skipper_plan.md
+      codex_diff: /tmp/penguins/codex_diff.md
+      melman_report: /tmp/penguins/melman_report.md
+      audit_dir: audit/
+      finalization_rules: rules/finalization.md
+    task: |
+      You are Skipper. Final review and audit log.
+      Read all inputs. Then:
+
+        1. Write an audit log entry to audit/<today_date>.json
+        2. Provide a concise summary of what was built
+        3. Confirm whether all rules and standards were followed
+        4. If Melman reported FAIL — list what still needs fixing before delivery
+        5. Note: implementation was done by Codex CLI, not Private agent
+
+      End with exactly:
+      Smile and wave boys, smile and wave 🐧🐧🐧🐧🦒🐒
+
+parallel_execution:
+  enabled: false
+  groups:
+    discovery:
+      members: [rico_discovery, kowalski_analysis]
+      wait_for_all: true
+  sequential_after:
+    - discovery
+    - skipper_decision
+    - codex_implementation
+    - melman_validation
+    - skipper_finalization

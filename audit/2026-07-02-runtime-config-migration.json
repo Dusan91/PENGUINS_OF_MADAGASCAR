@@ -1,0 +1,50 @@
+{
+  "date": "2026-07-02",
+  "task": "Runtime config — full migration: privatne env vars, packages/shared singleton, lazy API clients",
+  "tier": "large",
+  "status": "PASS",
+  "files_created": [
+    "packages/shared/src/infrastructure/env/runtime-config.ts",
+    "apps/web-shell/src/app/api/runtime-config/route.ts",
+    "apps/web-shell/src/hooks/use-runtime-config.ts"
+  ],
+  "files_modified": [
+    "packages/shared/src/infrastructure/env/env.service.ts",
+    "packages/shared/src/infrastructure/api-client/ibet-api-client.ts",
+    "packages/shared/src/infrastructure/api-client/rest-api-client.ts",
+    "packages/shared/src/infrastructure/api-client/cms-client.ts",
+    "packages/shared/src/infrastructure/api-client/casino-api-client.ts",
+    "packages/shared/src/index.ts",
+    "packages/shared/src/query/config/params.ts",
+    "apps/web-shell/next.config.ts",
+    "apps/web-shell/src/api/themes/theme-client.ts",
+    "apps/web-shell/src/app/[locale]/layout.tsx",
+    "apps/web-shell/src/presentation/components/settings/app-version.tsx",
+    "apps/web-shell/src/tolgee/shared.ts",
+    "apps/web-shell/src/utils/utils.ts",
+    "packages/betting/src/hooks/use-client-hook.ts",
+    "packages/betting/src/hooks/api/players/players-client.ts",
+    "packages/betting/src/hooks/api/results/results-client.ts"
+  ],
+  "files_deleted": [
+    "apps/web-shell/src/lib/runtime-config.ts"
+  ],
+  "typescript_errors_new": 0,
+  "typescript_errors_preexisting": "packages/shared (path alias @/presentation), packages/betting (infrastructure import violations) — both pre-existing",
+  "any_types_introduced": 0,
+  "commits_made": false,
+  "decisions": {
+    "runtime_config_location": "Moved from apps/web-shell/src/lib to packages/shared/src/infrastructure/env — required for envService and API clients to access it",
+    "env_var_names": "Removed NEXT_PUBLIC_ prefix — vars are now private server-side only. Exceptions: NEXT_PUBLIC_RUNTIME (platform detection, must be client-accessible) kept as-is",
+    "api_clients_lazy": "All 4 shared API clients + theme-client + players-client + results-client now resolve prefixUrl per-request via beforeRequest hook instead of at module load time",
+    "tolgee_stays_process_env": "TOLGEE_API_KEY/URL remain process.env reads — Tolgee initializes synchronously before async runtime config is populated",
+    "next_config_stays_process_env": "API_DOMAIN in next.config.ts stays process.env — next.config evaluated at build/server start before any HTTP request",
+    "layout_stays_process_env": "API_BASE_URL in server layout stays process.env.API_BASE_URL — server component renders before client-side runtime config fetch completes"
+  },
+  "user_action_required": [
+    "Rename env vars in .env files and deployment config: NEXT_PUBLIC_CONFIG_URL → CONFIG_URL, NEXT_PUBLIC_API_BASE_URL → API_BASE_URL, etc.",
+    "Keep NEXT_PUBLIC_RUNTIME=next in .env (platform detection requires it)",
+    "Wire useRuntimeConfig() into Providers component (apps/web-shell/src/components/providers.tsx) to trigger fetch at app startup",
+    "Update deployment Docker/K8s env injection to use new private var names"
+  ]
+}

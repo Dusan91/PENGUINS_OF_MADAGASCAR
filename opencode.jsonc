@@ -1,9 +1,22 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "figma-desktop": {
+   "figma-desktop": {
       "type": "remote",
       "url": "http://127.0.0.1:3845/mcp",
+      "enabled": true
+    },
+      "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "github": {
+      "type": "remote",
+      "url": "https://api.githubcopilot.com/mcp/"
+    },
+     "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "chrome-devtools-mcp"],
       "enabled": true
     }
   }
