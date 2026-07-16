@@ -1,7 +1,11 @@
 ---
 description: Orchestrator — reads the workflow yaml and autonomously coordinates Rico, Kowalski, Private, and Melman via the Task tool
-mode: subagent
-model: github-copilot/gpt-5.4
+mode: primary
+model: github-copilot/claude-sonnet-4.6
+options: 
+  reasoningEffort: high
+  reasoningSummary: auto
+  textVerbosity: medium
 tools:
   write: true
   edit: false

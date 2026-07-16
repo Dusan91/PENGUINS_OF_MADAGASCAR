@@ -1,0 +1,19 @@
+{
+  "date": "2026-07-07",
+  "workflow": "tiered (MEDIUM tier) — follow-up task",
+  "task": "Create /login route in apps/mobile-shell Expo Router",
+  "tier": "medium",
+  "agents": ["rico", "kowalski (inline)", "private", "melman (inline)"],
+  "files_created": [
+    "apps/mobile-shell/src/app/login.tsx"
+  ],
+  "files_modified": [
+    "apps/mobile-shell/src/app/_layout.tsx"
+  ],
+  "protected_areas_touched": false,
+  "guardrail_violations": false,
+  "melman_result": "PASS",
+  "summary": "Created login.tsx at the /login Expo Router route. Screen includes: back button (ChevronLeft → router.back()), Sign In title+subtitle, username TextInput, password TextInput with Eye/EyeOff toggle, submit Button. All using native RN primitives + existing mobile-shell UI components. Registered in _layout.tsx Stack. No new dependencies. @wh-label/shared is not a dep of mobile-shell so auth API is not wired — placeholder onPress only.",
+  "notes": "mobile-shell has no @wh-label/shared dependency. shared Login component is web-only. Screen is UI-only. Melman flagged that MobileAppShell wraps Stack so the header is still visible on the login screen — future decision needed.",
+  "standards_compliance": "Full compliance with coding-standards.md, guardrails.md, protected-areas.md, react-next-rules.md"
+}

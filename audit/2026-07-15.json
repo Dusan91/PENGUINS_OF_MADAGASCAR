@@ -1,0 +1,30 @@
+{
+  "date": "2026-07-15",
+  "workflow": "tiered.yaml (medium tier)",
+  "user_command": "Add mobile-shell profile pages: My Bets, Account Statement; update Game History and Financial Transactions",
+  "tier": "medium",
+  "agents": ["rico", "private"],
+  "files_created": [
+    "apps/mobile-shell/src/components/profile/transactions/account-statement.tsx",
+    "apps/mobile-shell/src/app/(tabs)/profile/account-statement.tsx"
+  ],
+  "files_modified": [
+    "apps/mobile-shell/src/components/profile/transactions/utils.ts",
+    "apps/mobile-shell/src/app/(tabs)/profile/logs/my-bets.tsx"
+  ],
+  "decisions": [
+    "@wh-label/betting and @wh-label/shared are NOT in mobile-shell package.json — cannot use MyBets/MyBetsFilters from betting package",
+    "My Bets implemented natively in mobile-shell using local @tanstack/react-query + api() helper — same data source, different stack",
+    "Account Statement uses 7_DAYS/30_DAYS/3_MONTHS time periods with YEAR BE period for 3_MONTHS",
+    "THREE_MONTHS added to TIME_PERIODS constant in utils.ts; 3_MONTHS falls through to default in getStartAndEndDays (no client-side filter, backend handles via YEAR period)"
+  ],
+  "guardrails_check": {
+    "protected_areas_touched": false,
+    "auth_changed": false,
+    "payments_changed": false,
+    "api_contracts_changed": false,
+    "new_packages_installed": false
+  },
+  "typescript_errors": "none in modified files",
+  "status": "COMPLETED"
+}

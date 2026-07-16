@@ -1,7 +1,7 @@
 ---
 description: Analyst — reads Rico's findings and produces a detailed implementation plan. No code, no final decisions.
 mode: subagent
-model: github-copilot/gpt-5.4
+model: github-copilot/gpt-5.3-codex
 tools:
   write: true
   edit: false

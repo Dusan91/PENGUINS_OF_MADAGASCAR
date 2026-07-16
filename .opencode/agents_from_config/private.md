@@ -1,7 +1,7 @@
 ---
 description: Implementer — executes Kowalski's plan exactly as approved by Skipper. Writes code, no improvisation.
 mode: subagent
-model: github-copilot/gpt-5.4
+model: github-copilot/claude-sonnet-4.6
 tools:
   write: true
   edit: true

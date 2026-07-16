@@ -1,23 +1,33 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-   "figma-desktop": {
+    "figma-desktop": {
       "type": "remote",
       "url": "http://127.0.0.1:3845/mcp",
-      "enabled": true
+      "enabled": true,
     },
-      "context7": {
+    "context7": {
       "type": "remote",
-      "url": "https://mcp.context7.com/mcp"
+      "url": "https://mcp.context7.com/mcp",
     },
     "github": {
       "type": "remote",
-      "url": "https://api.githubcopilot.com/mcp/"
+      "url": "https://api.githubcopilot.com/mcp/",
     },
-     "chrome-devtools": {
+    "fff": {
+      "type": "local",
+      "command": ["fff-mcp"],
+      "enabled": true,
+    },
+    "memorygraph": {
+      "type": "local",
+      "command": ["memorygraph"],
+      "enabled": true,
+    },
+    "chrome-devtools": {
       "type": "local",
       "command": ["npx", "chrome-devtools-mcp"],
-      "enabled": true
-    }
-  }
+      "enabled": true,
+    },
+  },
 }

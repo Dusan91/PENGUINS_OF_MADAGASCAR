@@ -1,7 +1,7 @@
 ---
 description: QA validator — paranoid verifier, checks implementation against plan, guardrails, and coding standards. No code changes.
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: github-copilot/gpt-5.4-mini
 tools:
   write: true
   edit: false

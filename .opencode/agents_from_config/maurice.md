@@ -1,7 +1,7 @@
 ---
 description: Code reviewer — reviews diffs for bugs, standards violations, hidden behavior changes, and risks. No code changes.
 mode: subagent
-model: github-copilot/gpt-5-mini
+model: github-copilot/gpt-5.4-mini
 tools:
   write: true
   edit: false

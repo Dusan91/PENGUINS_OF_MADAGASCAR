@@ -1,0 +1,14 @@
+{
+  "date": "2026-07-16",
+  "agent": "Skipper",
+  "tier": "SMALL",
+  "task": "Bug fix — transactions.service.ts monthOffsets for ALL timePeriod",
+  "file": "apps/mobile-shell/src/services/transactions.service.ts",
+  "line": 110,
+  "change": "Changed monthOffsets fallback from [0, 1] to [0] for the ALL timePeriod branch",
+  "rootCause": "The ALL (30-day) path fetched 2 calendar months instead of 1, returning more transactions than the 3-month filter. Fixed by fetching only the current month [0] for ALL; 3_MONTHS correctly keeps [0, 1, 2].",
+  "rulesFollowed": ["coding-standards.md", "minimal diff", "no new packages", "no auth/payments/API contract changes"],
+  "protectedAreasModified": false,
+  "memoryUpdated": ["memory/lessons-learned.md"],
+  "auditLogCreated": "audit/2026-07-16-transactions-fix.json"
+}
