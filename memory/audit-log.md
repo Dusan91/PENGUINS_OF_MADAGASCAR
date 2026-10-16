@@ -121,3 +121,52 @@
   - `jackpotConfigsByGroupsData` not yet wired to JSX (pending backend type confirmation)
   - `JackpotConfigsByGroupsItem` is a placeholder (`id: string` only)
   - Groups array `[]` is a placeholder — real group IDs must be sourced once contract confirmed
+
+## 2026-10-07 — Emergency implementation — Jackpot winners casino migration
+
+- Status: SUCCESS
+- Model: github-copilot/gpt-5.6-sol (emergency implementer; Private unavailable)
+- Source: user-command.md plus explicit emergency migration command; Jira and Figma empty
+- Changes: moved both jackpot-winners components from web-shell to `packages/casino`, extracted the React Query service, added public component/infrastructure exports, redirected the home-page import, and deleted the old feature files
+- Modal fixes: valid dialog semantics; controlled `(open: boolean) => void` state assignment; custom close explicitly sets false
+- Locale: package Tolgee convention; no Next route coupling
+- Validation: focused grep/read and scoped `git diff --check` passed; full lint/typecheck intentionally not run
+- Compliance: no dependencies, protected areas, API transformations, unrelated cleanup, browser/network access, or git writes
+- Artifact: `/tmp/penguins/private_diff.md`
+- Notification: sent via Telegram (`workflow_complete`, `/tmp/penguins/notifications.jsonl` latest entry)
+
+## 2026-10-07 — tiered (LARGE/Figma) — Gift card visual alignment
+
+- Status: SUCCESS
+- Model: github-copilot/gpt-5.6-sol
+- Source: `user-command.md` plus Figma node `12:9089`; Jira empty
+- Tier: LARGE because Figma notes were present; low-cost execution retained one-file scope
+- Changed: `apps/web-shell/src/components/profile/gifts/gift-card.tsx`
+- Implementation: replaced the image tile with the measured responsive text-first card, 48px gift icon, status pill, date/action column, mobile divider, and 128x40 activation action
+- Behavior: existing card click, activation call, translation use, status union, and API/domain contracts preserved
+- Validation: Melman PASS after rejecting one stale unrelated report and correcting non-functional bonus controls; focused read/grep only per command
+- Compliance: no dependencies, protected paths, business logic, API contracts, env, CI/CD, migrations, or git writes
+- Notification: sent via Telegram (`workflow_complete`; latest `/tmp/penguins/notifications.jsonl` entry at `2026-10-07T11:19:50.511Z`)
+
+## 2026-10-09 — Local WH stack alignment
+
+- `bet-admin-web` `.env` auth URL changed to `localhost:8081`.
+- `user-management` `.env` created for port `8081`, `bet-admin`, local cookies, local config import, and bootstrap.
+- `wh-cms-backend` `.env` uses a matching local internal token, port `8083`, `wh-admin`, and JWKS on `8081`; no tokens or secrets are recorded here.
+- `runtime-config.ts` was not changed because environment overrides are sufficient.
+- MongoDB, user-management, backend, and frontend started on ports `27017`, `8081`, `8083`, and `3000` respectively.
+- Health, JWKS, and CORS checks returned `200`; the unauthenticated registration endpoint returned the expected `401`.
+- Local databases are empty and bootstrap is allowed; manual action with a real Dualsoft subject is still required.
+- No auth bypass or source auth modification was made; existing dirty source changes were preserved.
+
+## 2026-10-09 — Local BFF setup
+
+- `wh-cms-bff-service` `.env` created for port `8084`, tenant `wh-admin`, and local CORS; no secrets are recorded here.
+- `web-shell` `.env` set `WEB_SHELL_PRERENDER=false`, `BET_ADMIN_TENANT_KEY=test`, and `WH_CMS_BFF_API=http://localhost:8084`.
+- BFF domain, response, and mapper extended with nullable `value` and `text`; an integration test was added.
+- Focused `WhRegistrationConfigBffIntegrationTest` passed.
+- BFF health/readiness and tenant test registration/themes checks returned `200`.
+- `web-shell` restarted on port `3001`; `/api/registration-config` returned `200` with `value` and `text`.
+- Multiple text/link duplicate support remains out of scope.
+- No migration, dependency, auth bypass, or git write was made.
+- `GlobalAppConfig` warning was observed and is unrelated to registration.

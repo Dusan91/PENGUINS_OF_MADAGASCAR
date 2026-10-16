@@ -25,27 +25,49 @@ Read the full decisions log from:
 - Stability over optimization
 - When in doubt — STOP and surface the ambiguity, do not guess
 
+## Agent Communication Rules
+
+All inter-agent communication MUST follow:
+`~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/rules/agent-communication.md`
+
+Shared Reference IDs (use instead of repeating context):
+`~/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/memory/shared-memory.yaml`
+
 ## Tool Usage Rules
 
 - When searching documentation, always use context7.
 - When modifying repositories, prefer github MCP tools.
 
-## Codex CLI Integration
+## Sticky Penguins Workflow Mode
 
-Codex CLI (`@openai/codex`) is available as an implementation agent.
+After the user invokes `@skipper`, `pokreni auto workflow`, Penguins workflow, auto workflow, Jira/Figma workflow, refactor workflow, or review workflow, all following user messages in the same session remain under Penguins rules and workflow context until the user explicitly says to exit or stop Penguins workflow mode.
 
-**When to use Codex workflow:**
-- Use `workflows/jira_figma_to_code_codex.yaml` when Codex CLI is preferred over Private agent
+Follow `rules/coding-standards.md`, guardrails, protected-areas, and minimal-scope constraints for every follow-up task; do not switch to ad-hoc implementation.
 
-**Prerequisites:**
-- Codex CLI installed: `npm install -g @openai/codex`
-- OpenAI API key available: `OPENAI_API_KEY` env var must be set
+## Low-Cost Penguins Mode
 
-**Rules for Codex:**
-- Codex always runs with `--approval-mode full-auto` inside the workflow
-- Codex must only touch files listed in skipper_plan.md
-- If Codex touches a protected path, execution must stop immediately
-- Melman adds an extra check for Codex hallucinations (unexpected code, unused imports)
+- Applies to all future sessions and all follow-up tasks under Penguins workflow mode.
+- Before each task, choose the cheapest safe execution path that still follows coding standards, guardrails, protected areas, and minimal-scope rules.
+- For small follow-up changes, do not launch subagents unless needed for writing files, unavailable direct tooling, or safety-critical validation.
+- Do not ask before using a subagent; announce briefly why it is needed, then proceed.
+- Limit to one discovery/read pass, one implementation pass, and one validation pass whenever possible.
+- Avoid reading entire large files when a focused slice/search is enough.
+- Do not create audit/validation scratchpad overhead for tiny label/text follow-ups unless explicitly requested or required by a full workflow cycle.
+- If direct write/edit tools are unavailable, use the cheapest available safe writer path; if no writer is available, stop and report blocker.
+- If a response can be safely completed without tool calls, do not use tools.
+- Stability and Penguins rules still win over cost savings.
+
+## Runtime Tool Compatibility
+
+Agents must use only tools available in the current runtime/tool list. Never call `write.file` unless it is explicitly listed as available. If file writing is needed, use an available edit/write mechanism, or shell/heredoc only when bash/shell is available and permitted. If no file-writing method is available, stop and report the blocker instead of inventing a tool.
+
+## Notifications
+
+Skipper MUST use `node tools/notify.mjs` for workflow notifications. Send `workflow_started` when a workflow begins, `workflow_complete` on successful finalization, `workflow_failed` on final failure, `validation_failed` when Melman fails validation, and `decision_required`, `approval_required`, or `blocked` before stopping for user input, approval, or blockers. Do not include secrets in notification titles or messages; see `docs/notifications.md`.
+
+External network access remains forbidden except as documented in `rules/notification-network-exception.md`. When that exception is active, Skipper may call `node tools/notify.mjs` without `--dry-run` for the allowed workflow notification events only. Direct ad-hoc network calls to ntfy or other services remain forbidden.
+
+Skipper MUST include notification command output and `/tmp/penguins/notifications.jsonl` status evidence in the final summary and audit log. Before stopping for a human decision, approval, or blocker, Skipper MUST send the notification and state whether the latest status is `sent`, `skipped`, or `failed`.
 
 ## Instruction Priority Order
 

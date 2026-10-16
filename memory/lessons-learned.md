@@ -64,3 +64,38 @@
 - **Why it failed**: Native `View` i `Pressable` iz react-native ne primjenjuju tema boje sa backenda — CSS varijable ne reaguju na iOS u runtime. `/ui/view` i `/ui/pressable` rješavaju ovo automatski kroz `useMobileThemeColors`.
 - **What to do instead**: U `apps/mobile-shell` uvijek importovati `View` iz `@/components/ui/view` i `Pressable` iz `@/components/ui/pressable`. Nikad iz `react-native` direktno — osim unutar samih `ui/view.tsx` i `ui/pressable.tsx` fajlova.
 - **Affects**: Svi Private agent taskovi u `apps/mobile-shell`. Važi sve dok korisnik ne kaže da prestane.
+
+## 2026-09-25 — "Prepiši" zahteva potpunu bihevioralnu paritetnost
+
+- **What failed**: Mobile filteri za custom komponente proglašeni su završenim i označeni kao PASS iako Providers nije prikazivao provajdere, a Search nije vraćao rezultate.
+- **Why it failed**: Statičke provere i provere uslova samo čitanjem koda nisu obuhvatile ponašanje interakcija od početka do kraja.
+- **What to do instead**: Pre implementacije nabrojati svako izvorno ponašanje, API poziv, promenu stanja, uslov renderovanja, loading/error/empty stanje, paginaciju, navigaciju, perzistenciju i prevod; napraviti matricu paritetnosti; implementirati sva primenljiva ponašanja; proveriti svaku korisničku interakciju od početka do kraja. Nikada ne proglašavati parcijalan rad završenim niti ga označavati kao PASS. Ako runtime validacija nije moguća, to eksplicitno navesti i ne tvrditi da je runtime ponašanje ispravno.
+- **Affects**: Skipper, Rico, Private i Melman; svi zadaci replikacije sa weba na mobile ili replikacije komponenti, posebno filteri za custom komponente.
+
+## 2026-09-25 — Više komponenti mora biti podeljeno u zasebne fajlove po postojećim standardima
+
+- **What failed**: Replikacija koja je sadržala više komponenti smeštena je u jedan veliki fajl umesto u zasebne fajlove komponenti.
+- **Why it failed**: Implementacija je optimizovana za brzinu i minimalan broj fajlova umesto da prati postojeću strukturu komponenti i granice odgovornosti.
+- **What to do instead**: Pre implementacije pregledati konvencije obližnjih foldera i fajlova. Kreirati zaseban fajl za svaku logičku komponentu kada izvor ili referenca sadrži više komponenti ili odgovornosti. Kontejner/dispatcher, filtere/pretragu/listu provajdera, listu/karticu igara, paginaciju i druge odvojene UI odgovornosti držati zasebno kada projektni obrasci tako nalažu. Ponovo koristiti postojeće komponente i ne spajati komponente samo radi smanjenja broja fajlova. Uključiti sve potrebne fajlove u scope/plan i zatražiti proširenje scope-a pre pisanja ako je potrebno. Revieweri moraju proveriti podelu komponenti i fajlova prema konvencijama repozitorijuma i odbiti monolitne implementacije koje ih krše.
+- **Affects**: Skipper, Rico, Kowalski, Private i Melman; svi zadaci replikacije komponenti i prenosa sa weba na mobile.
+
+## 2026-09-29 — URLSearchParams vrednosti ne treba unapred kodirati
+
+- **What failed**: Trimovane vrednosti query parametara prosleđene su kroz `encodeURIComponent` pre dodavanja u `URLSearchParams`, pa su razmaci postali dvostruko kodirani kao `%2520` umesto `%20`.
+- **Why it failed**: `URLSearchParams` već obavlja percent-encoding, pa je prethodno kodiranje ponovo kodirano.
+- **What to do instead**: U `URLSearchParams` proslediti sirove trimovane vrednosti i prepustiti mu kodiranje query stringa.
+- **Affects**: Izgradnja game route query stringa u `apps/mobile-shell/src/features/casino/components/sections/custom-component-filters-section.tsx` i sva buduća upotreba `URLSearchParams`.
+
+## 2026-09-29 — Native room-preview measurement and layering must be branch-invariant
+
+- **What failed**: Arrow paging used a missing or unrelated layout width in conditional ScrollView branches, while background and hero media risked obscuring or intercepting interactive content.
+- **Why it failed**: One-row and multi-row branches did not consistently attach the same viewport `onLayout` measurement, and decorative image layers were not treated uniformly as non-interactive background layers.
+- **What to do instead**: Attach the same viewport `onLayout` measurement used by arrow paging to every ScrollView render branch; keep background and hero images absolute, non-interactive, and below content.
+- **Affects**: Native room-preview hero/background layering and horizontal paging in `apps/mobile-shell/src/features/casino/components/sections/room-preview-section.tsx`.
+
+## 2026-09-30 — Validate banner jackpot behavior against an exact API payload
+
+- **What failed**: Prior validation falsely passed after reasoning from inferred banner and jackpot shapes. In the concrete response, pure widget slides were dropped before render, so the jackpot never reached the banner component.
+- **Why it failed**: Validation did not trace one concrete API fixture through every mapper and null guard. It also misread contract details: `dualsoft` uses the standard jackpot path, `widget.config.levelConfigs` must become root `tiers`, autoplay is nested at `options.autoplayIntervalSeconds`, and `backgroundStyle: 'image'` is a display mode rather than a color value.
+- **What to do instead**: Validate a concrete fixture end to end through normalization, widget retention, section synthesis, jackpot routing, tier normalization, query inputs, and render guards. Explicitly list the expected tier IDs; for the verified payload they are `321`, `322`, `323`, and `324`.
+- **Affects**: Rico, Private, Melman, and Skipper; mobile `banner-carousel/v1` jackpot mapping and validation in `casino-page-mapper.ts`, `banner-carousel-section.tsx`, and `jackpot-standard-section.tsx`.

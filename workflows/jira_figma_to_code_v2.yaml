@@ -99,6 +99,12 @@ steps:
         5. Confirm no guardrail violations
         6. Any special instructions (e.g. client/server boundaries, naming rules)
 
+      Before stopping for user input, approval, or a blocker, notify with the matching event:
+        node tools/notify.mjs --event decision_required --title "Penguins decision needed" --message "Skipper needs user input" --priority high
+
+      If a blocker is detected, notify with the blocked event and include a blocker id plus optional follow-up message:
+        node tools/notify.mjs --event blocked --title "Penguins blocked" --message "<blocker reason>" --blocker-id "<unique-id>" --followup-message "<resolution hint>" --priority high
+
       Return ONLY the path to the output file: /tmp/penguins/skipper_plan.md
     output: /tmp/penguins/skipper_plan.md
 
@@ -225,6 +231,17 @@ steps:
         2. Provide a concise summary of what was built
         3. Confirm whether all rules and standards were followed
         4. If Melman reported FAIL — list what still needs fixing before delivery
+
+      Notify before the final response:
+        - If Melman reported PASS: node tools/notify.mjs --event workflow_complete --title "Penguins workflow complete" --message "Workflow finalized successfully" --priority default
+        - If Melman reported FAIL: node tools/notify.mjs --event validation_failed --title "Penguins validation failed" --message "Melman reported validation issues" --priority high
+        - If finalization fails for another reason: node tools/notify.mjs --event workflow_failed --title "Penguins workflow failed" --message "Workflow finalization failed" --priority high
+        - If a blocker stops finalization: node tools/notify.mjs --event blocked --title "Penguins blocked" --message "<blocker reason>" --blocker-id "<unique-id>" --followup-message "<resolution hint>" --priority high
+
+      Under rules/notification-network-exception.md, real workflow notifications use tools/notify.mjs without --dry-run for the allowed events above. Do not make direct ad-hoc network calls.
+
+      Read /tmp/penguins/notifications.jsonl after notifying. Include the latest status before the final phrase:
+      Notification: sent|skipped|failed
 
       End with exactly:
       Smile and wave boys, smile and wave 🐧🐧🐧🐧🦒🐒

@@ -1,0 +1,72 @@
+# Shared Memory — Reference IDs
+
+# Agents reference these IDs in inter-agent messages instead of repeating context.
+# Example usage:
+#   requirementsRef: REQ-01
+#   architectureRef: ARCH-01
+
+---
+
+REQ-01:
+  framework: Next.js (App Router)
+  language: TypeScript
+  packageManager: pnpm
+  monorepo: NX
+  dataFetching: react-query (forbidden in wh-label-cms — use raw fetch)
+
+ARCH-01:
+  architecture: NX Monorepo
+  routing: App Router
+  packages:
+    - apps/web-shell
+    - apps/wh-label-cms
+    - packages/casino
+    - packages/betting
+    - packages/shared
+  protectedAreas:
+    - /auth/**
+    - /payments/**
+    - /middleware.ts
+    - /env/**
+    - /config/**
+    - /api/core/**
+    - .github/**
+    - database/migrations/**
+
+STYLE-01:
+  styling: follows existing project convention (CSS Modules / Tailwind / styled-components)
+  formatting: Prettier
+  linting: ESLint (onlyWarn for unused vars)
+  components: functional only, no business logic in UI components
+
+CODE-01:
+  ref: /rules/coding-standards.md
+  keyRules:
+    - no refactor unless explicitly required
+    - no new dependencies without approval
+    - no any types without justification
+    - keep diffs minimal
+    - reuse existing components and patterns
+
+GUARD-01:
+  ref: /rules/guardrails.md
+  forbidden:
+    - auth changes
+    - authorization changes
+    - payment/billing changes
+    - env var changes
+    - CI/CD changes
+    - DB migration changes
+    - API contract changes
+
+COMM-01:
+  ref: /rules/agent-communication.md
+  summary:
+    - never forward full conversation history
+    - return structured output only (YAML/JSON)
+    - replace history with summaries
+    - compress messages to under 500 tokens
+    - send diffs not full files
+    - use reference IDs
+    - no reasoning or explanations in output
+    - minimize inter-agent delegation

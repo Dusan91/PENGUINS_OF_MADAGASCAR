@@ -238,3 +238,17 @@ If `user-command.md` is missing or unclear in Refactor Mode:
 - AI agents MUST detect `any` usage in new code and warn Skipper.
 
 **No agent is allowed to optimize at the cost of safety.**
+
+## 17. Agent Communication Rules
+
+All inter-agent communication MUST follow `/rules/agent-communication.md`.
+
+Key constraints:
+- Never forward full conversation history — send compressed summaries only
+- Return structured output (YAML/JSON) — no reasoning or explanations
+- Send diffs, not full files
+- Use Reference IDs from `/memory/shared-memory.yaml` instead of repeating context
+- Compress every message to under 500 tokens where possible
+- Minimize inter-agent delegation chains
+
+Violations must be logged in audit-log.md.

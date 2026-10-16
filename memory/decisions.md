@@ -1,5 +1,11 @@
 # Architectural Decisions
 
+## 2026-08-14 — Skipper notifier requirement for decisions and blockers
+
+- Future Skipper decisions and workflow blockers must trigger `node tools/notify.mjs` notification when shell/tool access permits.
+- Notifications must be run from the Penguins root without `--dry-run` unless the task explicitly requests a dry run.
+- If notification cannot be sent, Skipper must explicitly report why and record the failure/blocker in the audit log.
+
 ## 2026-06-26 — Tournaments Configurator in CMS (apps/wh-label-cms)
 
 - **New Payload Global created**: `apps/wh-label-cms/src/globals/TournamentConfig.ts` — slug `tournament-config`, single `json` field named `config`, same pattern as SportsbookConfig/OddsDisplayConfig/HomePageConfig.
@@ -171,3 +177,10 @@
 - **importMap.js auto-regenerated** by `pnpm generate:importmap` after adding the view registration in payload.config.ts.
 - **TypeScript strict: zero errors** — no `any` types introduced.
 - **Dashboard card added**: 5th card using `BarChart2` icon from lucide-react.
+
+## 2026-09-30 — Mobile banner-carousel/v1 jackpot contract
+
+- Mobile `banner-carousel/v1` reads carousel settings from nested `options`, including `options.autoplayIntervalSeconds`; media slides use `mediaUrl` with `contentType`.
+- Enabled widget-only `jackpot/v1` slides must be retained without media. `dualsoft` follows the standard jackpot path, and `widget.config.levelConfigs` maps to root `tiers`.
+- Every carousel page uses a consistent height of at least `320`; `backgroundStyle: 'image'` is a mode and must not be applied as a color.
+- Video playback remains unsupported until a dependency is explicitly approved; no video package is added implicitly.

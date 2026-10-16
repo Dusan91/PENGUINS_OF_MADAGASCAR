@@ -4,7 +4,7 @@ description: |
   Automatically routes tasks to appropriate workflow based on size/complexity.
 
   Tiers:
-  - small: Direct Private execution (no agents)
+  - small: Direct Private execution (no discovery/analysis agents)
   - medium: Rico + Private + Melman
   - large: Full parallel workflow
 
@@ -31,6 +31,7 @@ tiers:
     triggers:
       - files_count: { min: 2, max: 5 }
       - no_figma: true
+      - no_jira: true
     workflow: refactor_v2
     steps:
       - id: rico_quick
@@ -59,26 +60,28 @@ tiers:
   large:
     description: Figma designs, many files, complex features
     triggers:
-      - figma_exists: true
-      - files_count: { min: 6 }
-      - jira_exists: true
+      any:
+        - figma_exists: true
+        - jira_exists: true
+        - files_count: { min: 6 }
     workflow: jira_figma_to_code_v2
+    next_workflow: jira_figma_to_code_v2
     # Uses full jira_figma_to_code_v2.yaml workflow
 
 task_classifier:
   rules:
     - name: is_large
-      condition: "figma_exists AND (files_count >= 6 OR jira_exists)"
+      condition: "figma_exists OR jira_exists OR files_count >= 6"
       tier: large
     - name: is_medium
-      condition: "files_count >= 2 AND NOT figma_exists"
+      condition: "files_count >= 2 AND files_count <= 5 AND NOT figma_exists AND NOT jira_exists"
       tier: medium
     - name: is_small
       condition: "files_count <= 1 AND NOT figma_exists AND NOT jira_exists"
       tier: small
 
   defaults:
-    small_if_unclear: true
+    block_if_unclear: true
 
 classifier_input:
   jira_task: inputs/jira-task.md
@@ -90,23 +93,29 @@ classifier_task: |
 
   LARGE if:
     - figma-notes.md exists
-    - OR jira-task.md exists with complex requirements
+    - OR jira-task.md exists
     - OR more than 5 files need to be modified
 
   MEDIUM if:
     - 2-5 files need to be modified
-    - No Figma design required
+    - No Figma, no Jira
 
   SMALL if:
     - 1 or fewer files
     - No Figma, no Jira
     - Simple fix or refactor
 
+  BLOCKED if:
+    - Inputs are unclear or missing
+
+  If output is "tier: blocked", Skipper must notify before stopping:
+    node tools/notify.mjs --event blocked --title "Penguins blocked" --message "Workflow classifier needs clearer input" --blocker-id "tiered-blocked" --followup-message "Provide a clearer user command, Jira task, or Figma notes." --priority high
+
   Output ONLY:
-  - "tier: small" OR "tier: medium" OR "tier: large"
+  - "tier: small" OR "tier: medium" OR "tier: large" OR "tier: blocked"
   - One line only, no explanation
 
 workflow_mapping:
-  small: tiered_small
-  medium: tiered_medium
+  small: direct
+  medium: refactor_v2
   large: jira_figma_to_code_v2
