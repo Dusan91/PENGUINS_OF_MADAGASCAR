@@ -1,0 +1,459 @@
+{
+  "format_version": "2.0",
+  "export_version": "1.0",
+  "export_date": "2026-10-16T10:18:42.660667+00:00",
+  "backend_type": "sqlite",
+  "memory_count": 23,
+  "relationship_count": 0,
+  "memories": [
+    {
+      "id": "b413fc28-7fa6-4a6c-b531-6253b1c0bf72",
+      "type": "general",
+      "title": "CRITICAL: configApi cannot be used in apps/wh-label-cms \u2014 use direct fetch",
+      "content": "configApi from @wh-label/shared CANNOT be safely used in apps/wh-label-cms.\n\nReason: envService throws at module load when NEXT_PUBLIC_CONFIG_URL is absent from the CMS environment.\n\nInstead: use direct fetch() with ${NEXT_PUBLIC_CONFIG_URL}/ibet/... and add an env guard (show UI warning if not set).\n\nDecided: 2026-06-26 \u2014 Tournaments Configurator in CMS.",
+      "summary": null,
+      "tags": [
+        "cms",
+        "configapi",
+        "wh-label-cms",
+        "envservice",
+        "critical",
+        "env"
+      ],
+      "importance": 1.0,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:32:12.072431+00:00",
+      "updated_at": "2026-07-08T13:32:12.072462+00:00"
+    },
+    {
+      "id": "76cbf73c-bce1-4166-a6f3-ff0937b20e05",
+      "type": "general",
+      "title": "CRITICAL: react-query NOT installed in apps/wh-label-cms \u2014 use raw fetch",
+      "content": "@tanstack/react-query is NOT installed in apps/wh-label-cms.\n\nIn apps/wh-label-cms, ALWAYS use raw fetch() + useState + useEffect instead of useQuery/useMutation.\n\nThis applies to ALL configurator components in CMS: HomePageConfigurator, OddsDisplayConfigurator, SportsbookConfigurator, CasinoConfigurator (TournamentsConfigurator).\n\nDecisions: 2026-06-17, 2026-06-18, 2026-06-22, 2026-06-26.\n\nIf user explicitly asks to install react-query in CMS \u2014 stop and confirm first.",
+      "summary": null,
+      "tags": [
+        "cms",
+        "react-query",
+        "wh-label-cms",
+        "critical",
+        "fetch"
+      ],
+      "importance": 1.0,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:32:08.144345+00:00",
+      "updated_at": "2026-07-08T13:32:08.144381+00:00"
+    },
+    {
+      "id": "553f5c66-58d1-459e-af90-9abae48da1ac",
+      "type": "fix",
+      "title": "2026-07-08 \u2014 U mobile-shell uvijek koristiti /ui/view i /ui/pressable",
+      "content": "What failed: Agent koristio View i Pressable direktno iz react-native u mobile-shell komponentama.\n\nWhy it failed: Native View i Pressable iz react-native ne primjenjuju tema boje sa backenda \u2014 CSS varijable ne reaguju na iOS u runtime. /ui/view i /ui/pressable rje\u0161avaju ovo automatski kroz useMobileThemeColors.\n\nWhat to do instead: U apps/mobile-shell uvijek importovati View iz @/components/ui/view i Pressable iz @/components/ui/pressable. Nikad iz react-native direktno \u2014 osim unutar samih ui/view.tsx i ui/pressable.tsx fajlova.\n\nAffects: Svi Private agent taskovi u apps/mobile-shell. Va\u017ei sve dok korisnik ne ka\u017ee da prestane.",
+      "summary": null,
+      "tags": [
+        "mobile-shell",
+        "view",
+        "pressable",
+        "theme",
+        "react-native",
+        "lesson",
+        "private"
+      ],
+      "importance": 0.95,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:32:00.813156+00:00",
+      "updated_at": "2026-07-08T13:32:00.813203+00:00"
+    },
+    {
+      "id": "bd21160c-7c5b-4893-b457-7495aad58b89",
+      "type": "fix",
+      "title": "2026-07-08 \u2014 \"Prepisi\" zna\u010di potpuna replika, ne parcijalna",
+      "content": "What failed: Kada korisnik ka\u017ee \"prepisi\" ili \"implementiraj\" komponentu iz web paketa u mobile-shell, agent je kreirao delimi\u010dnu repliku \u2014 propustio showFreeBet guard iz useParams, pogre\u0161an uslov za prikaz iznosa (showFreebetAmount ? freebetAmount : 0), i hardkodovao string umesto translation key-a.\n\nWhy it failed: Agent je prepisao samo \"su\u0161tinu\" logike a ne sve detalje originalne komponente. Tretirao je neke delove kao opcione.\n\nWhat to do instead: Kada se ka\u017ee \"prepisi\" ili \"implementiraj po uzoru na\", svaki logi\u010dki detalj originala mora biti repliciran u native ekvivalentu: svi uslovi, svi computed values, svi labels (hardkodovani ako translation nije dostupan, ali identi\u010dni originalnom stringu). Razlike treba eksplicitno nabrojati korisniku.\n\nAffects: Private agent, sve komponente koje se repliciraju iz packages/betting ili packages/shared u apps/mobile-shell.",
+      "summary": null,
+      "tags": [
+        "mobile-shell",
+        "replica",
+        "private",
+        "lesson",
+        "betting",
+        "freebet"
+      ],
+      "importance": 0.9,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:31:54.692752+00:00",
+      "updated_at": "2026-07-08T13:31:54.692775+00:00"
+    },
+    {
+      "id": "c12fc034-a66e-4589-a193-e97bc80cd1d6",
+      "type": "workflow",
+      "title": "2026-05-07 \u2014 Codex CLI integration in workflow",
+      "content": "- Codex CLI replaces Private agent for implementation in jira_figma_to_code_codex.yaml workflow.\n- Skipper acts as Codex executor \u2014 invokes codex --approval-mode full-auto per each step from skipper_plan.md.\n- Parallel execution disabled in Codex workflow \u2014 Codex CLI needs sequential context to avoid file conflicts.\n- Melman gets extra hallucination check \u2014 Codex may introduce unexpected code; Melman explicitly validates for this.\n- Protected path guardrail applies to Codex output \u2014 if Codex touches /auth, /payments, /middleware.ts, /config, execution stops immediately.",
+      "summary": null,
+      "tags": [
+        "codex",
+        "workflow",
+        "skipper",
+        "melman",
+        "protected-areas"
+      ],
+      "importance": 0.9,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:30:39.680741+00:00",
+      "updated_at": "2026-07-08T13:30:39.680773+00:00"
+    },
+    {
+      "id": "f65eddfa-9fb1-495a-a525-0cd2f9d59b6c",
+      "type": "code_pattern",
+      "title": "2026-06-26 \u2014 Consolidated jackpot services (jackpots/ directory) \u2014 jacpots typo intentional",
+      "content": "- packages/casino/src/infrastructure/jackpots/types.ts created: types for all 5 providers.\n- packages/casino/src/infrastructure/jackpots/jacpots.services.ts created. IMPORTANT: typo \"jacpots\" is intentional \u2014 matches pre-existing filename on disk. Do NOT rename.\n- 5 services: useEgtJackpot, useEgtDigitalJackpot, useSynotJackpot, useFaziJackpot, useEgtDigitalJackpotForInstanceNames; all use configApi + queryOptions + useQuery + staleTime: 30 * 1000.\n- EgtJackpot double-parse: getEgtJackpots.json wraps body as JSON-encoded string in outer.data.body; service does JSON.parse(outer.data.body) as EgtJackpotBody.\n- FaziJackpot uses POST + dynamic URL: native fetch() with application/x-www-form-urlencoded; enabled: !!params.url.\n- EgtDigitalJackpot + SynotJackpot + EgtJackpot: switched from hardcoded https://dual-dev.betole.com/ibet/... to configApi.\n- Old ibet/egt-digital-jackpot-for-instance-names.service.ts converted to re-export barrel.\n- No barrel update in jackpots/ \u2014 direct-import convention.",
+      "summary": null,
+      "tags": [
+        "jackpot",
+        "casino",
+        "services",
+        "configapi",
+        "egt",
+        "synot",
+        "fazi",
+        "jacpots",
+        "typo"
+      ],
+      "importance": 0.9,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:29:53.658201+00:00",
+      "updated_at": "2026-07-08T13:29:53.658236+00:00"
+    },
+    {
+      "id": "020ed218-51e3-4d32-8a1c-ed2d1d510071",
+      "type": "code_pattern",
+      "title": "2026-06-18 \u2014 Odds Display Config service in packages/betting",
+      "content": "- packages/betting uses split infrastructure pattern: raw fetch fn in infrastructure/betting/*.service.ts, react-query hook in infrastructure/query/betting/*.ts, @legendapp/state store in application/stores/*.store.ts.\n- First cmsApi usage in packages/betting \u2014 import via import { cmsApi } from '@wh-label/shared'; all existing betting services use restApi. Pattern confirmed working.\n- New service: packages/betting/src/infrastructure/betting/odds-display-config.service.ts \u2014 types (OddsDisplayType, DropdownLabel, OddsDisplayItem, OddsDisplayConfig) + fetchOddsDisplayConfig() with throwHttpErrors: false null-safe pattern.\n- New store: packages/betting/src/application/stores/odds-display-config.store.ts \u2014 oddsDisplayConfig$ observable initialized to null, follows search.store.ts minimal pattern.\n- New query: packages/betting/src/infrastructure/query/betting/odds-display-config.ts \u2014 oddsDisplayConfigQueryOptions() (staleTime 30s) + useOddsDisplayConfigQuery() which syncs data to oddsDisplayConfig$ via useEffect.\n- Store exported via barrel: application/stores/index.ts.\n- Usage: call useOddsDisplayConfigQuery() in layout/root client component; read oddsDisplayConfig$.get() from any other component.",
+      "summary": null,
+      "tags": [
+        "betting",
+        "odds-display",
+        "cmsapi",
+        "legendapp",
+        "store",
+        "query",
+        "react-query"
+      ],
+      "importance": 0.85,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:31:36.353495+00:00",
+      "updated_at": "2026-07-08T13:31:36.353532+00:00"
+    },
+    {
+      "id": "2ced8aa8-3cd0-4e35-8bd4-6cf616a86067",
+      "type": "general",
+      "title": "2026-06-17 \u2014 Home Page Configurator (apps/wh-label-cms)",
+      "content": "- Payload Global + JSON field chosen for persistence \u2014 slug home-page-config, single json field named config stores full HomePageConfig object.\n- Public GET endpoint: GET /api/globals/home-page-config \u2014 auto-provided by Payload when read: () => true. No custom endpoint needed.\n- react-query conflict resolved: @tanstack/react-query was not installed in apps/wh-label-cms; raw fetch() + useState/useEffect pattern used instead.\n- Component pattern: follows NavigationElementsAdmin exactly \u2014 server wrapper with AdminViewServerProps + DefaultTemplate, client component with 'use client', DnD via @dnd-kit/core + @dnd-kit/sortable, ImageUploadField reused.\n- No migration needed \u2014 Payload manages its own globals table internally.\n- importMap.js auto-regenerated by pnpm generate:importmap after adding view registration.\n- TypeScript strict: zero errors \u2014 no any types introduced.",
+      "summary": null,
+      "tags": [
+        "cms",
+        "home-page",
+        "payload",
+        "configurator",
+        "react-query",
+        "dnd-kit",
+        "wh-label-cms"
+      ],
+      "importance": 0.85,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:31:19.165089+00:00",
+      "updated_at": "2026-07-08T13:31:19.165123+00:00"
+    },
+    {
+      "id": "b9c6e036-9dd5-45ea-8a92-255b1c14483c",
+      "type": "code_pattern",
+      "title": "2026-03-13 \u2014 ticket-accept-reject endpoint patterns",
+      "content": "- react-hook-form excluded when there is no form context \u2014 adding unused hook violates \"clarity over cleverness\" (\u00a74). Use zod-only validation.\n- Domain service may call configApi directly when it follows existing pattern (stream.service.ts does the same). No need to create additional infrastructure wrapper.\n- useMutation hook must be instantiated at component level, not inside callbacks (React rules of hooks).",
+      "summary": null,
+      "tags": [
+        "betting",
+        "react-hook-form",
+        "zod",
+        "mutation",
+        "hooks",
+        "configapi"
+      ],
+      "importance": 0.85,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:30:46.446209+00:00",
+      "updated_at": "2026-07-08T13:30:46.446237+00:00"
+    },
+    {
+      "id": "250fc227-0b7c-4957-a203-4f483258cf66",
+      "type": "code_pattern",
+      "title": "2026-06-26 \u2014 EgtDigitalJackpotForInstanceNames implementation",
+      "content": "- New service: packages/casino/src/infrastructure/ibet/egt-digital-jackpot-for-instance-names.service.ts \u2014 configApi, endpoint getEgtDigitalJackpotsForInstanceNames.json, searchParams: { locale: 'sr' } hardcoded, queryOptions + useQuery, staleTime: 30 * 1000. Response type is Record<string, EgtDigitalJackpotItem> (named map, not array).\n- EgtDigitalJackpotItem: all 20 level fields typed as string \u2014 backend returns numeric values as strings and uses literal string \"null\" for missing values; component guards with !== 'null'.\n- tiers amounts parsed with parseInt(..., 10): CasinoJackpotTierConfig.amount is number; backend sends strings; || 0 fallback for NaN.\n- egt-digital-jackpot-for-isntance-names/index.tsx replaced: stub \u2192 full implementation; accepts type: string prop; filters with allData?.[type].\n- providers-jackpot/index.tsx updated: type=\"Clover Chance\" confirmed by user.\n- No barrel export added.\n- Folder typo preserved: egt-digital-jackpot-for-isntance-names (\"isntance\" not \"instance\") \u2014 matches existing import. Do NOT rename folder.",
+      "summary": null,
+      "tags": [
+        "jackpot",
+        "casino",
+        "egt",
+        "egt-digital",
+        "instance-names",
+        "typo",
+        "typescript"
+      ],
+      "importance": 0.85,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:30:04.466696+00:00",
+      "updated_at": "2026-07-08T13:30:04.466745+00:00"
+    },
+    {
+      "id": "2db73df4-a2a8-46dd-af3e-ce04d49b0b82",
+      "type": "general",
+      "title": "2026-06-26 \u2014 Tournaments Configurator in CMS (apps/wh-label-cms)",
+      "content": "- New Payload Global created: apps/wh-label-cms/src/globals/TournamentConfig.ts \u2014 slug tournament-config, single json field named config, same pattern as SportsbookConfig/OddsDisplayConfig/HomePageConfig.\n- Tournament config shape: { tournaments: TournamentConfigItem[] } where TournamentConfigItem = { tournamentId: number; image: string; rulesPath: string; active: boolean } \u2014 stored as JSON in the Global.\n- New admin view: apps/wh-label-cms/src/components/CasinoConfigurator/ \u2014 index.tsx (server wrapper) + CasinoConfiguratorClient.tsx ('use client'); follows SportsbookConfigurator pattern exactly.\n- react-query NOT used \u2014 @tanstack/react-query is not installed in apps/wh-label-cms; raw fetch() + useState/useEffect used.\n- configApi NOT used in CMS \u2014 envService throws at module load when NEXT_PUBLIC_CONFIG_URL is absent; direct fetch() used with env guard.\n- NEXT_PUBLIC_CONFIG_URL required in CMS env; visible warning shown in UI when not set.\n- Merge pattern: tournament list from ibet API; config from GET /api/globals/tournament-config; merged by iTournament.id === tournamentConfig.tournamentId; missing config defaults to image:'', rulesPath:'', active:false.\n- Per-row save: POST /api/globals/tournament-config with full updated config array; no page-level Save button.\n- payload.config.ts updated: casinoConfigurator view at /casino-configurator; TournamentConfig added to globals array.\n- importMap.js updated: new entry \"/components/CasinoConfigurator#default\" hash 2879b46109fff95a8c2fd8f051768415.\n- No new npm dependencies introduced.",
+      "summary": null,
+      "tags": [
+        "cms",
+        "tournament",
+        "payload",
+        "configurator",
+        "react-query",
+        "configapi",
+        "wh-label-cms"
+      ],
+      "importance": 0.85,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:29:51.346446+00:00",
+      "updated_at": "2026-07-08T13:29:51.346720+00:00"
+    },
+    {
+      "id": "dc577ffb-e9f5-4000-8304-06d7e3dbad32",
+      "type": "code_pattern",
+      "title": "Live mobile league grouping dependency map",
+      "content": "Transfer target: packages/betting/src/components/offer/components/live-mobile-league-grouped-matches.tsx -> apps/mobile-shell/src/features/home/components/offer/mobile-live-league-groups-view.tsx\n\nSource imports:\n- jotai (useSetAtom) - mobile-shell has no jotai\n- lucide-react ChevronDown - mobile-shell uses lucide-react-native\n- @wh-label/shared cn/useScrollThreshold - mobile-shell has cn; useScrollThreshold not found\n- @wh-label/ui/accordion - mobile-shell uses @rn-primitives/accordion via @/components/ui/accordion\n- @wh-label/betting internals: useBetDefinitions, mobileFiltersHiddenAtom, useOfferDataMobile, selectedLineCodeAtom, COMPLETE_OFFER_LINE_CODE, useLiveMatchHeadersRunningByLeagues, useLiveSpecialNavigation\n- @legendapp/state/react useValue - present in mobile-shell\n- @tolgee/react useTolgee/useTranslate - not found in mobile-shell packages (i18n unknown)\n- packages/betting index.ts exports: SportId, sportsRunningWithCount$, useFilter, useSportsNavigation\n- packages/betting hooks/logic/expanded.store - equivalent local state exists in mobile-shell\n- packages/betting components/collapse-all collapsed$ - no equivalent found\n- packages/betting components/live-mobile-match-row LiveMobileMatchRow - mobile-shell has TopViewLiveMobile/top-view-live-mobile.tsx\n\nMobile-shell existing equivalents:\n- @tanstack/react-query\n- @legendapp/state live store with runningHeadersAll$/runningHeaders$/sportsFilter$/sportOffer$\n- useLiveHeader/useLiveBets/useLiveResult/useLiveConnection\n- local FilterContext (useHomeFilter)\n- useAllOffers/useOffersForLeague restApi-based (no SSE)\n- TopViewLiveMobile reads live store by matchCode\n\nKey gaps:\n- No jotai state equivalents (mobileFiltersHiddenAtom, selectedLineCodeAtom)\n- No useScrollThreshold\n- No useLiveSpecialNavigation (Next.js router specific)\n- No direct useOfferDataMobile (needs local filter/bet definitions)\n- No @tolgee/react in mobile-shell\n- Source LiveMobileMatchRow depends on Next.js MobileTopView/LiveOddsMobile components not portable",
+      "summary": null,
+      "tags": [
+        "betting",
+        "mobile-shell",
+        "live-offer",
+        "dependencies",
+        "legendapp-state",
+        "jotai",
+        "react-query"
+      ],
+      "importance": 0.8,
+      "confidence": 0.8,
+      "created_at": "2026-09-08T07:30:16.075144+00:00",
+      "updated_at": "2026-09-08T07:30:16.075183+00:00",
+      "context": {
+        "files_involved": [],
+        "languages": [],
+        "frameworks": [],
+        "technologies": [],
+        "additional_metadata": {}
+      }
+    },
+    {
+      "id": "5a46c7d9-50f8-43a2-b42a-aa3ec5aba7c4",
+      "type": "general",
+      "title": "2026-06-22 \u2014 Sportsbook Configurator (apps/wh-label-cms)",
+      "content": "- Payload Global chosen: slug sportsbook-config, single json field named config. Same pattern as HomePageConfig (2026-06-17) and OddsDisplayConfig (2026-06-18).\n- Public GET endpoint: GET /api/globals/sportsbook-config \u2014 auto-provided by Payload when read: () => true.\n- react-query NOT used \u2014 consistent with 2026-06-17 and 2026-06-18; raw fetch() + useState/useEffect.\n- Component pattern: follows OddsDisplayConfigurator exactly \u2014 server wrapper + DefaultTemplate, client 'use client', raw fetch, loading/error states, no tabs, no DnD.\n- 2-column grid layout: grid grid-cols-1 lg:grid-cols-2 \u2014 left: 5 cards (Cashout, Express Ticket, Default Theme, Swipe Gesture, More Games); right: Top View Filters.\n- Conditional leagueSortType field: rendered only when config.topViewFilters.defaultSorting === 'LEAGUE'; stored as LeagueSortType | null.\n- importMap.js auto-regenerated by pnpm generate:importmap.\n- TypeScript strict: zero errors.\n- Dashboard card added: 5th card using BarChart2 icon from lucide-react.",
+      "summary": null,
+      "tags": [
+        "cms",
+        "sportsbook",
+        "payload",
+        "configurator",
+        "wh-label-cms",
+        "react-query"
+      ],
+      "importance": 0.8,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:31:42.197672+00:00",
+      "updated_at": "2026-07-08T13:31:42.197704+00:00"
+    },
+    {
+      "id": "e17a0501-8028-4a89-b7c1-40b1ddb57b3b",
+      "type": "general",
+      "title": "2026-06-18 \u2014 Odds Display Configurator (apps/wh-label-cms)",
+      "content": "- Payload Global chosen: slug odds-display-config, single json field named config. Same pattern as HomePageConfig (2026-06-17).\n- Public GET endpoint: GET /api/globals/odds-display-config \u2014 auto-provided by Payload when read: () => true.\n- react-query NOT used \u2014 @tanstack/react-query not installed in apps/wh-label-cms; raw fetch() + useState/useEffect.\n- Component pattern: follows HomePageConfigurator exactly \u2014 server wrapper + DefaultTemplate, client 'use client', raw fetch, loading/error states.\n- 3 fixed odds types: SPEC_DESK (Spec Desc), SPEC_MOBILE (Spec Mobile), TOP_VIEW_MOBILE (Top View Mobile). No create/delete \u2014 only update + read.\n- Each item: type (read-only display) + dropdownLabel ('Left' | 'Top').\n- OddsPreviewCube: simple inline component showing Left vs Top layout visually.\n- importMap.js auto-regenerated by pnpm generate:importmap.\n- Dashboard card was pre-existing \u2014 Dashboard/index.tsx already had link card for /admin/odds-display-configurator.\n- TypeScript strict: zero errors.",
+      "summary": null,
+      "tags": [
+        "cms",
+        "odds-display",
+        "payload",
+        "configurator",
+        "wh-label-cms",
+        "react-query"
+      ],
+      "importance": 0.8,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:31:28.021174+00:00",
+      "updated_at": "2026-07-08T13:31:28.021208+00:00"
+    },
+    {
+      "id": "17de8ae2-3e68-4da0-b671-944b24302373",
+      "type": "code_pattern",
+      "title": "2026-06-24 \u2014 Cashout submitPrePayoutRequest implementation",
+      "content": "- submitPrePayoutRequest added to existing service: packages/betting/src/infrastructure/betting/ticket/ticket-prepayout.service.ts \u2014 follows acceptPrepayment/rejectPrepayment pattern; URLSearchParams body with tuuid, requestUuid, cashoutValue; POST /ticket/submitPrePayoutRequest.json.\n- New domain service: packages/betting/src/domain/services/ticket-prepayout-submit.service.ts \u2014 useSubmitPrePayoutRequest hook with useMutation; follows ticket-accept-reject.service.ts pattern.\n- Domain import in component tolerated: played-ticket.tsx imports from domain/services \u2014 consistent with 18 pre-existing violations; check-components-no-domain-imports.mjs was already failing before this task.\n- uuid package used in component layer: import { v4 as uuid } from 'uuid' \u2014 already hoisted in pnpm workspace; not added to package.json.",
+      "summary": null,
+      "tags": [
+        "cashout",
+        "betting",
+        "prepayout",
+        "mutation",
+        "domain",
+        "uuid"
+      ],
+      "importance": 0.8,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:30:33.688852+00:00",
+      "updated_at": "2026-07-08T13:30:33.688876+00:00"
+    },
+    {
+      "id": "73afb52d-e47d-4ad8-8d70-4ea7cb2dc871",
+      "type": "code_pattern",
+      "title": "2026-06-25 \u2014 Tournament list server-side prefetch",
+      "content": "- prefetchITournamentList added to existing service: packages/casino/src/infrastructure/ibet/tournament-list.service.ts \u2014 follows prefetchHomePageConfig/prefetchPromoPages pattern; getQueryClient() + client.prefetchQuery(iTournamentListQueryOptions()) + returns client.\n- getQueryClient added to import from @wh-label/shared \u2014 already exported there, no new dependency.\n- Barrel export added: packages/casino/src/infrastructure/index.ts now exports tournament-list.service \u2014 previous \"no barrel\" decision (2026-06-16) was for intra-package usage; web-shell requires exported path via @wh-label/casino/infrastructure.\n- page.tsx updated: apps/web-shell/src/app/[locale]/tournaments/page.tsx is now async server component; uses HydrationBoundary + dehydrate pattern.",
+      "summary": null,
+      "tags": [
+        "tournament",
+        "casino",
+        "prefetch",
+        "server-component",
+        "hydration",
+        "barrel"
+      ],
+      "importance": 0.8,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:30:26.976513+00:00",
+      "updated_at": "2026-07-08T13:30:26.976546+00:00"
+    },
+    {
+      "id": "2fb3c2b5-464f-4c88-9b39-e2b44fbdc90f",
+      "type": "code_pattern",
+      "title": "2026-06-25 \u2014 Tournament detail server-side prefetch",
+      "content": "- New service: packages/casino/src/infrastructure/ibet/tournament-detail.service.ts \u2014 mirrors tournament-list.service.ts; configApi, endpoint getITournamentWithRoundData.json, searchParams built dynamically (lr/lrl omitted when null), queryOptions + useQuery + prefetchTournamentDetail, staleTime: 30 * 1000.\n- Barrel export added: packages/casino/src/infrastructure/index.ts now exports tournament-detail.service.\n- tournament/[slug]/page.tsx updated: async server component; slug parsed via parseInt(slug, 10); getIcParams() called server-side and cast as unknown as CasinoIcParams to extract lr/lrl; prefetchTournamentDetail called; HydrationBoundary + dehydrate pattern.\n- as unknown as CasinoIcParams cast justified: IcParamsResponse doesn't declare limitTournamentRoundForShow/limitTournamentRangListLength but backend returns them at runtime; CasinoIcParams has index signature [key: string]: string | null | undefined; no any used.",
+      "summary": null,
+      "tags": [
+        "tournament",
+        "casino",
+        "prefetch",
+        "server-component",
+        "hydration",
+        "typescript"
+      ],
+      "importance": 0.8,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:30:12.193321+00:00",
+      "updated_at": "2026-07-08T13:30:12.193352+00:00"
+    },
+    {
+      "id": "3c1000e2-c2b1-445a-8821-0242d571e4ee",
+      "type": "general",
+      "title": "2026-06-26 \u2014 Provider jackpot components refactored to consolidated services",
+      "content": "- All 4 remaining provider jackpot components refactored \u2014 replaced useState/useEffect/raw fetch with useQuery hooks from jackpots/jacpots.services.ts.\n- egt-jackpot/index.tsx: uses useEgtJackpot(); JackpotLevel = 'I' | 'II' | 'III' | 'IV'; template literal key access data[`currentLevel${level}`]; amounts already number.\n- egt-digital-jackpot/index.tsx: uses useEgtDigitalJackpot(); parseInt(..., 10) || 0 for amounts; !== 'null' guards for string-\"null\" backend values; currency field absent in response.\n- synot-jackpot/index.tsx: uses useSynotJackpot(); parseFloat(...) || 0 for amounts; (Image as any).src pattern preserved for Next.js static image imports.\n- fazi-jackpot/index.tsx: keeps useIcParams + useTolgee; uses useFaziJackpot({ url, type, currency, locale }); IcParamsResponse used as explicit type for select callback param to avoid TS7006.\n- TS validation: zero new logic errors; pre-existing TS6305 (unbuilt dist) and TS7006 in unrelated files remain.",
+      "summary": null,
+      "tags": [
+        "jackpot",
+        "casino",
+        "refactor",
+        "react-query",
+        "egt",
+        "synot",
+        "fazi",
+        "typescript"
+      ],
+      "importance": 0.8,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:29:51.432546+00:00",
+      "updated_at": "2026-07-08T13:29:51.432575+00:00"
+    },
+    {
+      "id": "3807b366-bc51-4f0c-9fbd-70f3e9b77357",
+      "type": "code_pattern",
+      "title": "2026-06-16 \u2014 Upcoming tournament list service",
+      "content": "- packages/casino modified directly \u2014 ONLY MADE CHANGES IN WEB SHELL! HTML comment lifted, same precedent as 2026-06-11.\n- New service: packages/casino/src/infrastructure/ibet/tournament-list.service.ts \u2014 mirrors jackpot-config.service.ts; configApi, endpoint ibet/getITournamentList.json, no URLSearchParams (plain GET), queryOptions + useQuery, staleTime: 30 * 1000.\n- ITournamentListItem response type is a placeholder (id: string only) \u2014 must be extended once full backend contract is confirmed.\n- 'use client' added to index.tsx \u2014 required for react-query hook; converts component from server to client component.\n- tournamentListData declared but not yet wired to JSX.\n- No barrel export update needed \u2014 direct import pattern used.",
+      "summary": null,
+      "tags": [
+        "tournament",
+        "casino",
+        "service",
+        "client-component",
+        "react-query"
+      ],
+      "importance": 0.75,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:31:11.287372+00:00",
+      "updated_at": "2026-07-08T13:31:11.287404+00:00"
+    },
+    {
+      "id": "575b3f3b-8242-4c2f-a403-35e9ef1dc604",
+      "type": "code_pattern",
+      "title": "2026-06-11 \u2014 Jackpot live config service",
+      "content": "- packages/casino modified directly (not web-shell override) \u2014 user-command.md explicitly named packages/casino/src/components/jackpot/jackpot/index.tsx; the web-shell-override architectural decision was specific to Tournament task only.\n- New service: packages/casino/src/infrastructure/ibet/jackpot-config.service.ts \u2014 follows game-detail.service.ts pattern; configApi (ibet client), queryOptions + useQuery, URLSearchParams.append for repeated configIds params.\n- JackpotConfigInfoItem response type is a placeholder (configId: string only) \u2014 must be extended once getJackpotConfigInfo.json backend contract is confirmed.\n- jackpotConfigData declared but not yet wired to JSX \u2014 ESLint warning only due to onlyWarn config.",
+      "summary": null,
+      "tags": [
+        "jackpot",
+        "casino",
+        "configapi",
+        "service",
+        "placeholder"
+      ],
+      "importance": 0.75,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:30:59.188122+00:00",
+      "updated_at": "2026-07-08T13:30:59.188147+00:00"
+    },
+    {
+      "id": "7f6a1e05-8acb-486e-8087-073f97145bef",
+      "type": "general",
+      "title": "2026-05-25 \u2014 Tournament Component reduced-scope delivery (Option B)",
+      "content": "- User-approved Option B: web-shell-only implementation when full CMS/package work is out of scope.\n- Web-shell may locally override casino page rendering by composing exported @wh-label/casino page data/types/components, without modifying packages/casino.\n- Tournament sections must fail closed: if active widget/tournament payload data is missing, invalid, inactive, or insufficient, render null with no placeholder.\n- Banner and room-preview tournament widget behavior remains unchanged unless web-shell has enough safe documented payload data to override it locally.\n- NOTE: This web-shell-override restriction was specific to the Tournament task. Later tasks (2026-06-11+) lifted this \u2014 packages/casino was modified directly again.",
+      "summary": null,
+      "tags": [
+        "tournament",
+        "casino",
+        "web-shell",
+        "scope",
+        "fail-closed"
+      ],
+      "importance": 0.75,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:30:53.149343+00:00",
+      "updated_at": "2026-07-08T13:30:53.149374+00:00"
+    },
+    {
+      "id": "3c91d96b-c687-4a12-a70a-3fb22aba170a",
+      "type": "code_pattern",
+      "title": "2026-06-25 \u2014 Tournament image URL construction",
+      "content": "- coreDesign added to CasinoIcParams: packages/casino/src/infrastructure/ibet/ic-params.types.ts \u2014 field not present before; backend returns at runtime; typed as string | null.\n- getTournamentImageUrl helper added: packages/casino/src/infrastructure/ibet/tournament-list.service.ts \u2014 constructs ${NEXT_PUBLIC_CONFIG_URL}/ibet/img/${coreDesign}/icimage_${imageId}.png; uses process.env.NEXT_PUBLIC_CONFIG_URL directly (avoids envService platform-detection issues on server).\n- TournamentsList converted to client component: 'use client' added \u2014 required for useIcParams hook; coreDesign extracted via select: data => (data as unknown as CasinoIcParams).coreDesign \u2014 cast via unknown documented, no any used.\n- backgroundImage guard: only constructed when imageId !== null && coreDesign \u2014 safe fallback to undefined.",
+      "summary": null,
+      "tags": [
+        "tournament",
+        "casino",
+        "image",
+        "coredesign",
+        "client-component"
+      ],
+      "importance": 0.75,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:30:17.982779+00:00",
+      "updated_at": "2026-07-08T13:30:17.982812+00:00"
+    },
+    {
+      "id": "0be7ad7f-15ad-4d28-b7dc-07f94d757fe0",
+      "type": "code_pattern",
+      "title": "2026-06-11 \u2014 Jackpot live data service",
+      "content": "- New service: packages/casino/src/infrastructure/ibet/jackpot-data.service.ts \u2014 mirrors jackpot-config.service.ts exactly; configApi, URLSearchParams.append for repeated configIds, endpoint jackpot/getJackpotData.json.\n- JackpotDataItem response type is a placeholder (configId: string only) \u2014 extend once getJackpotData.json backend contract is confirmed.\n- jackpotData available in Jackpot component \u2014 not yet wired to JSX; ESLint warning only.\n- Pre-existing as any casts on jackpotConfigData indexing in JSX (lines 153,154,188,189) were introduced by user between sessions \u2014 flagged but not touched (out of scope).",
+      "summary": null,
+      "tags": [
+        "jackpot",
+        "casino",
+        "service",
+        "placeholder",
+        "configapi"
+      ],
+      "importance": 0.7,
+      "confidence": 0.8,
+      "created_at": "2026-07-08T13:31:06.009659+00:00",
+      "updated_at": "2026-07-08T13:31:06.009691+00:00"
+    }
+  ],
+  "relationships": []
+}

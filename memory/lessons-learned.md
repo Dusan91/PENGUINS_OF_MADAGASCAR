@@ -99,3 +99,10 @@
 - **Why it failed**: Validation did not trace one concrete API fixture through every mapper and null guard. It also misread contract details: `dualsoft` uses the standard jackpot path, `widget.config.levelConfigs` must become root `tiers`, autoplay is nested at `options.autoplayIntervalSeconds`, and `backgroundStyle: 'image'` is a display mode rather than a color value.
 - **What to do instead**: Validate a concrete fixture end to end through normalization, widget retention, section synthesis, jackpot routing, tier normalization, query inputs, and render guards. Explicitly list the expected tier IDs; for the verified payload they are `321`, `322`, `323`, and `324`.
 - **Affects**: Rico, Private, Melman, and Skipper; mobile `banner-carousel/v1` jackpot mapping and validation in `casino-page-mapper.ts`, `banner-carousel-section.tsx`, and `jackpot-standard-section.tsx`.
+
+## 2026-10-27 — Tolgee initialization is a lifecycle side effect
+
+- **What failed**: Tolgee was initialized while deriving provider state, and an initialized builder was then reused for final language initialization.
+- **Why it failed**: Initialization owns runtime resources and is not a memoizable value transformation; reuse can double-initialize an instance and becomes unsafe under React Strict Mode or provider-key changes.
+- **What to do instead**: Use a disposable fallback instance to read `getLanguage()` and call `stop()`, bound persisted-language hydration, key the hydration owner by runtime configuration, then create a fresh final instance in an effect, call `init()` exactly once, and call `stop()` during cleanup.
+- **Affects**: Mobile Tolgee providers and any future Tolgee provider lifecycle implementation.

@@ -184,3 +184,11 @@
 - Enabled widget-only `jackpot/v1` slides must be retained without media. `dualsoft` follows the standard jackpot path, and `widget.config.levelConfigs` maps to root `tiers`.
 - Every carousel page uses a consistent height of at least `320`; `backgroundStyle: 'image'` is a mode and must not be applied as a color.
 - Video playback remains unsupported until a dependency is explicitly approved; no video package is added implicitly.
+
+## 2026-10-27 — Mobile device persistence architecture
+
+- Bet-slip selections are device-global and stored as versioned, strictly validated AsyncStorage records with bounded hydration, revision protection, and queued writes.
+- Theme persistence keeps and hardens the existing override key and startup gate; storage failures remain nonfatal.
+- Tolgee language uses versioned AsyncStorage validated against shared `ALL_LANGUAGES`; missing or invalid data falls back through Tolgee `getLanguage()`, and keyed provider ownership gives each configuration a disposable fallback lifecycle plus one fresh final initialization.
+- Authentication and logout scoping remain unchanged; persistence is not account-scoped.
+- No new dependencies were introduced.

@@ -170,3 +170,179 @@
 - Multiple text/link duplicate support remains out of scope.
 - No migration, dependency, auth bypass, or git write was made.
 - `GlobalAppConfig` warning was observed and is unrelated to registration.
+
+## 2026-10-19 — Mobile Tolgee prerequisites blocker
+
+- Status: BLOCKED; requires explicit approval for Tolgee dependencies and client-public translation config, plus confirmation of the runtime project ID.
+- Notification: sent via Telegram (`blocked`, HTTP 200, blocker `mobile-tolgee-prerequisites`; `/tmp/penguins/notifications.jsonl` at `2026-10-19T13:30:46.399Z`).
+- Evidence: `/tmp/penguins/private_diff.md`; no application changes or git commands.
+
+## 2026-10-20 — tiered (LARGE) — Mobile Tolgee migration blocked
+
+- Status: BLOCKED at Skipper approval; Private implementation and Melman validation were not started.
+- Model: github-copilot/gpt-5.6-sol; Kowalski fallback: general specialist after two file-writing failures.
+- Source: user-command.md; Jira and Figma inputs empty.
+- Discovery: existing mobile Tolgee provider/dependencies found, but provider is skipped without `translationServiceUrl`; `app.json` supplies no such runtime value.
+- Decision: REJECTED pending explicit approval for client-public mobile Tolgee runtime configuration and confirmation of service URL plus tenant namespace/project mapping, or instruction to deliver inventory/report only.
+- Application changes: NONE. No dependencies, protected paths, auth/API/env/CI/migrations, browser/network access, or git writes.
+- Artifacts: `/tmp/penguins/rico_findings.md`, `/tmp/penguins/kowalski_analysis.md`, `/tmp/penguins/skipper_decision.md`, `/tmp/penguins/skipper_plan.md`.
+- Notification: blocker event `mobile-tolgee-runtime-config` sent via Telegram (HTTP 200; latest status `sent`).
+
+## 2026-10-20 — tiered (LARGE) — Mobile Tolgee migration validation failed
+
+- Status: FAIL; workflow stopped after validation and was not finalized.
+- User clarification resolved runtime-config blocker: Tolgee service/config activation remained out of scope; local `apps/web-shell/translations` was authorized as read-only key reference.
+- Inventory: 772 user-facing rows; 448 non-null keys, of which 445 had both namespace+key; generated report: 345 true, 427 false.
+- Implementation declared 75 authorized source files plus `apps/mobile-shell/tolgee-translation-report.json`; no dependencies/runtime config/protected areas were intentionally changed.
+- Validation blockers: incorrect duplicate-occurrence true attribution in profile navbar and verification page; translated-value comparison regression in verification-page document mapping; safely applicable matched rows skipped; punctuation/spacing regressions.
+- Original Melman returned stale unrelated PASS twice; rejected. Fallback recovery validator produced the evidence-based FAIL report at `/tmp/penguins/melman_report.md`.
+- Notification: `validation_failed` sent via Telegram (HTTP 200; latest status `sent`).
+- Required next action: correct implementation and report, then rerun validation before finalization.
+
+## 2026-10-20 — tiered (LARGE) — Mobile Tolgee translation implementation completed
+
+- Status: SUCCESS; correction passes resolved duplicate attribution, verification mapping, skipped matched rows, punctuation/spacing, and report booleans.
+- Deliverable: `apps/mobile-shell/tolgee-translation-report.json` with 772 rows (352 implemented, 420 not implemented, 93 remaining matched false).
+- Validation: PASS via evidence-based recovery validator; focused grep/read only per user, with no full lint/typecheck/tests/runtime/browser/network/git commands.
+- Compliance: no Tolgee runtime/config/dependency, web-shell/packages, protected/auth/API/CI/migration, package, or git-write changes.
+- Artifacts: `/tmp/penguins/rico_findings.md`, `/tmp/penguins/kowalski_analysis.md`, `/tmp/penguins/skipper_plan.md`, `/tmp/penguins/private_diff.md`, `/tmp/penguins/melman_report.md`.
+- Notification: `workflow_complete` sent via Telegram (HTTP 200 at `2026-10-20T08:05:11.203Z`).
+
+## 2026-10-20 — Mobile Tolgee filtered replacement follow-up
+
+- Status: SUCCESS; compared 420 filtered records, with 79 matches.
+- Replacements: safely replaced 10 matches (8 exact, 2 normalized) and generated `/Users/dusanmilenkovic/Documents/mobile-shell-translations-unreplaced.json` with 410 records.
+- Skips: 69 matched records were justified by module-scope, utility, ambiguity, or punctuation constraints.
+- Correction: fixed the providers-list hook-order defect.
+- Validation: PASS via final focused grep/read; no full lint, typecheck, or tests were run.
+- Compliance: no config, provider, env, dependency, web translation, protected-area, or git changes.
+
+## 2026-10-20 — Mobile Tolgee reconciliation follow-up
+
+- Status: SUCCESS; all 410 records reconciled: 388 newly wired, 18 already wired, 4 technical tokens excluded, and 0 blocked.
+- Resources: 363 EN/SR keys across 8 namespaces, with zero missing, extra, empty, or placeholder mismatches; remote Tolgee resync remains required for `profile.withdrawal.cash.success-message` and `betting.ticket.value-n-value` after the user's import.
+- Validation: PASS (`/tmp/penguins/melman_report.md`, `/tmp/penguins/mobile_tolgee_final_report.json`); 118 affected TS/TSX files parsed with zero diagnostics, 143 legal hooks, and 676 resolved translator calls.
+- Compliance: no full lint/typecheck/tests/browser/network/git writes and no provider/env/dependency/web-shell/packages/protected/API/CI/migration changes; utility/domain boundaries remain hooks-free and backend precedence is preserved.
+
+## 2026-10-22 — tiered (SMALL) — Mobile casino menu validation blocked
+
+- Status: BLOCKED; Rico discovery and Private implementation completed, but Melman validation is FAIL.
+- Exact blocker: Mobile casino menu validation failed: icon lookup needs runtime key validation.
+- Evidence note: `/tmp/penguins/melman_report.md` contains a stale unrelated Mobile Tolgee PASS and does not validate the current menu change.
+- Private artifact: `/tmp/penguins/private_diff.md` records the mobile casino menu implementation.
+- Protected changes: NONE.
+- Required follow-up: Harden the icon-map lookup, then rerun validation.
+
+## 2026-10-22 — tiered (MEDIUM) — Mobile home/signup scope blocked
+
+- Status: BLOCKED after Rico discovery; Private implementation and Melman validation were not run.
+- Exact scope conflict: implementation is requested in `apps/mobile-shell`, but the authorized source paths list only `apps/web-shell/src/app/[locale]/page.tsx` and `apps/web-shell/src/app/[locale]/signup/page.tsx`; explicit permission to discover and modify the required mobile-shell route and feature files is missing.
+- Source changes: NONE. No application source changes or git commands were made.
+- Evidence: `/tmp/penguins/rico_findings.md`.
+- Notification: blocker `mobile-home-scope` sent via Telegram (HTTP 200 at `2026-10-22T10:03:12.560Z`; latest status `sent`).
+- Required follow-up: Authorize discovery and modification of the required mobile-shell route and feature files.
+
+## 2026-10-22 — tiered (LARGE) — Native Home/Signup approval rejected
+
+- Status: BLOCKED at Skipper approval; large workflow rerouted to stop before Private implementation.
+- Discovery and analysis completed: `/tmp/penguins/rico_findings.md` and `/tmp/penguins/kowalski_analysis.md`.
+- Decision: REJECTED. Home is feasible using existing CMS BFF conventions, but Signup parity requires protected auth changes and unconfirmed registration contracts; Jira is empty, so guardrails exception conditions are not met.
+- Authorized source files: NONE. Private execution prohibited; no source changes or git commands were made.
+- Artifacts: `/tmp/penguins/skipper_decision.md`, `/tmp/penguins/skipper_plan.md`.
+- Notification: blocker event `mobile-signup-auth-contract` sent via Telegram (HTTP 200 at `2026-10-22T10:09:09.313Z`; latest status `sent`).
+- Resume condition: choose Home-only delivery or provide an explicit Jira registration contract and protected-area authorization.
+
+## 2026-10-22 — Registration Jira authorization blocker
+
+- Status: BLOCKED. Direct user/Skipper approval received, but `rules/guardrails.md` also requires Jira to explicitly require auth changes; `inputs/jira-task.md` is empty and registration behavior/contracts are missing.
+- Source changes: NONE. No authoritative inputs were modified and no git commands were run.
+- Notification: blocker `registration-jira-authorization` sent via Telegram (HTTP 200 at `2026-10-22T10:31:54.051Z`; latest status `sent`).
+- Required follow-up: Populate `jira-task.md` with registration behavior and confirmed contracts, then rerun the workflow.
+
+## 2026-10-22 — Casino lobby HTTP 400 runtime payload blocker
+
+- Status: BLOCKED after diagnostic-only Melman PASS; safe diagnostics are persisted in `/tmp/penguins/melman_report.md`.
+- Remaining blocker: capture one structured `Casino BFF request failed` runtime log to determine whether the BFF rejects the tenant, resolved key, or payload.
+- Application source changes during this task: NONE. No Git commands were run.
+- Notification: blocker `casino-lobby-400-payload` sent via Telegram (HTTP 200 at `2026-10-22T12:27:28.497Z`; latest status `sent`).
+
+## 2026-10-27 — tiered (MEDIUM) — Room preview background mapper scope blocked
+
+- Status: BLOCKED after Rico discovery; Private implementation and Melman validation were not started.
+- Exact blocker: room-preview background rendering already exists, but the upstream room-preview mapper and `CasinoRoomPreviewConfig` type required to supply the image are outside authorized scope.
+- Source changes: NONE. No application source changes or git commands were made.
+- Artifact: `/tmp/penguins/rico_findings.md`.
+- Notification: blocker `room-preview-background-mapper-scope` sent via Telegram (HTTP 200 at `2026-10-27T08:25:57.408Z`; status `sent`, provider `telegram`; evidence: `/tmp/penguins/notifications.jsonl`).
+
+## 2026-10-27 — tiered (MEDIUM) — Room preview background mapping validation failed
+
+- Status: FAIL; workflow stopped after Melman validation.
+- Rico discovery complete: `/tmp/penguins/rico_findings.md`.
+- Private implementation: `apps/mobile-shell/src/features/casino/infrastructure/casino-page-mapper.ts`; artifact: `/tmp/penguins/private_diff.md`.
+- Melman FAIL: image mode is inferred from an unknown source before `asString` normalization, allowing `{ mode: 'image', image: undefined }`; report: `/tmp/penguins/melman_report.md`.
+- Required correction: normalize the selected image source with `asString` first and infer image mode only from the resulting non-empty string.
+- Compliance: no unrelated, protected-area, dependency, API-contract, layering, or git changes.
+- Notification: `validation_failed` sent via Telegram (HTTP 200 at `2026-10-27T08:42:54.570Z`; latest status `sent`, provider `telegram`; evidence: `/tmp/penguins/notifications.jsonl`).
+
+## 2026-10-27 — tiered (LARGE) — Mobile device persistence validation failed
+
+- Status: FAIL; discovery, analysis, approval, and execution completed; Melman retry failed and the workflow stopped before finalization.
+- Execution scope: seven authorized application files recorded in `/tmp/penguins/private_diff.md`.
+- Exact blocker: `ticket-selection.context.tsx` sets hydration complete before its separate persistence effect subscribes, so an early interactive mutation can be missed; no immediate post-hydration write closes the gap.
+- Required correction: attach persistence before interactive render or provide an equivalent ordering guarantee.
+- Artifacts: `/tmp/penguins/rico_findings.md`, `/tmp/penguins/kowalski_analysis.md`, `/tmp/penguins/skipper_plan.md`, `/tmp/penguins/private_diff.md`, `/tmp/penguins/melman_report.md`.
+- Compliance: no protected-area, dependency, API-contract, environment, CI/CD, migration, or git changes; no guardrail, unauthorized-change, or new `any` evidence found.
+- Validation: focused read/grep only; tests were not run.
+- Notification: `validation_failed` sent via Telegram (HTTP 200 at `2026-10-27T09:30:09.839Z`; latest status `sent`, provider `telegram`; evidence: `/tmp/penguins/notifications.jsonl`).
+
+## 2026-10-27 — tiered (LARGE) — Mobile device persistence validation-failed follow-up
+
+- Status: FAIL; workflow remains stopped after focused Melman validation.
+- Prior race fixed: persistence now subscribes before the ticket hydration gate opens, with Strict Mode-safe cleanup.
+- Remaining blockers: `ticket-selection.context.tsx` storage read has no timeout and can gate forever; `tolgee/provider.tsx` language read has no timeout and can gate forever.
+- Required correction: bounded timeout fallbacks to empty selected tips and `DEFAULT_LANGUAGE`.
+- Evidence: `/tmp/penguins/melman_report.md`; focused read/grep only, with no guardrail, unauthorized-change, or TypeScript failure evidence.
+- Compliance: no new protected-area, dependency, API-contract, environment, CI/CD, migration, application-source, or git changes.
+- Notification: `validation_failed` sent via Telegram (HTTP 200 at `2026-10-27T09:35:18.282Z`; latest status `sent`, provider `telegram`; evidence: `/tmp/penguins/notifications.jsonl`).
+
+## 2026-10-27 — tiered (LARGE) — Mobile device persistence lifecycle validation-failed follow-up
+
+- Status: FAIL; workflow remains stopped after focused read/grep validation.
+- Prior blockers fixed: ticket hydration/subscription is bounded and correctly ordered; language hydration has a bounded timeout with `getLanguage()` fallback and no `DEFAULT_LANGUAGE` usage.
+- Remaining lifecycle blocker: `provider.tsx` initializes `baseTolgee` at line 27, then calls `updateDefaults(...).init()` on the same instance at lines 69-73 when the stored language differs.
+- Required correction: use a separate fallback instance and initialize the final Tolgee instance exactly once after language resolution.
+- Evidence: `/tmp/penguins/melman_report.md`.
+- Compliance: no application source, protected-area, dependency, API-contract, environment, CI/CD, migration, audit JSON, or git changes.
+- Notification: `validation_failed` sent via Telegram (HTTP 200 at `2026-10-27T09:50:32.067Z`; latest status `sent`, provider `telegram`; evidence: `/tmp/penguins/notifications.jsonl`).
+
+## 2026-10-27 — tiered (LARGE) — Mobile device persistence finalization
+
+- Status: SUCCESS; the prior subscription-order, unbounded ticket/language hydration, `DEFAULT_LANGUAGE` fallback, Tolgee single-init/Strict Mode lifecycle, and selector rejection/list-consistency validation failures are resolved.
+- Workflow: `tiered.yaml` → `jira_figma_to_code_v2`; Rico/Kowalski parallel discovery and analysis, Skipper approval, Private/Melman preparation, focused validation, and finalization completed.
+- Scope: exactly seven authorized application files changed: `apps/mobile-shell/src/features/home/application/betting/ticket-selection.persistence.ts`, `apps/mobile-shell/src/features/home/application/betting/ticket-selection.context.tsx`, `apps/mobile-shell/src/features/home/domain/__tests__/ticket-selection-context.test.ts`, `apps/mobile-shell/src/context/color-scheme.context.tsx`, `apps/mobile-shell/src/tolgee/language-storage.ts`, `apps/mobile-shell/src/tolgee/provider.tsx`, and `apps/mobile-shell/src/components/layout/lang-selector.tsx`.
+- Artifacts: `/tmp/penguins/rico_findings.md`, `/tmp/penguins/kowalski_analysis.md`, `/tmp/penguins/skipper_decision.md`, `/tmp/penguins/skipper_plan.md`, `/tmp/penguins/private_diff.md`, `/tmp/penguins/melman_report.md`, and `/tmp/penguins/notifications.jsonl`.
+- Validation: final Maurice fallback PASS after stale/unwritable Melman; focused read/grep only; tests not run per command.
+- Compliance: no protected-area, dependency, API-contract, environment, CI/CD, migration, authentication/logout-scope, unauthorized-scope, type, network/browser, or git changes/violations.
+- Notification: status `sent`, provider `telegram`, timestamp `2026-10-27T10:01:54.833Z`; evidence: `/tmp/penguins/notifications.jsonl`.
+
+## 2026-10-27 — tiered (MEDIUM) — Started-match backend error contract blocked
+
+- Status: BLOCKED after Rico discovery; Private implementation and Melman validation were not started.
+- Exact ambiguity: the started-match backend `messageCode` and payload shape are unconfirmed; available evidence does not establish whether regular or quick-ticket responses identify started matches through `messageParams` or `transactionErrorMessages`.
+- Source changes: NONE. No application source changes or git commands were made.
+- Artifact: `/tmp/penguins/rico_findings.md`.
+- Notification: blocker `started-match-error-contract` status `sent`, provider `telegram`, timestamp `2026-10-27T10:51:47.577Z`; evidence: `/tmp/penguins/notifications.jsonl`.
+- Required payload: provide one regular or quick-ticket response for an already-started selected match, including `messageCode`, `messageParams`, and `transactionErrorMessages`.
+
+## 2026-10-27 — tiered (MEDIUM) — Started-match selective removal finalization
+
+- Status: SUCCESS; the initial backend-code blocker was resolved through the authorized web-shell/package reference, which establishes a local kickoff-time criterion rather than a backend started-match code.
+- Workflow: `tiered.yaml` → MEDIUM; Rico, Private, and Melman validation steps completed.
+- Implementation: web behavior was adapted using kickoff milliseconds earlier than the current time for past non-live selections; both regular and express flows run the preflight before submission lock or API invocation.
+- File changed: `apps/mobile-shell/src/app/ticket.tsx` only.
+- Behavior: confirmation removes captured exact selection identities only; cancel/back close only, backdrop dismissal is disabled, no whole-slip clear occurs, and unrelated dialog defaults are preserved.
+- Validation: final Maurice fallback PASS after two stale Melman reports; focused read/grep only; tests not run per command.
+- Persistence: selective removal uses the existing revision-aware removal and queued persistence path.
+- Compliance: no protected-area, dependency, API-contract, authentication, environment, CI/CD, migration, application-source-finalization, network/browser, or Git changes/violations beyond the recorded `ticket.tsx` implementation.
+- Artifacts: `/tmp/penguins/rico_findings.md`, `/tmp/penguins/private_diff.md`, `/tmp/penguins/melman_report.md`, and `/tmp/penguins/notifications.jsonl`.
+- Notification: status `sent`, provider `telegram`, timestamp `2026-10-27T11:10:45.466Z`; evidence: `/tmp/penguins/notifications.jsonl`.
