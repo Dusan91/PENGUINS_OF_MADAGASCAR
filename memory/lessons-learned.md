@@ -21,6 +21,41 @@
 
 <!-- New lessons go below this line -->
 
+## 2026-11-04 — Audio deduplication must follow successful playback
+
+- **What failed**: smile-and-wave marked an assistant message played before afplay completed, so a failed attempt prevented a later idle event from retrying. The original reported silent playback's runtime cause is still unconfirmed.
+- **Why it failed**: Attempted playback and successful playback used the same deduplication state; unmatched completion messages were silently skipped.
+- **What to do instead**: Mark played only after afplay succeeds, retain that marker if the subsequent toast fails, and log subscription/idle/filter reasons/playback without message contents. Direct afplay exited zero; this does not establish audible receipt or the live event path.
+- **Affects**: Global plugins/smile-and-wave/index.js and shared.js. Two offline regression tests pass; live workflow sound remains unverified.
+
+## 2026-11-04 — V2 frontmatter alone does not align role instructions
+
+- **What failed**: V2-format agent definitions still requested Task calls, skill name arguments, forbidden MCP services and mandatory report files from roles denied writing.
+- **Why it failed**: Frontmatter migration did not update prose contracts or reconcile report persistence with effective permissions.
+- **What to do instead**: Follow the global V2 runtime protocol and exposed schemas, return complete inline reports when writing is denied, and use an authorized mechanical writer only with exact scope and provenance. Validate final matching permissions, not just individual allow entries. Patch hunks within a file must follow source order; read back after a failed patch before retrying.
+- **Affects**: All 13 global OpenCode agents and shared AGENTS.md. Offline structural checks passed; live role execution remains unverified.
+
+## 2026-11-04 — Mixed agent frontmatter silently drops Skipper in V2
+
+- **What failed**: Skipper disappeared and auto-workflow failed with Agent not found: skipper.
+- **Why it failed**: A native `permissions` key selected the V2 loader, but its value was a legacy mapping rather than an ordered rule array. Installed v2.2.5 loader inspection showed the failed schema decode drops the agent; unsupported options/tools/tags warnings were secondary.
+- **What to do instead**: Keep frontmatter consistently V2: request.body and permissions arrays, shell/subagent action names, normalized MCP names, broad read denial before exceptions. V2 write/edit/patch share edit permission; preserve the explicit deny rather than silently enabling writes. On macOS include /private/tmp/penguins as the canonical alias of the existing scratch allowlist.
+- **Affects**: ~/.config/opencode/agents/skipper.md. The command's agent: skipper remains correct. Structural/permission tests passed; agent.updated was logged for whitelabel after the edit, but a complete workflow execution was not tested.
+
+## 2026-11-04 — OpenCode V2 notification plugin migration
+
+- **What failed**: Global smile-and-wave.js failed with reference err_9f51a12c; the matching server log reports SchemaError missing default.
+- **Why it failed**: The installed OpenCode v2.2.5 requires a default id/setup or id/effect definition, while the file exported a V1 named function and experimental.text.complete hook.
+- **What to do instead**: Use a local package with server and ./tui exports; subscribe to session.idle, inspect V2 typed assistant content, and deliver the toast through the CLI API. The server setup context has no legacy client.tui or shell $ helper. No new dependency is required for plain JavaScript definitions. Five mocked offline regression tests passed; live sound/toast receipt requires user confirmation.
+- **Affects**: ~/.config/opencode/plugins/smile-and-wave/. The separate Penguins .opencode/plugins/smile-and-wave.js remains a legacy copy outside this repair's scope.
+
+## 2026-11-02 - Notifier provider setting does not control delivery
+
+- **What failed**: PENGUINS_NOTIFY_PROVIDER=ntfy still sent a Telegram notification.
+- **Why it failed**: tools/notify.mjs reads provider configuration but unconditionally attempts Telegram first.
+- **What to do instead**: Under the ntfy-only network exception, supply empty TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID for the notifier process only; the credential guard fails before any Telegram request, then ntfy fallback sends. Do not modify persisted env files. Verified workflow_complete status sent via ntfy-fallback, HTTP 200.
+- **Affects**: Skipper workflow notifications and tools/notify.mjs invocation.
+
 ## 2026-07-16 — "Prati logiku" znači prati redosled operacija, ne tehnologiju
 
 - **What failed**: Kada korisnik kaže "prati logiku sa web-shella", agent se fokusirao na tehnološke razlike (WebView vs Dialog, Monri Components JS SDK vs URL redirect) umesto na tačan redosled operacija. Implementacija je pozivala API pre otvaranja modala — suprotno od weba gde se modal otvara odmah na Pay klik, a API poziv se dešava unutar modala.
@@ -106,3 +141,96 @@
 - **Why it failed**: Initialization owns runtime resources and is not a memoizable value transformation; reuse can double-initialize an instance and becomes unsafe under React Strict Mode or provider-key changes.
 - **What to do instead**: Use a disposable fallback instance to read `getLanguage()` and call `stop()`, bound persisted-language hydration, key the hydration owner by runtime configuration, then create a fresh final instance in an effect, call `init()` exactly once, and call `stop()` during cleanup.
 - **Affects**: Mobile Tolgee providers and any future Tolgee provider lifecycle implementation.
+
+## 2026-11-02 — Retire empty-Telegram-credentials transport workaround
+
+- **What failed**: The earlier 2026-11-02 provider-setting lesson recommended empty Telegram credentials to activate the ntfy fallback; that workaround is now retired and must not be followed.
+- **Why it failed**: Historical implementation and network policy disagreed; provider selection did not control delivery. Keeping the workaround would contradict the approved Telegram-only transport and stricter session restrictions.
+- **What to do instead**: Use the sole Telegram notifier only when session/network authorization permits. Missing credentials or delivery failures remain nonfatal with secret-safe failed evidence and no fallback or lifecycle append. Preserve the old lesson as historical evidence, not active advice. Syntax and 48 isolated offline cases passed; no live delivery was attempted or verified.
+- **Affects**: Skipper, Private, Melman; notifier policy/docs, tools/notify.mjs, historical notification evidence.
+
+## 2026-11-02 — Resolve artifact writer capability against the actual runtime
+
+- **What failed**: The user reported two Kowalski attempts returned no plan because writing was unavailable, despite role-declared writer tools.
+- **Why it failed**: Declared tools do not guarantee that the runtime exposes a usable writer. Repeating the same unsuccessful attempt did not produce the required artifact.
+- **What to do instead**: Use an available artifact writer in a bounded fallback or return the plan inline rather than repeatedly returning no plan. A bounded writer subsequently wrote and read back `/tmp/penguins/kowalski_plan.md`; task-specific approval was supplied separately. No fallback model identity is established by this evidence. During offline harness development, normalize cross-VM objects before strict comparison and derive callback boundary lengths from the actual prefix rather than a guessed count.
+- **Affects**: Kowalski, Skipper, artifact-writing delegation and offline VM regression harnesses.
+
+## 2026-11-02 - Verify validation report content before accepting returned paths
+
+- **What failed**: In the MEDIUM stake-input cycle, Melman first lacked a file writer, then returned a path to a stale notifier report. Path-only output also deviated from requested structured communication; an apparent reporting success was not current-task validation.
+- **Why it failed**: Writer availability is runtime-dependent, and a shared scratch filename can retain unrelated task content. A returned path alone establishes neither freshness nor a task-specific independent verdict.
+- **What to do instead**: Read the report and verify task, scope, evidence and verdict before accepting its path. Reject stale evidence, preserve it unchanged as clearly named historical scratch, obtain task-specific independent fallback review, and materialize supplied results through an available bounded writer with provenance/readback. Record the path-only deviation and safe recovery, do not invent model identity, and distinguish PASS_STATIC from unverified runtime/build behavior. This cycle used supplied Maurice independent PASS_STATIC and Skipper static-only acceptance without validation reruns.
+- **Affects**: Skipper, Melman, Maurice, bounded artifact writers, shared /tmp/penguins reports and MEDIUM finalization.
+
+## 2026-11-02 - Keep controlled accordion values defined and collision-free
+
+- **What failed**: Passing undefined for closed Accordion Root switched the installed controllable primitive out of controlled mode; repeated reopen/close could select retained uncontrolled state. The raw-ID empty-string fix initially lacked nonempty-ID and installed-type evidence, so Private correctly stopped.
+- **Why it failed**: The installed hook determines controlled mode by prop !== undefined, not external ownership intent. Raw app IDs are strings that can be empty, so an empty closed sentinel requires a separate noncolliding internal item value.
+- **What to do instead**: Under explicit refined approval, verify installed string declarations and use nonempty internal sport-${sportId} for Root/Item/callback comparison, with defined closed ''. Keep internal IDs distinct in purpose from raw app keys and forward original sportId; preserve the correct parent setter/equality guard and complete callback dependencies. Trace initial closed/expanded and close-open-close statically; do not equate PASS_STATIC with verified device/animation/first-click visual behavior.
+- **Affects**: Mobile boosted-odds sport header, installed controllable accordion integration, Private/Melman/Skipper. Historical guidance remains preserved; this is a task-specific refinement, not permission to normalize unrelated app IDs.
+
+## 2026-11-02 - Recover canceled preparation and path-only handoffs by artifact readback
+
+- **What failed**: Accordion preparation was canceled and Private later returned only an artifact path instead of structured output; shared scratch could still contain unrelated footer/stake material. Melman supplied substantive inline validation but lacked a report writer.
+- **Why it failed**: Cancellation/path existence does not establish current content or completion, and reporting capability differs from review capability. No unavailable Melman or fallback identity should be inferred from missing writes.
+- **What to do instead**: Inspect actual task/scope/approval/evidence, preserve prior histories with clear names without duplicate backups, recover prerequisites, and use a bounded writer to materialize the supplied current verdict and acceptance with provenance/readback. Record the communication deviation and resolved blockers; never reuse old verdicts or notification deliveries. Here notification remains not_attempted due session restrictions.
+- **Affects**: Skipper, Private, Melman, bounded writers and shared /tmp/penguins artifacts; complements the historical stake-report lesson without replacing it.
+
+## 2026-11-02 - Threshold-only scroll savings do not establish faster initial loading
+
+- **What failed**: A faster-data/faster-display request cannot be considered measured initial-load improvement merely because a patch removes redundant scroll-driven state updates. This is a claim boundary, not evidence of a failed runtime test.
+- **Why it failed**: Scroll rerenders and repeated group/sort derivation are separate from initial query/backend latency. Static inspection can establish redundant work but cannot measure network time or device performance. Coarsened state also no longer represents the latest exact offset.
+- **What to do instead**: Coarsen scroll state ONLY when all consumers depend solely on the same threshold; keep producer/consumer thresholds aligned and preserve the exact boundary predicate. Revisit the optimization before introducing any exact-offset consumer. Profile initial loading, query durations and device scroll commits under separate authorization before prioritizing initial-load changes; never equate scroll-work savings with faster fetching or claim a measured speedup from source reads. Read actual task-specific reports after path-only handoffs and distinguish Private static evidence from independent validation.
+- **Affects**: Results page apps/mobile-shell/src/app/(tabs)/sportsbook/results.tsx, its sole BackToTop consumer, future scroll-state consumers, and Private/Skipper performance reporting. Current acceptance is ACCEPTED_STATIC under SMALL private_direct; initial/backend latency and device behavior remain unverified.
+
+## 2026-11-03 - Keyboard viewport ownership does not guarantee device reveal
+
+- **What failed**: The original search-only scope could not safely control an ancestor viewport; an input-row wrapper or a generic extra KAV/padding would not establish focused-input reveal and could double native avoidance. This records the scope/design limitation, not a failed device test.
+- **Why it failed**: Insets/scroll range belong to screen ScrollViews, while keyboard/viewport coordinate ownership and actual Android resize depend on native deployment. Static source evidence cannot prove device ordering, initial insets or sufficient scroll range.
+- **What to do instead**: Obtain explicit screen scope/platform confirmation; use one native iOS inset owner and Android's existing resize owner, with bounded public-API measured reveal for current local focus. Preserve stale-measurement/unmount/blur/user-scroll guards; dragging disables correction until next focus. Use installed same-key-window coordinate evidence, not guessed offsets/conversion. If Android does not resize or scroll range is absent, report the gap and require separate native/config evidence and approval, never duplicate KAV/padding.
+- **Limits to retain**: Actual Android resize unknown; short content/iOS newly mounted viewport with IME already open may lack native inset/range; initial keyboard metrics can be stale and intervening scroll can cancel correction. Full-window/same-key-window TextInput-bounds only, no floating/split/multiwindow/whole-row assurance. Tests/build/lint/typecheck/runtime/StrictMode ordering unverified; PASS_STATIC is not device completion.
+- **Handoff recovery**: Read actual current artifacts after Private path-only output; preserve unrelated accordion report before materializing Melman's supplied inline independent PASS_STATIC when its writer is unavailable. Do not fabricate a completed Kowalski-subagent/model identity, independent writer verdict, or notification delivery. Supplied Skipper ACCEPTED_STATIC resolves only the expanded cycle; historical BLOCKED event stays unchanged.
+- **Affects**: CasinoScreen/CasinoLobbyScreen keyboard handling and future Skipper/Private/Melman keyboard work; audit/2026-11-03.json. Required later device checks include both backgrounds/screens, short/long content, already-open IME, async layouts, native resize, manual drag and navigation transitions.
+
+## 2026-11-03 - Diagnostic logging must preserve production and guard evaluation
+
+- **What failed**: Supplied Melman FAIL rejected casino keyboard diagnostics: unconditional diagnostic-only usePathname adds production routing subscription, and cancellation snapshots query native refs/focus after the original liveness/identity conjunction short-circuits. Exact prediagnostic source/diff is missing from the current implementation report, so preservation is not fully independently established. No demonstrated runtime crash is claimed.
+- **Why it failed**: A no-op logger does not prevent evaluation of its arguments. Logging guards cannot neutralize unconditional production hooks or make native queries safe after failed liveness/host-identity guards. Narrative preservation claims do not replace an exact baseline/diff.
+- **What to do instead**: Keep dev diagnostics outside production hooks, preserve hook rules and original short-circuit protection, and do not query native refs after failed liveness/identity guards. Retain exact prediagnostic source and introduced diff for behavioral-preservation audit. Stop on FAIL; obtain fresh user direction before correction or revert and revalidation, then obtain a targeted trace rather than asking users to run rejected diagnostics.
+- **Affects**: CasinoScreen, CasinoLobbyScreen, custom-component-filters/search-input.tsx, Private/Melman/Skipper diagnostic review and bounded administrative writers. Prior PASS_STATIC remains historical static evidence, not runtime success; actual keyboard cause remains unresolved.
+
+## 2026-11-03 - Tiered MEDIUM dispatch must satisfy task-specific Private prerequisites
+
+- **What failed**: Favorites-count MEDIUM orchestration stopped at Private after classification and Rico discovery; implementation and validation did not occur.
+- **Why it failed**: Tiered MEDIUM routing can conflict with Private's mandatory plan/approval requirements; shared plan and approval artifacts still authorized an unrelated casino task.
+- **What to do instead**: Check task-specific plan, approval and file allowlist before dispatch. Obtain a fresh favorites-specific Kowalski plan and Skipper approval; never reuse stale authority or overwrite historical artifacts merely to bypass the prerequisite.
+- **Affects**: Skipper, Kowalski, Private, tiered MEDIUM routing and shared /tmp/penguins plan/approval artifacts.
+
+## 2026-11-03 - Balance bridge role writers and current report identity
+
+- **What failed**: Specialized planner failed twice solely because its runtime lacked a writer. Reviewer first returned a stale canonical favorites report path; no current balance-bridge report had been written by Melman.
+- **Why it failed**: Role capability declarations and shared filenames do not establish available runtime tools, current run identity, substantive review or artifact persistence. A read-only reviewer can inspect evidence without writing it.
+- **What to do instead**: Use a bounded capable general-agent planning fallback with accurate attribution and task-specific approval; reject stale paths after content/run inspection. Obtain current inline reviewer source/patch/harness/log review, distinguish runner execution from reviewer judgment, then mechanically persist supplied PASS_STATIC and inline ACCEPTED_STATIC through an available writer. Archive old reports unchanged as clearly historical, verify canonical/run-local equality and scoped source hashes, and never invent role/model execution or reuse notification delivery.
+- **Limits**: This balance-bridge cycle has 83 actual-source offline cases with real QueryClient/disabled offline QueryObserver; TS 82 each and ESLint 16 errors/one warning each with zero introduced, not clean checks. Native/provider timing, mounted UI/React lifecycle and in-flight overwrite remain unverified; modeled missed early installation is not confirmed runtime cause and fallback cannot recover already missed messages.
+- **Affects**: Skipper, Kowalski, Melman, runner assistants, administrative writers and shared /tmp/penguins reports; run rico-20261103-111658-11664 only.
+
+## 2026-11-04 - Conditional mixed-group odds lookup is runtime-unconfirmed
+
+- **What failed**: Reported boosted matches lack odds while all-matches shows odds for the same match IDs. Static diagnosis establishes a possible missing-odds mechanism, not the actual runtime cause or a tested fix.
+- **Why it failed**: In the supplied source-read review, TopViewMobile calculates specialValue from the passed group but conditionally chooses a matching child prematch group for tip inputs; absent that group, it retains the passed group. A truthy betMap prevents flat odds fallback, so incompatible keys, locked entries or invalid values can produce a disabled dash; an empty visible tip slice yields no buttons. Both parent paths share the child, and sport-level any-match availability does not prove per-row compatibility. This mechanism remains runtime-unconfirmed for the reported symptom.
+- **What to do instead**: Obtain contemporaneous redacted same-match responses and actual parent/child groups, visible tips, specialValue, normalized keys and entry status/value. Trace the exact pair through lookup before proposing a fix; do not assume identical IDs mean identical payloads or generalize conditional override into a universal cause. Keep supplied Private post-discovery hashes separate from independent review and whole-worktree claims.
+- **Affects**: Mobile home boosted/all-matches odds, TopViewMobile, PrematchOddMobile, domain/odds.ts and future Rico/Private/Melman/Skipper diagnostic work; odds-diagnosis-20261104-01.
+
+## 2026-11-04 - Equal diagnostic counts do not establish equal contents
+
+- **What failed**: Boosted-odds implementation's unchanged-normalized-TypeScript claim was rejected by supplied independent Melman FAIL despite 82 diagnostics in each run.
+- **Why it failed**: Equal counts alone cannot establish content equality; position-only normalization cannot erase changed module names. Current artifact readback does not corroborate the review's cited filename discrepancy, so supplied review and current evidence must remain distinctly attributed, not silently reconciled.
+- **What to do instead**: Preserve exact evidence and supplied FAIL/STOP. With fresh authorization, reconcile exact diagnostic contents and provenance before asserting no new errors; never promote equal counts to equal diagnostics or infer callback parity from serialized trees that omit callbacks.
+- **Affects**: Private/Melman/Skipper baseline comparisons and administrative persistence; boosted-odds-fix-20261104-01. No correction or revalidation performed in this stop-recording task.
+# 2026-11-04 - Status wording and baseline YAML validation
+
+- **What failed**: Unconditional success endings could follow failed/blocked finalization; baseline v2 workflow YAML had malformed indentation (10 Jira/Figma and 8 refactor parser errors).
+- **Why it failed**: Final wording was not gated by actual workflow status; malformed input/task indentation prevented parsing independently of wording edits.
+- **What to do instead**: Select exact event-specific endings, reserve success for successful validation, report notification evidence separately, and obtain explicit approval before repairing pre-existing structural issues. User approved indentation-only repair in this run; independent review remains pending.
+- **Affects**: Six approved finalization instruction sources; status-wording-20261104. No notifier or application changes.

@@ -65,9 +65,11 @@ Agents must use only tools available in the current runtime/tool list. Never cal
 
 Skipper MUST use `node tools/notify.mjs` for workflow notifications. Send `workflow_started` when a workflow begins, `workflow_complete` on successful finalization, `workflow_failed` on final failure, `validation_failed` when Melman fails validation, and `decision_required`, `approval_required`, or `blocked` before stopping for user input, approval, or blockers. Do not include secrets in notification titles or messages; see `docs/notifications.md`.
 
-External network access remains forbidden except as documented in `rules/notification-network-exception.md`. When that exception is active, Skipper may call `node tools/notify.mjs` without `--dry-run` for the allowed workflow notification events only. Direct ad-hoc network calls to ntfy or other services remain forbidden.
+External network access remains forbidden except as documented in `rules/notification-network-exception.md`. Standing user permission authorizes Skipper in future sessions to call `node tools/notify.mjs` from the Penguins root without `--dry-run` for the allowed real workflow notification events, without separate approval for each send, using Telegram as the sole transport. Direct ad-hoc network calls, bot polling/launch, and credential changes remain forbidden. Fresh explicit session restrictions and higher-priority runtime restrictions take precedence; historical cleanup-session bans do not apply automatically to new sessions. Never bypass tool approval or sandbox controls.
 
 Skipper MUST include notification command output and `/tmp/penguins/notifications.jsonl` status evidence in the final summary and audit log. Before stopping for a human decision, approval, or blocker, Skipper MUST send the notification and state whether the latest status is `sent`, `skipped`, or `failed`.
+
+When session restrictions prohibit execution, record `not_attempted` and the reason instead of sending or reusing historical evidence. Telegram delivery failure is nonfatal, secret-safe, and has no fallback; report the original workflow status.
 
 ## Instruction Priority Order
 

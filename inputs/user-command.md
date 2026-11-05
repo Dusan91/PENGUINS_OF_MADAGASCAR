@@ -1,9 +1,9 @@
 # User Command
 Low-cost Penguins.
 Files:
-- apps/mobile-shell
+- apps/mobile-shell/src/features/home/components/offer/mobile-league-groups-view.tsx
 Task: `
-Dugme back na telefonu (trougao) koje nema veze sa aplikacijom, ne vraca jedan korak nazad vec vrati na pocetnu stranu sto je pogresno ponasanje, treba jedan korak nazad 
+ Prilikom expandovanja accordiona ili skrolovanja desava se da se pojavi prazan prostor, kao da virtualizer ne stigne da prikaze sta treba. Tako se javljaju skokovi u renderovanju
 `
-Validation: grep/read only, no full lint
+
 No audit unless required

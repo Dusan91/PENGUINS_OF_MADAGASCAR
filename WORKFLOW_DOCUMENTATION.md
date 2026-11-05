@@ -220,9 +220,9 @@ Protected paths se tretiraju kao visokorizicne oblasti. Ako task zahteva njihovu
 
 Spoljni network pristup ostaje zabranjen osim uskog izuzetka opisanog u `rules/notification-network-exception.md`.
 
-Skipper sme da pokrene `node tools/notify.mjs` bez `--dry-run` samo za stvarne workflow notification event-e i samo kroz taj alat. Dozvoljeni su samo `POST https://ntfy.sh/<configured-topic>` zahtevi preko `tools/notify.mjs`, sa podrazumevanim topic-om `penguins-dusan-7f3a9c`.
+Skipper sme da pokrene `node tools/notify.mjs` bez `--dry-run` samo za stvarne workflow notification event-e i samo kroz taj alat. Dozvoljeni su samo `POST https://api.telegram.org/bot<token>/sendMessage` zahtevi preko `tools/notify.mjs`; Telegram je jedini transport.
 
-Direktni ad-hoc pozivi ka ntfy ili drugim servisima ostaju zabranjeni. Ako notification slanje ne uspe, workflow nastavlja da prijavljuje originalni status, a Skipper belezi notification failure u audit i finalni rezime.
+Trajna korisnicka dozvola vazi za stvarne workflow notifikacije u buducim sesijama, bez posebnog odobrenja za svako slanje. Direktni ad-hoc pozivi, pokretanje/polling bota i izmene kredencijala ostaju zabranjeni. Nova eksplicitna ogranicenja sesije i ogranicenja viseg prioriteta imaju prednost; istorijska cleanup zabrana se ne prenosi automatski na nove sesije. Ne zaobilaziti tool approval ili sandbox. Kada slanje nije dozvoljeno, Skipper belezi `not_attempted` i razlog, bez ponovne upotrebe istorijskih statusa. Ako slanje ne uspe, nema fallback-a; workflow prijavljuje originalni status, a Skipper belezi secret-safe failure i status evidence u audit i finalni rezime.
 
 ## Stop Conditions
 

@@ -45,26 +45,26 @@ steps:
     agent: kowalski
     isolated: true
     parallel_group: discovery
-     input:
-       jira_task: inputs/jira-task.md
-       figma_notes: inputs/figma-notes.md
-       user_command: inputs/user-command.md
-     task: |
-       You are Kowalski. Your ONLY job is analysis — no implementation, no final decisions.
-       DO NOT fetch Figma URLs directly. Rico handles Figma discovery.
-       Use figma_notes.md only as plain text context.
+    input:
+      jira_task: inputs/jira-task.md
+      figma_notes: inputs/figma-notes.md
+      user_command: inputs/user-command.md
+    task: |
+      You are Kowalski. Your ONLY job is analysis — no implementation, no final decisions.
+      DO NOT fetch Figma URLs directly. Rico handles Figma discovery.
+      Use figma_notes.md only as plain text context.
 
-       Read:
-         - Jira task: inputs/jira-task.md
-         - Figma notes: inputs/figma-notes.md
-         - User command: inputs/user-command.md
+      Read:
+        - Jira task: inputs/jira-task.md
+        - Figma notes: inputs/figma-notes.md
+        - User command: inputs/user-command.md
 
-       Produce a concise synthesis document to /tmp/penguins/kowalski_analysis.md:
-         1. What exactly needs to be built (2-3 sentences max)
-         2. What already exists that can be reused (bullet points)
-         3. Recommended approach with rationale (one option only — no A/B/C)
-         4. Risks and edge cases (bullet points)
-         5. Compliance check — any guardrail violations?
+      Produce a concise synthesis document to /tmp/penguins/kowalski_analysis.md:
+        1. What exactly needs to be built (2-3 sentences max)
+        2. What already exists that can be reused (bullet points)
+        3. Recommended approach with rationale (one option only — no A/B/C)
+        4. Risks and edge cases (bullet points)
+        5. Compliance check — any guardrail violations?
 
       Return ONLY the path to the output file: /tmp/penguins/kowalski_analysis.md
     output: /tmp/penguins/kowalski_analysis.md
@@ -77,10 +77,10 @@ steps:
     isolated: true
     depends_on: [discovery]
     parallel_group: null
-      input:
-       jira_task: inputs/jira-task.md
-       user_command: inputs/user-command.md
-       kowalski_analysis: /tmp/penguins/kowalski_analysis.md
+    input:
+      jira_task: inputs/jira-task.md
+      user_command: inputs/user-command.md
+      kowalski_analysis: /tmp/penguins/kowalski_analysis.md
     task: |
       You are Skipper. Your ONLY job is to make the final implementation decision
       and produce an actionable plan for Private.
@@ -115,9 +115,9 @@ steps:
     agent: private
     isolated: true
     parallel_group: execution
-     input:
-       rico_findings: /tmp/penguins/rico_findings.md
-       skipper_plan: /tmp/penguins/skipper_plan.md
+    input:
+      rico_findings: /tmp/penguins/rico_findings.md
+      skipper_plan: /tmp/penguins/skipper_plan.md
     task: |
       You are Private. Your ONLY job is implementation — no decisions, no planning.
 
@@ -145,8 +145,8 @@ steps:
     agent: melman
     isolated: true
     parallel_group: execution
-     input:
-       skipper_plan: /tmp/penguins/skipper_plan.md
+    input:
+      skipper_plan: /tmp/penguins/skipper_plan.md
     task: |
       You are Melman. Prepare validation checklist while Private implements.
 
@@ -233,18 +233,28 @@ steps:
         4. If Melman reported FAIL — list what still needs fixing before delivery
 
       Notify before the final response:
-        - If Melman reported PASS: node tools/notify.mjs --event workflow_complete --title "Penguins workflow complete" --message "Workflow finalized successfully" --priority default
+        - Only if Melman reported PASS and delivery is approved: node tools/notify.mjs --event workflow_complete --title "Penguins workflow complete" --message "<Task text, or Task completed successfully if empty>" --priority default
         - If Melman reported FAIL: node tools/notify.mjs --event validation_failed --title "Penguins validation failed" --message "Melman reported validation issues" --priority high
         - If finalization fails for another reason: node tools/notify.mjs --event workflow_failed --title "Penguins workflow failed" --message "Workflow finalization failed" --priority high
         - If a blocker stops finalization: node tools/notify.mjs --event blocked --title "Penguins blocked" --message "<blocker reason>" --blocker-id "<unique-id>" --followup-message "<resolution hint>" --priority high
 
       Under rules/notification-network-exception.md, real workflow notifications use tools/notify.mjs without --dry-run for the allowed events above. Do not make direct ad-hoc network calls.
 
-      Read /tmp/penguins/notifications.jsonl after notifying. Include the latest status before the final phrase:
+      Read /tmp/penguins/notifications.jsonl after notifying. Include the current attempt's status before the final phrase:
       Notification: sent|skipped|failed
 
-      End with exactly:
-      Smile and wave boys, smile and wave 🐧🐧🐧🐧🦒🐒
+      If sending is unavailable or forbidden, report not_attempted and its reason; never reuse historical delivery evidence. Preserve runtime/session restrictions and the existing notification policy.
+
+      Follow rules/finalization.md. Select the final line by the actual event:
+        - `workflow_complete`: `Smile and wave boys, smile and wave 🐧🐧🐧🐧🦒🐒`
+        - `workflow_failed`: `Boys we have a problem!`
+        - `validation_failed`: `Boys we have a problem!`
+        - `blocked`: `Boys we have a problem!`
+        - `blocker_resolved`: `Boys we have a problem!`
+        - `decision_required`: `Kowalski! Options!`
+        - `approval_required`: `Kowalski! Options!`
+        - `workflow_started`: `🐧 Penguins workflow started!`
+      Only successfully validated workflow_complete may use the success phrase; every other status must never append it. Nothing follows the selected final line. Notification delivery does not establish workflow success.
 
 parallel_execution:
   enabled: true

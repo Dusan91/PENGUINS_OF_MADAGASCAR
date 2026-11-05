@@ -1,14 +1,12 @@
 # Penguins Notifications
 
-Penguins workflows can notify a phone through ntfy when a workflow finishes or needs a user decision.
+Penguins workflows can notify a phone through Telegram when a workflow finishes or needs a user decision. Telegram is the sole transport; failed delivery has no fallback.
 
-Real workflow sends are allowed only under `rules/notification-network-exception.md`. External network access remains forbidden outside the exception: only `tools/notify.mjs` may send `POST https://ntfy.sh/<configured-topic>` for approved workflow notification events. Direct ad-hoc network calls to ntfy or any other service remain forbidden.
+Standing user permission authorizes real workflow sends in future sessions under `rules/notification-network-exception.md`, without separate approval for each send. External network access remains forbidden outside the exception: only `tools/notify.mjs` may send `POST https://api.telegram.org/bot<token>/sendMessage` for approved workflow notification events. Direct ad-hoc network calls, bot polling/launch, and credential changes remain forbidden. Fresh explicit session restrictions and higher-priority runtime restrictions take precedence; historical cleanup-session bans do not apply automatically to new sessions. Never bypass tool approval or sandbox controls.
 
 ## Setup
 
-1. Install the ntfy mobile app.
-2. Subscribe to topic `penguins-dusan-7f3a9c`.
-3. Keep notifications enabled for the topic.
+Use the existing Telegram bot/chat configuration identified by `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`, and keep Telegram notifications enabled on the phone. Do not expose their values or edit credentials as part of this cleanup.
 
 No npm packages are required. The notifier uses Node's built-in `fetch`.
 
@@ -24,7 +22,7 @@ Every notifier run appends one JSONL status entry to `/tmp/penguins/notification
 node tools/notify.mjs --event workflow_complete --title "Penguins" --message "Workflow finished" --status-file /tmp/penguins/custom-notifications.jsonl
 ```
 
-Each entry includes `timestamp`, `event`, `title`, `status`, and optional `reason` or `statusCode`. Status is one of `sent`, `skipped`, or `failed`.
+For valid invocations, each entry includes `timestamp`, `event`, `title`, `status`, and optional `reason`, `statusCode`, `provider`, or `blockerId`. Status is one of `sent`, `skipped`, or `failed`; confirmed sends include `provider: telegram`. Delivery errors use fixed secret-safe reasons, never raw transport errors or response bodies, and are nonfatal. Invalid arguments are rejected with a nonzero exit before delivery or status persistence.
 
 Supported events:
 
@@ -38,6 +36,8 @@ Supported events:
 - `blocker_resolved`
 
 Optional priority values are `min`, `low`, `default`, `high`, `urgent`, or `1` through `5`:
+
+Priority remains accepted for CLI compatibility but does not select Telegram delivery urgency. `--options` accepts a JSON array of label/value objects for inline buttons; message text uses MarkdownV2 escaping.
 
 ```sh
 node tools/notify.mjs --event decision_required --title "Penguins decision needed" --message "Skipper needs user input" --priority high
@@ -57,7 +57,7 @@ Dry-run mode validates the event/title/message arguments and writes a skipped st
 node tools/notify.mjs --dry-run --event workflow_complete --title "Penguins" --message "Workflow finished"
 ```
 
-Use dry-run mode for simulations, local checks, or any session where the notification network exception is not active. When the exception is active, Skipper may omit `--dry-run` only for real workflow notification events.
+Use dry-run mode for simulations or local checks where permitted. Dry-run takes precedence over disabled mode. Dry-run reads environment configuration and writes real evidence, so use an isolated mocked harness when session restrictions require it. Under standing permission, Skipper should omit `--dry-run` for real workflow notification events unless a fresh session or runtime restriction prohibits execution.
 
 ## Blocker Lifecycle
 
@@ -72,13 +72,13 @@ node tools/notify.mjs --event blocked \
   --priority high
 ```
 
-The resolve button payload has the format `penguins:blocker:resolve:<blockerId>` and is limited to 64 characters. Clicking it appends a resolved entry to `/tmp/penguins/blockers.jsonl` and sends a follow-up `--event blocker_resolved` notification through the same `notify.mjs` path.
+The resolve button payload has the format `penguins:blocker:resolve:<blockerId>` and is limited to 64 characters. Clicking it delegates a follow-up `--event blocker_resolved` notification to the same `notify.mjs` path, using the stored follow-up text. `--resolved-by` records the resolver.
 
-Blocker state is append-only. Open entries are written when a `blocked` notification is sent; resolved entries are written when the inline resolve action is handled by `tools/telegram-auto-workflow-bot.mjs`.
+Blocker state is append-only in `/tmp/penguins/blockers.jsonl` by default (`--blockers-file` overrides the path). Only `notify.mjs` writes an open or resolved row after successful sending, retaining the Telegram message ID; the bot delegates resolution and does not append a duplicate. Failed delivery appends no lifecycle row.
 
 ## Simulation
 
-Run the built-in simulation without network access:
+The built-in simulation uses dry-run without network access:
 
 ```sh
 node tools/simulate-workflow-notifications.mjs
@@ -88,7 +88,7 @@ It writes dry-run evidence to `/tmp/penguins/notifications-simulation.jsonl` for
 
 ## Real Phone Test
 
-After subscribing to the ntfy topic on the phone, send one real notification only when `rules/notification-network-exception.md` applies, then check `/tmp/penguins/notifications.jsonl` for `"status":"sent"`:
+Standing permission covers real workflow events, not synthetic phone tests. A live phone test requires separate explicit authorization and must respect session/runtime restrictions. When authorized, use the existing notifier and check the evidence for `"status":"sent"`:
 
 ```sh
 node tools/notify.mjs --event decision_required --title "Penguins phone test" --message "Confirm this appeared on the phone" --priority high
@@ -97,12 +97,10 @@ node tools/notify.mjs --event decision_required --title "Penguins phone test" --
 ## Environment Overrides
 
 - `PENGUINS_NOTIFY_ENABLED=false` disables notifications and exits successfully.
-- `PENGUINS_NOTIFY_PROVIDER=ntfy` selects the notifier provider.
-- `PENGUINS_NTFY_URL=https://ntfy.sh` overrides the ntfy base URL.
-- `PENGUINS_NTFY_TOPIC=penguins-dusan-7f3a9c` overrides the topic.
+- `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` identify the existing Telegram configuration. Missing values produce nonfatal failed evidence without a network request.
 
-For local overrides, use an untracked `.penguins-notify.env` file if needed.
+The notifier loads the Penguins root `.env` using its existing loader; existing process environment values take precedence, including empty values. An absent or unreadable file is nonfatal. No environment or credential files are changed by this task.
 
 ## Workflow Rule
 
-Skipper should call `node tools/notify.mjs` when a workflow starts, completes, fails validation, fails overall, is blocked, or stops for a user decision or approval. Under `rules/notification-network-exception.md`, these real workflow sends should run without `--dry-run`; otherwise, use `--dry-run`. Skipper must include the notification command output and latest evidence status in the final summary and audit log. If the notifier fails, Skipper should still report the original workflow status and include the notification failure in the summary and audit log.
+Skipper should call `node tools/notify.mjs` when a workflow starts, completes, fails validation, fails overall, is blocked, or stops for a user decision or approval, subject to stricter session restrictions. Under `rules/notification-network-exception.md`, authorized real workflow sends should run without `--dry-run`. Skipper must include command output and latest evidence status in the final summary and audit log. When execution is forbidden, record `not_attempted` and the reason instead; do not fabricate or reuse historical delivery evidence. If delivery fails, report the original workflow status and the nonfatal notification failure; no other transport is attempted.

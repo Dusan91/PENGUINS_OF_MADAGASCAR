@@ -6,9 +6,6 @@ import { fileURLToPath } from 'node:url';
 
 const DEFAULTS = {
   enabled: true,
-  provider: 'telegram',
-  ntfyBaseUrl: 'https://ntfy.sh',
-  ntfyTopic: 'penguins-dusan-7f3a9c',
   statusFile: '/tmp/penguins/notifications.jsonl',
   blockersFile: '/tmp/penguins/blockers.jsonl',
 };
@@ -227,13 +224,8 @@ function getConfig(env) {
     enabled: env.PENGUINS_NOTIFY_ENABLED === undefined
       ? DEFAULTS.enabled
       : env.PENGUINS_NOTIFY_ENABLED.toLowerCase() !== 'false',
-    provider: env.PENGUINS_NOTIFY_PROVIDER || DEFAULTS.provider,
-    // Telegram
     telegramToken: env.TELEGRAM_BOT_TOKEN || '',
     telegramChatId: env.TELEGRAM_CHAT_ID || '',
-    // ntfy (fallback)
-    ntfyBaseUrl: env.PENGUINS_NTFY_URL || DEFAULTS.ntfyBaseUrl,
-    ntfyTopic: env.PENGUINS_NTFY_TOPIC || DEFAULTS.ntfyTopic,
   };
 }
 
@@ -404,69 +396,21 @@ async function sendTelegram(config, payload, blockersFile) {
   );
 
   if (!response.ok) {
-    const errText = await response.text().catch(() => '(no body)');
-    throw new Error(`Telegram HTTP ${response.status}: ${errText}`);
+    throw Object.assign(new Error('Telegram HTTP request failed'), { statusCode: response.status });
   }
 
-  let telegramMessageId = null;
+  let result;
   try {
-    const result = await response.clone().json();
-    if (result?.result?.message_id) {
-      telegramMessageId = result.result.message_id;
-    }
+    result = await response.json();
   } catch {
-    // ignore parse failure
+    throw Object.assign(new Error('Invalid Telegram response'), { statusCode: response.status });
   }
 
-  return { statusCode: response.status, telegramMessageId };
-}
-
-function ntfyUrl(baseUrl, topic) {
-  const url = new URL(baseUrl);
-  url.pathname = `${url.pathname.replace(/\/$/, '')}/${encodeURIComponent(topic)}`;
-  return url;
-}
-
-function validateNtfyConfig(config) {
-  let url;
-  try {
-    url = new URL(config.ntfyBaseUrl);
-  } catch {
-    throw new Error('PENGUINS_NTFY_URL must be a valid URL');
+  if (result?.ok !== true || !Number.isSafeInteger(result?.result?.message_id) || result.result.message_id <= 0) {
+    throw Object.assign(new Error('Invalid Telegram response'), { statusCode: response.status });
   }
 
-  if (!['http:', 'https:'].includes(url.protocol)) {
-    throw new Error('PENGUINS_NTFY_URL must use http or https');
-  }
-
-  if (!/^[A-Za-z0-9_-]{1,128}$/.test(config.ntfyTopic)) {
-    throw new Error('PENGUINS_NTFY_TOPIC may only contain letters, numbers, underscore, and hyphen');
-  }
-}
-
-async function sendNtfy(config, payload) {
-  validateNtfyConfig(config);
-
-  const headers = {
-    Title: payload.title,
-    Tags: payload.event.replace(/_/g, '-'),
-  };
-
-  if (payload.priority !== undefined) {
-    headers.Priority = payload.priority;
-  }
-
-  const response = await fetch(ntfyUrl(config.ntfyBaseUrl, config.ntfyTopic), {
-    method: 'POST',
-    headers,
-    body: payload.message,
-  });
-
-  if (!response.ok) {
-    throw new Error(`ntfy HTTP ${response.status}`);
-  }
-
-  return response.status;
+  return { statusCode: response.status, telegramMessageId: result.result.message_id };
 }
 
 async function main() {
@@ -490,8 +434,6 @@ async function main() {
 
   const blockersFile = args['blockers-file'] || DEFAULTS.blockersFile;
 
-  // Attempt Telegram first (primary)
-  let telegramError = null;
   try {
     const { statusCode, telegramMessageId } = await sendTelegram(config, payload, blockersFile);
     await appendStatus(statusFile, statusEntry(payload, 'sent', { provider: 'telegram', statusCode }));
@@ -506,21 +448,15 @@ async function main() {
     console.log(`sent: ${payload.event} via telegram`);
     return;
   } catch (err) {
-    telegramError = err;
-    console.error(`telegram fail: ${err.message} — falling back to ntfy`);
-  }
-
-  // Fallback: ntfy
-  try {
-    const statusCode = await sendNtfy(config, payload);
-    await appendStatus(statusFile, statusEntry(payload, 'sent', { provider: 'ntfy-fallback', statusCode }));
-    console.log(`sent: ${payload.event} via ntfy (fallback)`);
-  } catch (ntfyErr) {
+    const statusCode = Number.isInteger(err?.statusCode) && err.statusCode >= 100 && err.statusCode <= 599
+      ? err.statusCode
+      : undefined;
     await appendStatus(statusFile, statusEntry(payload, 'failed', {
-      reason: `telegram: ${telegramError.message}; ntfy: ${ntfyErr.message}`,
+      reason: 'Telegram delivery failed',
+      statusCode,
     }));
     // Log but do NOT exit with error — workflow must continue
-    console.error(`fail: both telegram and ntfy failed. telegram=${telegramError.message} ntfy=${ntfyErr.message}`);
+    console.error('fail: Telegram delivery failed');
   }
 }
 

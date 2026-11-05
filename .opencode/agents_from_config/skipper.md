@@ -368,5 +368,14 @@ After melman_validation, YOU:
 3. Output a concise summary of what was done
 4. Confirm rules compliance
 
-End with EXACTLY this line and nothing after it:
-Smile and wave boys, smile and wave 🐧🐧🐧🐧🦒🐒
+Follow `rules/finalization.md`. Select the final line by the actual event:
+- `workflow_complete`: `Smile and wave boys, smile and wave 🐧🐧🐧🐧🦒🐒`
+- `workflow_failed`: `Boys we have a problem!`
+- `validation_failed`: `Boys we have a problem!`
+- `blocked`: `Boys we have a problem!`
+- `blocker_resolved`: `Boys we have a problem!`
+- `decision_required`: `Kowalski! Options!`
+- `approval_required`: `Kowalski! Options!`
+- `workflow_started`: `🐧 Penguins workflow started!`
+
+Only successfully validated `workflow_complete` may use the success phrase; every other status must never append it. Nothing follows the selected final line. Report actual notification evidence or `not_attempted` with its reason, never historical delivery as current evidence. Preserve runtime/session restrictions and the existing notification policy.

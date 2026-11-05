@@ -1,5 +1,26 @@
 # Architectural Decisions
 
+## 2026-11-04 - Event-specific workflow final wording
+
+- Run status-wording-20261104: supplied Skipper approval limits success wording to successfully validated workflow_complete. Failures, blocked and blocker_resolved use "Boys we have a problem!"; decisions/approvals use "Kowalski! Options!"; workflow_started uses "🐧 Penguins workflow started!". Six instruction sources aligned; runtime/session restrictions retain priority.
+- User explicitly approved minimal indentation repairs in the two scoped v2 workflows after baseline YAML parsing failed. No step order, agent, dependency, permission, notifier transport or application change authorized.
+- Private implementation evidence is recorded under /tmp/penguins/status-wording-20261104/. Independent validation and Skipper acceptance remain pending; no live delivery or runtime behavior certified. Historical records remain unchanged.
+
+## 2026-11-04 - OpenCode V2 agent instruction alignment
+
+- User explicitly authorized fixing the instruction issues found in all 13 global agents. Scope: global AGENTS.md and agents/*.md plus required memory/audit records; unrelated application input task is not executed.
+- All agents follow a shared V2 runtime protocol: load the OpenCode skill for relevant work, consult V2 docs through Context7, use exposed subagent/skill schemas, and use local file tools instead of prohibited MCP services. Final FFF/MemoryGraph deny rules override earlier allows in every agent.
+- Preserve read-only edit denials. When report writing is unavailable, return complete inline content with artifact_written: false rather than a fabricated file path. Skipper may delegate exact-content mechanical persistence with a file allowlist to an authorized writer; this narrow administrative assignment does not require an application implementation plan or confer decision authority.
+- YAML/frontmatter and effective FFF/MemoryGraph denials verified offline for all 13 agents, along with retained read-only edit denials and absence of obsolete Task tool/skill name syntax. Actual child-agent execution and live workflow behavior remain unverified.
+
+## 2026-11-04 - Standing permission for future Telegram workflow notifications
+
+- User explicitly requested persistent Telegram notification permission for future sessions. Scope approved: global OpenCode instructions and Penguins notification policy/documentation plus this decision and audit entry; no application work or old input task is authorized by this request.
+- Future sessions may run the existing `node tools/notify.mjs` from the Penguins root without `--dry-run` for real allowed workflow events, without separate approval per send. Only the notifier's Telegram sendMessage request is excepted from the network ban.
+- This supersedes interpreting the 2026-11-02 cleanup-session ban as a persistent prohibition. Historical decisions and delivery/audit records remain unchanged. Fresh explicit session restrictions and higher-priority runtime/tool restrictions still win; never bypass approval or sandbox controls.
+- No direct network calls, synthetic phone tests without separate approval, bot polling/launch, credential/environment changes, or other network access are authorized. Existing credentials are used only by the notifier. No notifier or OpenCode JSON configuration change was needed; no global permission override was added.
+- Restart OpenCode to load revised instructions. This administrative change does not verify credentials, notifier validation, or live Telegram delivery, and does not close prior validation blockers. No live send was attempted in the editing session.
+
 ## 2026-08-14 — Skipper notifier requirement for decisions and blockers
 
 - Future Skipper decisions and workflow blockers must trigger `node tools/notify.mjs` notification when shell/tool access permits.
@@ -192,3 +213,47 @@
 - Tolgee language uses versioned AsyncStorage validated against shared `ALL_LANGUAGES`; missing or invalid data falls back through Tolgee `getLanguage()`, and keyed provider ownership gives each configuration a disposable fallback lifecycle plus one fresh final initialization.
 - Authentication and logout scoping remain unchanged; persistence is not account-scoped.
 - No new dependencies were introduced.
+
+## 2026-11-02 — Telegram-only notifier supersedes legacy transport guidance
+
+- Task-specific Skipper approval: `/tmp/penguins/skipper_decision.md`; implementation plan: `/tmp/penguins/kowalski_plan.md`. Exactly nine files plus scratch authorized; unrelated odds-toggle inputs are not task authority.
+- Telegram is the sole notifier transport. `PENGUINS_NOTIFY_PROVIDER` and `PENGUINS_NTFY_*` settings are no longer read; there is no fallback. Missing Telegram credentials and delivery failures produce nonfatal failed evidence, not confirmed sends or blocker lifecycle transitions.
+- This supersedes earlier transport/workaround guidance, not historical delivery records. Do not blank Telegram credentials to activate another transport or edit credentials for this cleanup.
+- Session restrictions override local notification permission, including the earlier mandatory-notifier decision: no live sends, bot launch, or completion notification in this session. Record `not_attempted` with its reason rather than reusing historical evidence.
+- Actual implementation checks: syntax check and 48 isolated offline regression cases passed; independent Melman validation is pending. Live Telegram delivery remains unverified. No dependencies or credential files changed.
+
+## 2026-11-03 - Casino keyboard screen ownership and static-only acceptance
+
+- Supplied Skipper ACCEPTED_STATIC follows independent Melman PASS_STATIC for the expanded MEDIUM casino/lobby keyboard cycle, with bounded planning fallback rather than a completed Kowalski-subagent run. Mechanical finalization does not issue another verdict or assert model identity. Audit: audit/2026-11-03.json and memory/audit-log.md.
+- User approved both screen files beyond initial search-only scope and confirmed BOTH platforms via question tool, as supplied. Only casino.screen.tsx and casino-lobby.screen.tsx changed; search-input.tsx unchanged. Scope claims concern the introduced patch, not a worktree audit; old BLOCKED history remains intact.
+- Screen ScrollViews own native iOS automatic keyboard insets and Android viewport-only reveal under documented Expo resize ownership. No duplicate KeyboardAvoidingView/padding, global provider/window changes, guessed offsets, or dependency additions. Measured reveal uses current local focus, minimal overflow and stale-measurement/unmount/blur/user-scroll guards; drag suppresses reveal until next local focus.
+- Installed RN same-key-window evidence bounds coordinate comparison to normal full-window deployment and native TextInput bounds. Android actual resize remains unknown; short content/iOS viewport mount with IME already open may lack scroll range/insets, cached metrics may be stale, and async/native scroll can invalidate correction. No floating/split/multiwindow/whole-row or runtime/StrictMode certification.
+- Device validation of these boundaries remains separately required. Future Android native/window/config changes require separate evidence and explicit approval; do not silently stack avoidance or generalize this scoped static acceptance. Notifications not_attempted under session restriction; no historical delivery reused.
+
+## 2026-11-03 - Explicit auto-workflow invocations always start fresh
+
+- User instruction: every explicit `/auto-workflow` or `/auto-worklfow` invocation starts a fresh cycle with fresh classification, discovery, plan and approval as required by the selected workflow and agent prerequisites. Use unique run artifacts; shared scratch and historical plans/approvals/reports/outcomes are not current authority merely because their paths exist.
+- Fresh workflow means fresh evidence/authorization, not erasing source work. Preserve user/concurrent source work and audit/history; never reset the worktree, revert unrelated changes or rewrite historical verdicts to manufacture a clean start.
+- Resolve tooling limits against actual runtime capabilities. Use bounded capable helpers when needed; faithfully attribute inline plans/verdicts and executed evidence. Never invent tools/model identities or bypass safety, scope or approval requirements.
+- Applied to fresh MEDIUM favorites run `rico-20261103-104010`: supplementary Kowalski inline plan and task-specific Skipper approval preceded one-file filters-section.tsx patch; independent runner assist enabled Melman evidence review on one retry despite reviewer shell/writer limits. Supplied PASS_STATIC/ACCEPTED_STATIC mechanically recorded, not new writer verdicts. Audit: audit/2026-11-03.json and memory/audit-log.md.
+- Notifications not_attempted under session prohibition, no historical delivery reuse. Static acceptance is not clean typecheck, device/runtime/React lifecycle or real-cache certification.
+
+## 2026-11-03 - Mobile balance bridge fallback and static-only acceptance
+
+- Run `rico-20261103-111658-11664`: supplied Melman PASS_STATIC and Skipper inline ACCEPTED_STATIC mechanically persisted, not new writer verdicts. Specialized planner failed twice solely for writer absence; general-agent bounded fallback plan and task-specific approval authorized one hunk only. Stale reviewer favorites path was rejected before current inline retry review; runner execution and reviewer judgment remain separately attributed.
+- Scope: one `injectedJavaScript={MESSAGE_BRIDGE_SCRIPT}` prop at mobile game.tsx:593 adds document-end fallback while retaining early injection and idempotence. Preserve parser (including blank/whitespace-to-zero), mode, cache/updater, auth/financial/API behavior; no polling/refetch, package or protected-area changes authorized. Web remains byte-equal to run baseline. No permission to generalize to other providers/screens.
+- Evidence: 83 actual-source offline cases with installed real QueryClient and disabled offline QueryObserver, not mounted UI; original and independent runner outputs match. TS 82 diagnostics each and ESLint 16 errors/one warning each, zero introduced, not clean checks. Acceptance is scoped to reviewed patch and supplied baselines, never whole-worktree certification.
+- Root cause remains unconfirmed. Native/device/provider/frame/payload timing, navigation/fullscreen, React lifecycle/enabled observers and in-flight overwrite need separately authorized evidence. Late fallback cannot recover prior missed messages. This is not a universal runtime diagnosis or certified device repair.
+- Current canonical/run-local reports identify this run; prior canonical favorites report archived unchanged as historical only. Earlier events and source work preserved. Audit: audit/2026-11-03.json and memory/audit-log.md. Notifications not_attempted under session prohibition despite Task request; no notifier or historical delivery reuse. No workflow/config changes required.
+
+## 2026-11-04 - Odds toggle consumer-local selection and static boundary
+
+- Run odds-toggle-20261104-02: supplied Melman PASS_STATIC and Skipper ACCEPTED_STATIC, mechanically finalized, not a new finalizer verdict. User's 'resi blokere' authorized exactly the mobile odds-toggle.tsx and mobile offer/mobile-boosted-odds-matches.tsx introduced patch; web reference and hook files remain outside write scope.
+- Consumer owns per-sport requested IDs because parent MOBILE_PREMATCH_TOP selection cannot represent MOBILE_BONUS_TIP groups. Controlled header and rows share the effective group/list; validate ID 0 explicitly. Preserve parent/first and existing any-match availability fallbacks; retain requests through collapse/refresh/temporary removal, reset on consumer unmount. This task-specific decision does not authorize unrelated state or availability changes.
+- Private's 21 mocked offline cases, unchanged full failing TS logs and three unchanged lint warnings, supplied independent source review and earlier writer integrity recomputation support static-only acceptance. No device/runtime/React lifecycle/real-payload/whole-worktree certification; separate missing-odds diagnosis remains unresolved. Audit: audit/2026-11-04.json and memory/audit-log.md. Fresh authorized completion notification: sent via Telegram, HTTP 200, 2026-11-04T09:45:52.714Z; API acceptance, not device receipt.
+
+## 2026-11-04 - Status-wording administrative delivery accepted statically
+
+- Run status-wording-20261104: supplied Skipper ACCEPTED_STATIC follows supplied independent Melman PASS_STATIC, mechanically persisted without a new writer verdict. Review covered six instruction sources/diff, eight-event mapping, successful-validation gate, intended YAML nesting and unchanged controls; no issues reported. Private's 66 offline checks passed; reviewer did not rerun them.
+- This closes only the administrative wording task at static scope. No live agent behavior, whole-worktree certification or Android stake fix is claimed. Android stake issue remains unresolved; no application work authorized by finalization.
+- Fresh authorized workflow_complete notification sent via existing notifier, Telegram HTTP 200, 2026-11-04T14:17:57.173Z, notifications.jsonl line 13. Message explicitly separates administrative completion from unresolved Android issue. API acceptance is not device receipt. Prior pending/blocker history retained; report: /tmp/penguins/status-wording-20261104/finalization.md.
