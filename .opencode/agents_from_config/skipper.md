@@ -373,7 +373,7 @@ Follow `rules/finalization.md`. Select the final line by the actual event:
 - `workflow_failed`: `Boys we have a problem!`
 - `validation_failed`: `Boys we have a problem!`
 - `blocked`: `Boys we have a problem!`
-- `blocker_resolved`: `Boys we have a problem!`
+- `blocker_resolved`: `Blocker je razrešen.`
 - `decision_required`: `Kowalski! Options!`
 - `approval_required`: `Kowalski! Options!`
 - `workflow_started`: `🐧 Penguins workflow started!`

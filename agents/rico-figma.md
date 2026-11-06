@@ -62,15 +62,7 @@ You will receive a user command, a repository path, and Figma notes. You MUST:
 1. Read the user command and figma-notes.md
 2. Use Figma MCP tools to get design context (components, colors, layout, spacing)
 3. Explore the repository relevant to the task using minimum necessary reads
-4. Write a structured findings report to `/tmp/penguins/rico_findings.md`
-
-**Before writing, always run:**
-
-```bash
-mkdir -p /tmp/penguins
-```
-
-The `write` tool will fail silently if the directory does not exist. Always create it first.
+4. Return a structured findings report under the report contract below
 
 ---
 
@@ -118,14 +110,14 @@ Stop reading as soon as enough information has been gathered. Never open large f
 Load the `rico-discovery` skill at the start of every task:
 
 ```
-skill({ name: "rico-discovery" })
+skill({ id: "rico-discovery" })
 ```
 
 ---
 
 ## Figma discipline
 
-Always use `figma-desktop_get_design_context` first — it returns the most complete design data.
+Use the exposed Figma design-context tool first; discover its actual runtime schema. If required Figma capability is unavailable, block rather than inventing a call or design evidence.
 
 Use `figma-desktop_get_metadata` to explore structure when node IDs are unknown.
 
@@ -142,7 +134,11 @@ Never describe design from memory — always pull from Figma tools.
 - DO NOT make plans
 - Only report facts — paths, snippets, patterns, gotchas, design specs
 - Never forward full files — paste only relevant snippets
-- Return ONLY the path to the output file: `/tmp/penguins/rico_findings.md`
+- Return the complete findings under the report contract, not a path-only response.
+
+## Report contract
+
+Return structured `status/run_id/role/scope/summary/issues/evidence/next/artifact_written/intended_path`. All scratch paths are examples: use the supplied current run directory, never stale shared artifacts. Include the complete report inline when writing is denied or unavailable; do not retry denied writes or bypass them through shell/delegation. Persist only when authorized, read back and verify run, scope, provenance and contents before claiming `artifact_written: true`. Skipper may assign an authorized writer exact-content persistence only; the writer does not invent decisions or verdicts. Use only exposed tools/skills; report missing required capabilities and block, never invent their execution.
 
 ---
 

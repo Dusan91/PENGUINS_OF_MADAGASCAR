@@ -257,3 +257,25 @@
 - Run status-wording-20261104: supplied Skipper ACCEPTED_STATIC follows supplied independent Melman PASS_STATIC, mechanically persisted without a new writer verdict. Review covered six instruction sources/diff, eight-event mapping, successful-validation gate, intended YAML nesting and unchanged controls; no issues reported. Private's 66 offline checks passed; reviewer did not rerun them.
 - This closes only the administrative wording task at static scope. No live agent behavior, whole-worktree certification or Android stake fix is claimed. Android stake issue remains unresolved; no application work authorized by finalization.
 - Fresh authorized workflow_complete notification sent via existing notifier, Telegram HTTP 200, 2026-11-04T14:17:57.173Z, notifications.jsonl line 13. Message explicitly separates administrative completion from unresolved Android issue. API acceptance is not device receipt. Prior pending/blocker history retained; report: /tmp/penguins/status-wording-20261104/finalization.md.
+
+## 2026-11-05 - Optimization instruction routing accepted statically
+
+- Supplied Skipper memory decision, mechanically persisted by Private for optimize-20261105-01/correction-01; no new writer decision.
+- 2026-11-05: Inline structured current-run report authority with optional authorized verified persistence; SMALL bounded Skipper plan/approval+independent validation, MEDIUM single refactor chain, high-risk/LARGE mandatory gates; direct available specialist dispatch, disjoint independent Private-2 ownership. Run optimize-20261105-01 static acceptance only; models/security/depth unchanged.
+- Supplied Melman PASS_STATIC and Skipper ACCEPTED_STATIC resolve M1/M2 only; not all six-phase objectives complete. Effective permissions/built-ins/live routing and speedup unverified; no external/service bypass or whole-worktree certification.
+- Report: /tmp/penguins/optimize-20261105-01/finalization.md. Current blocker_resolved notification sent via Telegram HTTP 200 at 2026-11-05T15:12:26.951Z; /tmp/penguins/notifications.jsonl line 6. API acceptance, not device receipt; not workflow_complete.
+
+## 2026-11-05 - Finalization wording mapping accepted statically
+
+- Supplied Skipper mapping decision, mechanically persisted by Private; historical mappings retained unchanged.
+- wording-20261105-02: Melman PASS_STATIC independently reviewed six current files/diff/snapshots/checker/results; Private 56 offline checks, reviewer did not rerun. Six blocker_resolved mappings now Blocker je razrešen.; canonical DONE clarification restricts scope claims and distinguishes static acceptance/unverified runtime. All other mappings/security/completion gates unchanged in scoped patch. Skipper ACCEPTED_STATIC; bounded wording task workflow_complete, not completion of prior six-phase optimization/runtime audit. No live loaded-session guarantee. Author verdicts retained; writer mechanical only.
+- Report: /tmp/penguins/wording-20261105-02/finalization.md.
+
+## 2026-11-05 - Mandatory triad routing accepted statically
+
+- Supplied Skipper decision, mechanically persisted by Private for integrate-agents-20261105-01/stage1+stage2 correction01; not a new writer verdict. ACCEPTED_STATIC / workflow_complete after supplied independent review and final Melman PASS_STATIC. Historical stage2 failure retained.
+- Mort/Nana/Julien mandatory every cycle, including SMALL and direct routes; preflight actual exposed roles. Mort supplies current ready packets before handoffs, reuses only current applicable packets and refreshes on material changes. Direct inline handoffs avoid nested depth-limit retrieval.
+- Nana preapproval requires exact immutable reviewed plan identity; changed plan requires re-audit before approval. Postdiff requires actual introduced/supplied diff and approved scope. Missing/stale/mismatched evidence blocks; CAUTION requires explicit Skipper disposition.
+- Julien current report mandatory; insufficient_data nonblocking ONLY for performance, reported unmeasured with no speedup claims. Delegated target owns triad once; no router duplication. Legacy global commands point to current routes; stage1 read-only V2 model/body preserved.
+- Supplied correction Maurice/Melman-ts/final Melman PASS_STATIC and explicit Skipper Nana PRE/POST CAUTION disposition support administrative static acceptance only. No runtime/effective-dispatch/performance/application certification; unrelated accordion/virtualizer input Task not performed.
+- Report: /tmp/penguins/integrate-agents-20261105-01/finalization.md. Current completion notification sent via Telegram HTTP 200 at 2026-11-05T18:13:13.540Z; API acceptance, not device receipt.

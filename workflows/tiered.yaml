@@ -4,11 +4,38 @@ description: |
   Automatically routes tasks to appropriate workflow based on size/complexity.
 
   Tiers:
-  - small: Direct Private execution (no discovery/analysis agents)
-  - medium: Rico + Private + Melman
-  - large: Full parallel workflow
+  - small: Bounded Skipper plan/approval → Private → independent validation → finalization
+  - medium: Delegate solely to refactor_v2
+  - large: Dependency-ordered full workflow
 
 scratchpad_dir: /tmp/penguins
+
+execution_contract: |
+  Skipper allocates a unique run directory under scratchpad_dir. All artifact paths
+  are intended paths relative to that run, not proof of persistence.
+  Return structured status/run_id/role/scope/summary/issues/evidence/next/artifact_written/intended_path.
+  Include complete inline reports if writing is unavailable or denied; never retry
+  denied writes or bypass restrictions through shell/delegation. Persist only when
+  authorized, with readback verifying run, scope, provenance and contents. Skipper
+  may assign an authorized exact-content writer; no invented decisions or verdicts.
+  Reject stale/path-only reports. Missing mandatory roles/tools/skills block.
+  Conditional roles are dispatched directly by Skipper using exposed capabilities,
+  never by mandatory Rico nesting; no permission/model/depth/integration expansion.
+  Stop on FAIL/REJECTED/BLOCK. Preserve audit, finalization and notification policy.
+  Mandatory triad: mort, nana and julien participate in EVERY cycle, including SMALL.
+  Preflight the actual exposed triad and all mandatory roles of the selected route;
+  unavailable roles block, never substitute or expand permissions/model/depth.
+  SMALL owns the triad below. MEDIUM/LARGE delegate exactly once to their target
+  workflow, which owns the triad; do not repeat its steps in the router.
+  Before every specialist handoff, require Mort's ready current-run packet for that
+  target/task/source/constraints. Reuse only while current and applicable; refresh
+  on material changes. Missing/clarification/blocked packets stop dependent work.
+  Nana preapproval reviews the current plan/scope/security before approval; Nana
+  postdiff reviews the actual introduced diff before delivery. BLOCK, missing
+  required evidence or unavailable role stops; CAUTION needs explicit Skipper disposition.
+  Julien's current report is mandatory before finalization. insufficient_data is
+  nonblocking ONLY for performance: report unmeasured, with no performance/speedup
+  claims. A missing role/report still blocks. Existing gates remain mandatory.
 
 tiers:
   small:
@@ -17,14 +44,97 @@ tiers:
       - files_count: { max: 1 }
       - no_figma: true
       - no_jira: true
+      - high_risk: false
     workflow: direct
     steps:
+      - id: skipper_preflight
+        agent: skipper
+        task: Verify actual exposed mort/nana/julien/private/melman capabilities for this run; missing blocks.
+      - id: mort_context
+        agent: mort
+        depends_on: [skipper_preflight]
+        task: Supply ready current target/task/source/constraints packets under execution_contract; refresh before dependent handoffs when necessary.
+      - id: skipper_small_plan
+        agent: skipper
+        depends_on: [mort_context]
+        task: |
+          Emit and retain the complete current-run bounded plan, risks and exact
+          proposed file allowlist with run/scope/provenance. Retain immutable full
+          content or a verified content digest bound to that identity for Nana and
+          approval comparison; a mutable path alone is not identity. Do not approve yet.
+      - id: nana_preapproval
+        agent: nana
+        depends_on: [skipper_small_plan]
+        input:
+          bounded_plan: Complete retained skipper_small_plan content and run/scope/provenance identity
+          proposed_scope: Exact proposed file allowlist and risks from that same bounded plan
+          rules: [rules/coding-standards.md, rules/guardrails.md, rules/protected-areas.md]
+        task: |
+          Receive the complete retained bounded plan, same proposed scope/risks and
+          security rules in input. Accept complete inline evidence or authorized
+          artifacts verified for current run/scope/provenance/content; paths alone
+          are not evidence. Missing, stale, mismatched or unavailable required evidence
+          blocks. Audit before approval and report the exact inspected plan identity
+          using retained immutable content or verified content digest, plus scope and
+          rules inspected. BLOCK stops; CAUTION requires explicit Skipper disposition.
+      - id: skipper_small_approval
+        agent: skipper
+        depends_on: [nana_preapproval]
+        input:
+          bounded_plan: Complete retained skipper_small_plan content and run/scope/provenance identity
+          nana_preapproval: Complete current Nana report identifying that exact audited plan and scope
+        task: |
+          Only approve or reject the SAME retained plan, risks and exact allowlist
+          audited by Nana; never create or rewrite a plan in this approval step.
+          Compare complete immutable retained content or a verified content digest
+          tied to current run/scope/provenance against Nana's exact audited identity,
+          not a mutable path. Accept complete inline evidence or authorized artifacts
+          verified for current run/scope/provenance/content. Missing, stale, mismatched
+          or unavailable plan/report evidence blocks. Material changes block approval
+          until Nana re-audits the changed plan and scope before a new decision.
+          Approval must identify that exact reviewed plan and scope for Private;
+          do not dispatch Private without this explicit approval.
+          Require Nana preapproval and explicitly dispose of any CAUTION.
       - id: private_direct
         agent: private
+        depends_on: [skipper_small_approval]
         task: |
-          Execute the task from inputs/user-command.md directly.
-          Write diff to /tmp/penguins/private_diff.md
-          Return path to output.
+          Execute only the current approved bounded plan and exact file allowlist.
+          Return the complete diff report under execution_contract.
+      - id: melman_focused
+        agent: melman
+        depends_on: [private_direct]
+        task: |
+          Independently validate the introduced diff against the bounded plan,
+          risks and allowlist. Return checks, evidence, limitations and PASS/FAIL.
+      - id: nana_postdiff
+        agent: nana
+        depends_on: [private_direct]
+        input:
+          actual_diff: Complete actual introduced diff from private_direct, not its summary
+          approved_plan: Complete retained bounded plan identified by skipper_small_approval
+          approval_scope: Current skipper_small_approval and exact approved file allowlist
+          rules: [rules/coding-standards.md, rules/guardrails.md, rules/protected-areas.md]
+        task: |
+          Receive input.actual_diff, approved plan, current approval/exact scope and
+          rules. Accept complete inline evidence or authorized artifacts verified
+          for current run/scope/provenance/content; a summary or path alone is not
+          the actual diff. Missing, stale, mismatched or unavailable required evidence
+          blocks. Independently audit the actual diff against that approved plan/scope
+          and report exact inspected diff/plan/approval/scope/rules identities.
+          BLOCK stops delivery; CAUTION requires explicit Skipper disposition.
+      - id: julien_performance
+        agent: julien
+        depends_on: [melman_focused, nana_postdiff]
+        task: Report current-run verified workflow performance under execution_contract; insufficient_data is performance-only nonblocking with unmeasured/no speedup claims, never a missing report waiver.
+      - id: skipper_small_finalization
+        agent: skipper
+        depends_on: [melman_focused, nana_postdiff, julien_performance]
+        task: |
+          Require independent validation and delivery approval; stop on failure.
+          Preserve audit requirements. Follow rules/finalization.md and existing
+          notification policy; report actual evidence or not_attempted with reason.
+          Require all current triad reports and resolve Nana CAUTION explicitly.
 
   medium:
     description: Multiple files, no Figma, moderate complexity
@@ -32,38 +142,18 @@ tiers:
       - files_count: { min: 2, max: 5 }
       - no_figma: true
       - no_jira: true
+      - high_risk: false
     workflow: refactor_v2
-    steps:
-      - id: rico_quick
-        agent: rico
-        parallel_group: medium_discovery
-        task: |
-          Quick discovery. Read user-command.md.
-          Find only the files explicitly mentioned.
-          Output: /tmp/penguins/rico_findings.md
-
-      - id: private_medium
-        agent: private
-        depends_on: [rico_quick]
-        task: |
-          Read rico_findings + user_command.
-          Implement the change.
-          Output: /tmp/penguins/private_diff.md
-
-      - id: melman_medium
-        agent: melman
-        depends_on: [private_medium]
-        task: |
-          Validate private_diff against rules.
-          Output: /tmp/penguins/melman_report.md
+    next_workflow: refactor_v2
 
   large:
     description: Figma designs, many files, complex features
     triggers:
       any:
-        - figma_exists: true
-        - jira_exists: true
+        - figma_nonempty: true
+        - jira_nonempty: true
         - files_count: { min: 6 }
+        - high_risk: true
     workflow: jira_figma_to_code_v2
     next_workflow: jira_figma_to_code_v2
     # Uses full jira_figma_to_code_v2.yaml workflow
@@ -71,13 +161,13 @@ tiers:
 task_classifier:
   rules:
     - name: is_large
-      condition: "figma_exists OR jira_exists OR files_count >= 6"
+      condition: "figma_nonempty OR jira_nonempty OR files_count >= 6 OR high_risk"
       tier: large
     - name: is_medium
-      condition: "files_count >= 2 AND files_count <= 5 AND NOT figma_exists AND NOT jira_exists"
+      condition: "files_count >= 2 AND files_count <= 5 AND NOT figma_nonempty AND NOT jira_nonempty AND NOT high_risk"
       tier: medium
     - name: is_small
-      condition: "files_count <= 1 AND NOT figma_exists AND NOT jira_exists"
+      condition: "files_count <= 1 AND NOT figma_nonempty AND NOT jira_nonempty AND NOT high_risk"
       tier: small
 
   defaults:
@@ -90,19 +180,27 @@ classifier_input:
 
 classifier_task: |
   Analyze the inputs and determine task tier:
+  Treat missing, empty and whitespace-only Jira/Figma files as absent; no_figma
+  and no_jira mean no nonempty content, not mere absence of a file. Validate task
+  clarity before applying tier rules. Unknown scope/risk blocks classification.
+  High risk means protected-area, security, API-contract or critical business-logic
+  risk identified from the task/evidence; this does not authorize protected changes.
 
   LARGE if:
-    - figma-notes.md exists
-    - OR jira-task.md exists
+    - figma-notes.md has non-whitespace content
+    - OR jira-task.md has non-whitespace content
     - OR more than 5 files need to be modified
+    - OR high risk requires the full mandatory risk/review/TS/QA gates
 
   MEDIUM if:
     - 2-5 files need to be modified
     - No Figma, no Jira
+    - No high risk
 
   SMALL if:
     - 1 or fewer files
     - No Figma, no Jira
+    - No high risk
     - Simple fix or refactor
 
   BLOCKED if:
@@ -111,9 +209,8 @@ classifier_task: |
   If output is "tier: blocked", Skipper must notify before stopping:
     node tools/notify.mjs --event blocked --title "Penguins blocked" --message "Workflow classifier needs clearer input" --blocker-id "tiered-blocked" --followup-message "Provide a clearer user command, Jira task, or Figma notes." --priority high
 
-  Output ONLY:
-  - "tier: small" OR "tier: medium" OR "tier: large" OR "tier: blocked"
-  - One line only, no explanation
+  Return the execution_contract fields plus tier: small|medium|large|blocked,
+  with classification evidence and any blocker; never a path-only response.
 
 workflow_mapping:
   small: direct

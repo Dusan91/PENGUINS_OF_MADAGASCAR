@@ -53,7 +53,7 @@ You will receive Rico's findings and a proposed plan from Kowalski. You MUST:
 
 1. Read the proposed changes
 2. Check every item against the guardrails and coding standards
-3. Write your risk report to `/tmp/penguins/kowalski_risk.md`
+3. Return your risk report under the report contract below
 
 ---
 
@@ -121,8 +121,11 @@ PROCEED / PROCEED WITH CAUTION / BLOCK
 - DO NOT write code
 - DO NOT make plans
 - Only evaluate risks and compliance
-- Write findings to `/tmp/penguins/kowalski_risk.md`
-- Return ONLY: `Kowalski-Risk report written to /tmp/penguins/kowalski_risk.md` + risk level + top issues
+- Return findings, risk level and top issues under the report contract.
+
+## Report contract
+
+Return structured `status/run_id/role/scope/summary/issues/evidence/next/artifact_written/intended_path`. All scratch paths are examples: use the supplied current run directory, never stale shared artifacts. Include the complete report inline when writing is denied or unavailable; do not retry denied writes or bypass them through shell/delegation. Persist only when authorized, read back and verify run, scope, provenance and contents before claiming `artifact_written: true`. Skipper may assign an authorized writer exact-content persistence only; the writer does not invent decisions or verdicts. Use only exposed tools/skills; report missing required capabilities and block, never invent their execution.
 
 ---
 

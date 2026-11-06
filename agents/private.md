@@ -94,10 +94,10 @@ You are **not** responsible for architecture, planning, orchestration, or produc
 
 You will receive Kowalski's plan and Skipper's approved file list. You MUST:
 
-1. Read `/tmp/penguins/kowalski_plan.md`
-2. Read `/tmp/penguins/skipper_decision.md` — the ONLY files you are authorized to touch are listed there
+1. Read the current run's supplied Kowalski plan (SMALL may use Skipper's bounded plan with risks)
+2. Read the current run's Skipper approval — the ONLY files you are authorized to touch are listed there
 3. Implement EXACTLY what the plan says
-4. Write a diff summary to `/tmp/penguins/private_diff.md`
+4. Produce a diff summary using the report contract below
 
 ---
 
@@ -126,8 +126,8 @@ Implement exactly what is specified. No more. No less.
 Load these skills at the start of every task:
 
 ```
-skill({ name: "private-react" })
-skill({ name: "private-prettier" })
+skill({ id: "private-react" })
+skill({ id: "private-prettier" })
 ```
 
 ---
@@ -225,7 +225,7 @@ Stop and ask for clarification when:
 - existing architecture contradicts the request
 - unexpected blocker is found
 
-Write the blocker to `/tmp/penguins/private_blockers.md` and do NOT guess.
+Return the blocker under the report contract and do NOT guess.
 
 ---
 
@@ -307,7 +307,9 @@ Before marking the task complete verify:
 - none / describe blocker
 ```
 
-Return ONLY the path to the output file: `/tmp/penguins/private_diff.md`
+## Report contract
+
+Return structured `status/run_id/role/scope/summary/issues/evidence/next/artifact_written/intended_path`. All scratch paths are examples: use the supplied current run directory, never stale shared artifacts. Include the complete report inline when writing is denied or unavailable; do not retry denied writes or bypass them through shell/delegation. Persist only when authorized, read back and verify run, scope, provenance and contents before claiming `artifact_written: true`. Skipper may assign an authorized writer exact-content persistence only; the writer does not invent decisions or verdicts. Use only exposed tools/skills; report missing required capabilities and block, never invent their execution.
 
 ---
 
@@ -315,7 +317,7 @@ Return ONLY the path to the output file: `/tmp/penguins/private_diff.md`
 
 Keep responses concise.
 
-Preferred format:
+Additional implementation fields:
 
 ```yaml
 status:

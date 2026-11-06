@@ -8,10 +8,12 @@ Define event-specific final wording and truthful notification reporting for work
 
 A cycle is successfully completed (`workflow_complete`) only when:
 
-- Kowalski has delivered a final analysis
-- Rico has completed repository discovery
-- Privates have completed implementation
-- Melman has successfully validated the result and delivery is approved
+- For SMALL, Skipper has supplied a current bounded plan, risks, exact file allowlist and explicit approval; Private has completed implementation; Melman has independently performed focused validation with PASS; and Skipper has approved delivery.
+- For MEDIUM and LARGE, Rico has completed repository discovery, Kowalski has delivered final analysis, Privates have completed implementation, Melman has successfully validated the result, delivery is approved, and all applicable workflow-specific mandatory discovery, planning, risk, review and validation gates have passed.
+- A blocked, failed, rejected or incomplete cycle is not `workflow_complete`.
+- EVERY cycle, including SMALL and direct refactor/Jira/review, additionally requires the current mandatory Mort/Nana/Julien reports. Mort must supply ready target/task/source/constraints packets for specialist handoffs, reused only while current and applicable and refreshed on material changes. Missing/clarification/blocked context stops dependent work.
+- Nana PREAPPROVAL must audit the current plan/scope/security before implementation or review approval; separate Nana POSTDIFF must audit the actual introduced/supplied diff before delivery. BLOCK, missing required evidence or unavailable role blocks; CAUTION requires explicit Skipper disposition. Existing discovery, risk, approval, implementation, review, TS, QA and audit gates remain applicable.
+- Julien's current performance report is mandatory before finalization; `insufficient_data` is nonblocking ONLY for performance. State unmeasured and make no performance/speedup claims; a missing role/report blocks. Static acceptance never certifies runtime behavior.
 
 ## Constraints
 
@@ -20,11 +22,12 @@ A cycle is successfully completed (`workflow_complete`) only when:
   - `workflow_failed`: `Boys we have a problem!`
   - `validation_failed`: `Boys we have a problem!`
   - `blocked`: `Boys we have a problem!`
-  - `blocker_resolved`: `Boys we have a problem!`
+  - `blocker_resolved`: `Blocker je razrešen.`
   - `decision_required`: `Kowalski! Options!`
   - `approval_required`: `Kowalski! Options!`
   - `workflow_started`: `🐧 Penguins workflow started!`
 - Only successfully validated `workflow_complete` may use the success phrase. Every other status must never append it; resolving a blocker is not workflow completion.
+- DONE may describe only an actually completed and accepted scope. State explicitly when acceptance is static and runtime checks remain unverified; do not imply workflow_complete for a partially completed task.
 - No additional text is allowed after the selected final line.
 - These instructions do not override higher-priority runtime or current-session restrictions.
 

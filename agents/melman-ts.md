@@ -53,7 +53,7 @@ You will receive a list of changed files from Skipper. You MUST:
 
 1. Read each changed file
 2. Check for TypeScript and code quality issues
-3. Write your findings to `/tmp/penguins/melman_ts.md`
+3. Return your findings under the report contract below
 
 ---
 
@@ -114,8 +114,11 @@ PASS / FAIL — N issues found
 
 - DO NOT write code
 - DO NOT fix issues — only report them
-- Write findings to `/tmp/penguins/melman_ts.md`
-- Return ONLY: `Melman-TS report written to /tmp/penguins/melman_ts.md` + PASS/FAIL + top issues
+- Return findings, PASS/FAIL and top issues under the report contract.
+
+## Report contract
+
+Return structured `status/run_id/role/scope/summary/issues/evidence/next/artifact_written/intended_path`. All scratch paths are examples: use the supplied current run directory, never stale shared artifacts. Include the complete report inline when writing is denied or unavailable; do not retry denied writes or bypass them through shell/delegation. Persist only when authorized, read back and verify run, scope, provenance and contents before claiming `artifact_written: true`. Skipper may assign an authorized writer exact-content persistence only; the writer does not invent decisions or verdicts. Use only exposed tools/skills; report missing required capabilities and block, never invent their execution.
 
 ---
 

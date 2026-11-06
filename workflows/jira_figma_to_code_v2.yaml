@@ -3,18 +3,68 @@ name: Jira + Figma → Code (Parallel v2)
 scratchpad_dir: /tmp/penguins
 
 description: |
-  PARALLEL WORKFLOW - Rico and Kowalski run simultaneously.
-  Then Skipper decides → Private implements → Melman validates.
-  Expected speedup: ~33% vs sequential workflow.
+  Discovery → analysis/risk → approval → implementation → review/TS/QA.
+  Parallelize independent implementation and preparation only after approval.
+  Runtime performance is unverified; no speedup claim.
+
+execution_contract: |
+  Skipper allocates a unique current run directory under scratchpad_dir; all
+  /tmp/penguins report paths below are examples rebound to that run. Accept complete
+  current inline reports or persisted reports with verified run/scope/provenance/content.
+  Return structured status/run_id/role/scope/summary/issues/evidence/next/artifact_written/intended_path.
+  Produce reports inline when writing is denied/unavailable; never retry denied
+  writes or bypass restrictions through shell/delegation. Persist only if authorized
+  and read back before claiming artifact_written: true. Skipper may assign an
+  authorized exact-content writer, who cannot invent decisions or verdicts.
+  Reject stale/path-only reports. Use only exposed tools/skills/roles; missing
+  mandatory capabilities block. No permission/model/depth/integration expansion.
+  Skipper directly dispatches needed discovery specialists with bounded scopes;
+  only independent supplied-input work may run in parallel. No required Rico nesting.
+  A when condition is resolved explicitly by Skipper before dispatch; false steps
+  are recorded not_applicable, not completed. Dependencies wait for all applicable
+  steps; missing roles never make a true condition false. figma_required means
+  non-whitespace design input requiring Figma evidence; absent/empty inputs do not
+  trigger it. private_2_approved requires approved independent work and exact disjoint
+  file ownership; overlap or missing ownership blocks parallel execution.
+  Risk, Maurice review, TS and QA are mandatory for LARGE; missing roles block.
+  Stop on FAIL/REJECTED/BLOCK. Preserve audit and notification policy.
+  This workflow owns mort/nana/julien exactly once whether direct or delegated
+  from tiered LARGE. Preflight the actual exposed triad and every mandatory route
+  role; missing roles block without substitution or permission/model/depth expansion.
+  Before every specialist handoff require Mort's ready current-run packet matching
+  target/task/source/constraints. Reuse only while current and applicable; refresh
+  on material changes. Missing/clarification/blocked packets stop dependent work.
+  Nana preapproval audits current plan/scope/security before Skipper approval;
+  Nana postdiff audits actual introduced diffs before delivery. BLOCK, missing
+  required evidence or unavailable role stops; CAUTION needs explicit Skipper disposition.
+  Julien's current report is mandatory before finalization. insufficient_data is
+  nonblocking ONLY for performance: state unmeasured, no performance/speedup claims.
+  Missing role/report blocks. All existing discovery/risk/review/TS/QA gates remain.
 
 steps:
+  - id: skipper_preflight
+    agent: skipper
+    task: Verify exposed triad and all mandatory route roles, including applicable conditional roles; missing or unclear applicability blocks.
+  - id: mort_context
+    agent: mort
+    depends_on: [skipper_preflight]
+    task: Supply ready current target/task/source/constraints packets under execution_contract; refresh before dependent handoffs when necessary.
   # ═══════════════════════════════════════════════════
-  # PARALLEL GROUP 1: Discovery + Analysis
+  # Discovery precedes analysis
   # ═══════════════════════════════════════════════════
+  - id: rico_figma
+    agent: rico-figma
+    depends_on: [mort_context]
+    when: figma_required
+    task: |
+      Read current design inputs using exposed authorized Figma tools. Return
+      design facts under execution_contract; missing required capability blocks.
+    output: /tmp/penguins/rico_figma.md
+
   - id: rico_discovery
     agent: rico
     isolated: true
-    parallel_group: discovery
+    depends_on: [mort_context, rico_figma]
     input:
       jira_task: inputs/jira-task.md
       figma_notes: inputs/figma-notes.md
@@ -36,68 +86,99 @@ steps:
            - Component structure (client/server boundaries, folder conventions)
            - Naming conventions
         5. Any constraints or gotchas (protected areas, auth boundaries, etc.)
-        6. If figma-notes.md exists, use Figma tools to get design context
+        6. Incorporate current rico_figma evidence when figma_required; do not invent tools
 
-      Return ONLY the path to the output file: /tmp/penguins/rico_findings.md
+      Return the complete report under execution_contract.
     output: /tmp/penguins/rico_findings.md
 
   - id: kowalski_analysis
     agent: kowalski
     isolated: true
-    parallel_group: discovery
+    depends_on: [rico_discovery]
     input:
       jira_task: inputs/jira-task.md
       figma_notes: inputs/figma-notes.md
       user_command: inputs/user-command.md
     task: |
       You are Kowalski. Your ONLY job is analysis — no implementation, no final decisions.
-      DO NOT fetch Figma URLs directly. Rico handles Figma discovery.
+      DO NOT fetch Figma URLs directly. Consume current discovery evidence.
       Use figma_notes.md only as plain text context.
 
       Read:
         - Jira task: inputs/jira-task.md
         - Figma notes: inputs/figma-notes.md
         - User command: inputs/user-command.md
+        - Rico's findings: /tmp/penguins/rico_findings.md
 
-      Produce a concise synthesis document to /tmp/penguins/kowalski_analysis.md:
+      Produce a current plan under execution_contract for /tmp/penguins/kowalski_plan.md:
         1. What exactly needs to be built (2-3 sentences max)
         2. What already exists that can be reused (bullet points)
-        3. Recommended approach with rationale (one option only — no A/B/C)
+        3. Analyze alternatives (A/B/C) with concise trade-offs per mandatory kowalski-analysis skill, then recommend ONE executable plan with rationale for Skipper approval
         4. Risks and edge cases (bullet points)
         5. Compliance check — any guardrail violations?
+        6. Exact files to change/not touch and ordered implementation steps
 
-      Return ONLY the path to the output file: /tmp/penguins/kowalski_analysis.md
-    output: /tmp/penguins/kowalski_analysis.md
+      Return the complete report under execution_contract.
+    output: /tmp/penguins/kowalski_plan.md
+
+  - id: kowalski_risk
+    agent: kowalski-risk
+    depends_on: [kowalski_analysis]
+    task: |
+      Evaluate the current plan and discovery against guardrails. Return the full
+      risk report under execution_contract; BLOCK stops approval. Missing role blocks.
+    output: /tmp/penguins/kowalski_risk.md
 
   # ═══════════════════════════════════════════════════
   # STEP 3: Skipper decides
   # ═══════════════════════════════════════════════════
+  - id: nana_preapproval
+    agent: nana
+    depends_on: [kowalski_analysis, kowalski_risk]
+    input:
+      kowalski_plan: Complete current kowalski_analysis plan
+      proposed_scope: Exact proposed file allowlist and risks from that same plan
+      risk_report: Complete current mandatory kowalski_risk report
+      rules: [rules/coding-standards.md, rules/guardrails.md, rules/protected-areas.md]
+    task: |
+      Receive the current plan, exact proposed scope, mandatory risk report and
+      security rules in input. Accept complete inline evidence or authorized artifacts
+      verified for current run/scope/provenance/content; paths alone are not evidence.
+      Missing, stale, mismatched or unavailable required evidence blocks.
+      Audit before approval and report exact inspected plan/scope/risk/rules identities.
+      BLOCK stops; CAUTION requires explicit Skipper disposition before approval.
+    output: /tmp/penguins/nana_preapproval.md
+
   - id: skipper_decision
     agent: skipper
     isolated: true
-    depends_on: [discovery]
+    depends_on: [kowalski_analysis, kowalski_risk, nana_preapproval]
     parallel_group: null
     input:
       jira_task: inputs/jira-task.md
       user_command: inputs/user-command.md
-      kowalski_analysis: /tmp/penguins/kowalski_analysis.md
+      kowalski_plan: /tmp/penguins/kowalski_plan.md
+      kowalski_risk: /tmp/penguins/kowalski_risk.md
     task: |
       You are Skipper. Your ONLY job is to make the final implementation decision
-      and produce an actionable plan for Private.
+      and approve or reject the current Kowalski plan for Private.
+      Require current Nana preapproval; explicitly dispose of any CAUTION.
 
       Read:
         - Jira task: inputs/jira-task.md
         - User command: inputs/user-command.md
-        - Kowalski's analysis: /tmp/penguins/kowalski_analysis.md
+        - Kowalski's plan: /tmp/penguins/kowalski_plan.md
+        - Risk report: /tmp/penguins/kowalski_risk.md
         - Guardrails: rules/guardrails.md
 
-      Output an implementation plan at /tmp/penguins/skipper_plan.md:
-        1. Which solution option is approved (A, B, or C) and why
+      Produce approval under execution_contract for /tmp/penguins/skipper_decision.md:
+        1. Explicit APPROVED or REJECTED verdict for the current plan and why
         2. Exact list of files Private is authorized to CREATE or MODIFY
         3. Exact list of files Private must NOT touch
         4. Step-by-step implementation tasks for Private (numbered, unambiguous)
         5. Confirm no guardrail violations
         6. Any special instructions (e.g. client/server boundaries, naming rules)
+        7. Exact file ownership for each implementer; Private-2 only for independent disjoint work
 
       Before stopping for user input, approval, or a blocker, notify with the matching event:
         node tools/notify.mjs --event decision_required --title "Penguins decision needed" --message "Skipper needs user input" --priority high
@@ -105,8 +186,8 @@ steps:
       If a blocker is detected, notify with the blocked event and include a blocker id plus optional follow-up message:
         node tools/notify.mjs --event blocked --title "Penguins blocked" --message "<blocker reason>" --blocker-id "<unique-id>" --followup-message "<resolution hint>" --priority high
 
-      Return ONLY the path to the output file: /tmp/penguins/skipper_plan.md
-    output: /tmp/penguins/skipper_plan.md
+      Return the complete report under execution_contract.
+    output: /tmp/penguins/skipper_decision.md
 
   # ═══════════════════════════════════════════════════
   # PARALLEL GROUP 2: Implementation + Prep
@@ -114,53 +195,110 @@ steps:
   - id: private_implementation
     agent: private
     isolated: true
+    depends_on: [skipper_decision]
     parallel_group: execution
     input:
       rico_findings: /tmp/penguins/rico_findings.md
-      skipper_plan: /tmp/penguins/skipper_plan.md
+      kowalski_plan: /tmp/penguins/kowalski_plan.md
+      skipper_decision: /tmp/penguins/skipper_decision.md
     task: |
       You are Private. Your ONLY job is implementation — no decisions, no planning.
 
       Read:
         - Rico's findings (reusable code, patterns): /tmp/penguins/rico_findings.md
-        - Skipper's plan (what to build, authorized files): /tmp/penguins/skipper_plan.md
+        - Current Kowalski plan: /tmp/penguins/kowalski_plan.md
+        - Skipper approval and exact file list: /tmp/penguins/skipper_decision.md
 
       STRICT RULES:
-        - Only create or modify files explicitly listed in skipper_plan.md
+        - Only create or modify files explicitly assigned to Private in skipper_decision.md
         - Follow Skipper's steps exactly — do not improvise
         - Reuse existing components/hooks/utils found by Rico where possible
         - Respect client/server boundaries
-        - If you encounter something unexpected, STOP and write a blocker
-          to /tmp/penguins/private_blockers.md instead of guessing
+        - If you encounter something unexpected, STOP and return a blocker
+          under execution_contract instead of guessing
 
-      After implementation write a diff summary to /tmp/penguins/private_diff.md:
+      After implementation produce a diff summary under execution_contract:
         - Each file created/changed: what was done and why
         - How it maps to Skipper's numbered steps
         - Any blockers encountered
 
-      Return ONLY the path to the output file: /tmp/penguins/private_diff.md
+      Return the complete report under execution_contract.
     output: /tmp/penguins/private_diff.md
+
+  - id: private_2_implementation
+    agent: private-2
+    when: private_2_approved
+    depends_on: [skipper_decision]
+    parallel_group: execution
+    task: |
+      Read the current Kowalski plan and Skipper approval. Implement only the exact
+      independent disjoint Private-2 file list; return a diff under execution_contract.
+    output: /tmp/penguins/private_2_diff.md
 
   - id: melman_prep
     agent: melman
     isolated: true
+    depends_on: [skipper_decision]
     parallel_group: execution
     input:
-      skipper_plan: /tmp/penguins/skipper_plan.md
+      kowalski_plan: /tmp/penguins/kowalski_plan.md
+      skipper_decision: /tmp/penguins/skipper_decision.md
     task: |
       You are Melman. Prepare validation checklist while Private implements.
 
       Read:
-        - Skipper's approved plan: /tmp/penguins/skipper_plan.md
-        - All rules listed in input.rules
+        - Current plan: /tmp/penguins/kowalski_plan.md
+        - Skipper approval: /tmp/penguins/skipper_decision.md
+        - rules/coding-standards.md, rules/guardrails.md, rules/react-next-rules.md, rules/protected-areas.md
 
-      Create a validation checklist at /tmp/penguins/melman_checklist.md:
+      Produce a validation checklist under execution_contract:
         - Files Private is authorized to touch
         - Guardrail checkpoints to verify
         - Compliance criteria from coding standards
 
-      Return ONLY the path to the output file: /tmp/penguins/melman_checklist.md
+      Return the complete report under execution_contract.
     output: /tmp/penguins/melman_checklist.md
+
+  - id: maurice_review
+    agent: maurice
+    depends_on: [execution]
+    parallel_group: review
+    task: |
+      Review every applicable introduced diff against the current plan and approval.
+      Return the full review under execution_contract; failed review or missing role blocks.
+    output: /tmp/penguins/maurice_review.md
+
+  - id: melman_ts
+    agent: melman-ts
+    depends_on: [execution]
+    parallel_group: review
+    task: |
+      Validate every applicable introduced change for type/lint and boundary issues.
+      Return evidence and limitations under execution_contract; missing role blocks.
+    output: /tmp/penguins/melman_ts.md
+
+  - id: nana_postdiff
+    agent: nana
+    depends_on: [execution]
+    parallel_group: review
+    input:
+      actual_diff: Complete actual introduced diff from private_implementation, not its summary
+      private_2_diff: Complete actual introduced diff from private_2_implementation only when private_2_approved; otherwise explicit not_applicable reason
+      execution_outputs: All applicable execution outputs including melman_prep checklist; not a substitute for actual diffs
+      approved_plan: Complete current Kowalski plan identified by skipper_decision
+      approval_scope: Current skipper_decision and exact approved file ownership/allowlist
+      rules: [rules/coding-standards.md, rules/guardrails.md, rules/protected-areas.md]
+    task: |
+      Receive every applicable actual introduced diff, current skipper_decision/exact
+      approved scope, approved plan, all applicable execution outputs and rules in input.
+      Accept complete inline evidence or authorized artifacts verified for current
+      run/scope/provenance/content; a summary or path alone is not the actual diff.
+      Missing, stale, mismatched or unavailable required evidence blocks. Preserve
+      Private-2 not_applicable when not approved; otherwise its actual diff is required.
+      Audit against the approved plan/scope and report exact inspected diff/plan/
+      approval/scope/execution-output/rules identities for every applicable output.
+      BLOCK stops delivery; CAUTION requires explicit Skipper disposition.
+    output: /tmp/penguins/nana_postdiff.md
 
   # ═══════════════════════════════════════════════════
   # STEP 6: Melman validates
@@ -168,12 +306,15 @@ steps:
   - id: melman_validation
     agent: melman
     isolated: true
-    depends_on: [execution]
+    depends_on: [execution, review]
     parallel_group: null
     input:
       jira_task: inputs/jira-task.md
       private_diff: /tmp/penguins/private_diff.md
-      skipper_plan: /tmp/penguins/skipper_plan.md
+      skipper_decision: /tmp/penguins/skipper_decision.md
+      kowalski_plan: /tmp/penguins/kowalski_plan.md
+      maurice_review: /tmp/penguins/maurice_review.md
+      melman_ts: /tmp/penguins/melman_ts.md
       melman_checklist: /tmp/penguins/melman_checklist.md
       rules:
         - rules/coding-standards.md
@@ -186,7 +327,7 @@ steps:
       Read:
         - Jira task (requirements): inputs/jira-task.md
         - What Private implemented: /tmp/penguins/private_diff.md
-        - What Skipper approved: /tmp/penguins/skipper_plan.md
+        - What Skipper approved: /tmp/penguins/skipper_decision.md
         - Your prep checklist: /tmp/penguins/melman_checklist.md
         - All rules listed in input.rules
 
@@ -200,34 +341,42 @@ steps:
         7. Any edge cases or missing error handling?
         8. Are existing patterns and conventions followed?
 
-      Write validation report to /tmp/penguins/melman_report.md:
-        - PASS or FAIL (must be first line)
+      Include every applicable implementation and review report; reject missing evidence.
+      Produce validation under execution_contract:
+        - PASS or FAIL in the report payload
         - List of issues found (if FAIL)
         - List of checks that passed
 
-      Return ONLY the path to the output file: /tmp/penguins/melman_report.md
+      Return the complete report under execution_contract.
     output: /tmp/penguins/melman_report.md
 
   # ═══════════════════════════════════════════════════
   # STEP 7: Skipper finalizes
   # ═══════════════════════════════════════════════════
+  - id: julien_performance
+    agent: julien
+    depends_on: [melman_validation, review]
+    task: Report current-run verified workflow performance under execution_contract; insufficient_data is performance-only nonblocking with unmeasured/no speedup claims, never a missing report waiver.
+    output: /tmp/penguins/julien_performance.md
+
   - id: skipper_finalization
     agent: skipper
     isolated: true
-    depends_on: [melman_validation]
+    depends_on: [melman_validation, nana_postdiff, julien_performance]
     input:
       rico_findings: /tmp/penguins/rico_findings.md
-      kowalski_analysis: /tmp/penguins/kowalski_analysis.md
-      skipper_plan: /tmp/penguins/skipper_plan.md
+      kowalski_plan: /tmp/penguins/kowalski_plan.md
+      skipper_decision: /tmp/penguins/skipper_decision.md
       private_diff: /tmp/penguins/private_diff.md
       melman_report: /tmp/penguins/melman_report.md
       audit_dir: audit/
       finalization_rules: rules/finalization.md
     task: |
       You are Skipper. Final review and audit log.
+      Require all current triad reports; explicitly dispose of Nana postdiff CAUTION.
       Read all inputs. Then:
 
-        1. Write an audit log entry to audit/<today_date>.json
+        1. Supply an audit entry for authorized exact-content persistence to audit/<today_date>.json and verify it
         2. Provide a concise summary of what was built
         3. Confirm whether all rules and standards were followed
         4. If Melman reported FAIL — list what still needs fixing before delivery
@@ -250,7 +399,7 @@ steps:
         - `workflow_failed`: `Boys we have a problem!`
         - `validation_failed`: `Boys we have a problem!`
         - `blocked`: `Boys we have a problem!`
-        - `blocker_resolved`: `Boys we have a problem!`
+        - `blocker_resolved`: `Blocker je razrešen.`
         - `decision_required`: `Kowalski! Options!`
         - `approval_required`: `Kowalski! Options!`
         - `workflow_started`: `🐧 Penguins workflow started!`
@@ -259,15 +408,23 @@ steps:
 parallel_execution:
   enabled: true
   groups:
-    discovery:
-      members: [rico_discovery, kowalski_analysis]
-      wait_for_all: true
     execution:
-      members: [private_implementation, melman_prep]
+      members: [private_implementation, private_2_implementation, melman_prep]
+      wait_for_all: true
+    review:
+      members: [maurice_review, melman_ts, nana_postdiff]
       wait_for_all: true
   sequential_after:
-    - discovery
+    - skipper_preflight
+    - mort_context
+    - rico_figma
+    - rico_discovery
+    - kowalski_analysis
+    - kowalski_risk
+    - nana_preapproval
     - skipper_decision
     - execution
+    - review
     - melman_validation
+    - julien_performance
     - skipper_finalization

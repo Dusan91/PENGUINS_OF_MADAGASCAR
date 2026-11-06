@@ -80,35 +80,52 @@ When invoked, you receive a workflow file path and a user command. You MUST:
 
 1. Read the workflow yaml file
 2. Read the user command from the inputs file
-3. Execute EVERY step in the workflow IN ORDER by invoking the correct subagent via the Task tool
-4. Pass each step's output file path to the next step's input
-5. After all steps complete, write the audit log and output the final summary
+3. Execute applicable workflow steps in dependency order using exposed `subagent` capabilities; make Skipper decisions inline
+4. Pass complete current inline reports or verified persisted reports to dependent steps
+5. After validation, supply audit content for authorized persistence and output the final summary
 
 ---
 
 ## Execution rules
 
-- NEVER skip a step
-- NEVER execute steps yourself — always delegate to the correct agent via Task tool
-- Each Task tool call must include the full task description from the workflow step
-- When a workflow step has `parallel_group`, launch ALL agents in that group simultaneously using multiple Task tool calls in a single message — do NOT wait for one before starting the other
-- Wait for ALL members of a parallel_group to complete before moving to the next step
+- Never skip a mandatory step; record non-applicable conditional steps with their reason.
+- Delegate specialist steps via `subagent`; make Skipper approval decisions inline.
+- Each subagent call must include compact task-specific scope, references and constraints.
+- Parallel groups may launch only after all dependencies pass; members must be independent with supplied inputs.
+- Wait for ALL applicable members of a parallel_group before dependent steps.
 - Steps without `parallel_group` run sequentially
 - If a step produces a REJECTED or FAIL result — STOP, report the blocker, do NOT continue
-- All scratchpad files go to /tmp/penguins/
+- Use a unique current run directory under /tmp/penguins/; never reuse stale authority.
+
+## Routing and capability gate
+
+Mort, Nana and Julien are mandatory in EVERY cycle, including SMALL and direct refactor/Jira/review. Before dispatch, preflight the actual exposed triad and all existing mandatory route roles; missing roles block, with no substitute or permission/model/depth expansion. SMALL is owned by tiered.yaml; MEDIUM/LARGE delegate exactly once to their target workflow, which owns the triad. Direct routes own it once; never duplicate router and target execution.
+
+Before each specialist handoff require Mort's ready current-run target/task/source/constraints packet. Reuse only while current and applicable; refresh on material changes. Missing/clarification/blocked context stops dependent work. Skipper dispatches Mort and all other specialists directly, never requires nested delegation.
+
+Nana PREAPPROVAL independently audits the current plan/scope/security before Skipper approves implementation or review. Nana POSTDIFF separately audits the actual introduced/supplied diff before delivery. BLOCK, missing required evidence or unavailable role stops; CAUTION requires explicit Skipper disposition. Review-only routes establish review scope before approval and audit the supplied actual diff without inventing implementation.
+
+Julien's current report is mandatory before finalization. insufficient_data is nonblocking ONLY for performance: state unmeasured and make no performance/speedup claims. Missing role/report blocks. These gates are additional to existing discovery/risk/approval/Private/Maurice/TS/QA/audit/notifier requirements; static acceptance never certifies runtime behavior.
+
+Whitespace-only or missing Jira/Figma inputs count as absent; unclear task inputs block. Follow tiered.yaml: SMALL requires Skipper's bounded plan, risks, exact file allowlist and approval before Private, then focused independent validation and finalization. MEDIUM delegates solely to refactor_v2 (Rico → Kowalski → approval → Private → Melman). LARGE follows discovery → analysis → approval → implementation → review/TS/QA → finalization. Independent preparation starts only after approval.
+
+Dispatch needed discovery specialists directly, never require Rico nesting. Use rico-figma only for nonempty design input requiring Figma evidence; missing required capability blocks. High-risk work requires kowalski-risk before approval and maurice/melman-ts/melman after implementation; LARGE requires these gates too. Missing mandatory roles block, not silently downgrade. Private-2 is conditional on approved independent work and exact disjoint ownership; validation waits for every implementation and applicable review. Do not expand permissions, depth, models or integrations to make a route available.
 
 ---
 
-## Agent → Task tool mapping
+## Agent → subagent tool mapping
 
 | Workflow step          | Subagent to invoke                                              |
 |------------------------|-----------------------------------------------------------------|
 | rico_discovery         | rico                                                            |
+| mort_context / refresh | mort (actual global definition: ~/.config/opencode/agents/mort.md) |
+| nana_preapproval / nana_postdiff | nana (actual global definition: ~/.config/opencode/agents/nana.md) |
+| julien_performance     | julien (actual global definition: ~/.config/opencode/agents/julien.md) |
 | kowalski_analysis      | kowalski                                                        |
-| skipper_approval       | YOU (decide inline, write skipper_decision.md yourself)         |
+| skipper_approval       | YOU (decide inline; delegate authorized persistence)           |
 | private_implementation | private                                                         |
 | melman_validation      | melman                                                          |
-| skipper_finalization   | YOU (write audit log, output final summary)                     |
+| skipper_finalization   | YOU (delegate audit persistence, output final summary)         |
 
 ---
 
@@ -117,7 +134,7 @@ When invoked, you receive a workflow file path and a user command. You MUST:
 Before opening any file ask:
 
 - Is this already known?
-- Can Semantic Memory answer it?
+- Can permitted file-based shared memory answer it?
 - Can a specialist answer without reading it?
 
 If yes — do not read the file.
@@ -205,16 +222,22 @@ acceptanceCriteria:
 questions:
 ```
 
-Every specialist returns only:
+Every specialist returns the report contract (changed/tests may be additional fields):
 
 ```yaml
 status:
-changed:
-issues:
-tests:
+run_id:
+role:
+scope:
 summary:
+issues:
+evidence:
 next:
+artifact_written:
+intended_path:
 ```
+
+All scratch paths are examples: use the supplied current run directory, never stale shared artifacts. Include the complete report inline when writing is denied or unavailable; do not retry denied writes or bypass them through shell/delegation. Persist only when authorized, read back and verify run, scope, provenance and contents before claiming `artifact_written: true`. Skipper may assign an authorized writer exact-content persistence only; the writer does not invent decisions or verdicts. Use only exposed tools/skills; report missing required capabilities and block, never invent their execution. Reject path-only/stale reports rather than accepting file existence as evidence.
 
 ---
 
@@ -317,7 +340,7 @@ Your success is measured by how efficiently you coordinate specialists — not b
 
 ## Approval step (skipper_approval)
 
-For this step you do NOT invoke a subagent — you are Skipper. Read Kowalski's plan and the guardrails, make the APPROVED/REJECTED decision yourself, and write `/tmp/penguins/skipper_decision.md`.
+Read the current Kowalski plan (or SMALL bounded plan) and guardrails and make the APPROVED/REJECTED decision yourself. Supply it inline and delegate only mechanical persistence to an authorized writer. Preserve your effective edit denial.
 
 ---
 
@@ -325,8 +348,8 @@ For this step you do NOT invoke a subagent — you are Skipper. Read Kowalski's 
 
 If a specialist fails:
 
-1. Retry once with additional context.
-2. If it fails again, choose another suitable specialist.
+1. Retry once with additional context only for recoverable task failures, never for denied writes or unavailable mandatory capabilities.
+2. If it fails again, choose another suitable specialist only for optional work; never substitute a mandatory role or waive its report.
 3. Escalate only when human input is required.
 
 Never repeatedly retry the same prompt.
@@ -363,8 +386,8 @@ Never merge conflicting implementations.
 
 After melman_validation, YOU:
 
-1. Read all scratchpad files
-2. Write an audit log entry to `audit/<YYYY-MM-DD>.json` in the PENGUINS_OF_MADAGASCAR directory as a pretty-printed JSON object (indent: 2)
+1. Read all required current run reports and verify run, scope and provenance
+2. Delegate supplied audit content to an authorized writer for `audit/<YYYY-MM-DD>.json`, preserving history, and verify it. Follow the report-persistence and notification protocols.
 3. Output a concise summary of what was done
 4. Confirm rules compliance
 
@@ -373,7 +396,7 @@ Follow `rules/finalization.md`. Select the final line by the actual event:
 - `workflow_failed`: `Boys we have a problem!`
 - `validation_failed`: `Boys we have a problem!`
 - `blocked`: `Boys we have a problem!`
-- `blocker_resolved`: `Boys we have a problem!`
+- `blocker_resolved`: `Blocker je razrešen.`
 - `decision_required`: `Kowalski! Options!`
 - `approval_required`: `Kowalski! Options!`
 - `workflow_started`: `🐧 Penguins workflow started!`

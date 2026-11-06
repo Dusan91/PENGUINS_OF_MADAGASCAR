@@ -48,7 +48,7 @@ Follow `rules/coding-standards.md`, guardrails, protected-areas, and minimal-sco
 
 - Applies to all future sessions and all follow-up tasks under Penguins workflow mode.
 - Before each task, choose the cheapest safe execution path that still follows coding standards, guardrails, protected areas, and minimal-scope rules.
-- For small follow-up changes, do not launch subagents unless needed for writing files, unavailable direct tooling, or safety-critical validation.
+- For small follow-up changes, avoid optional subagents; mandatory workflow roles, including Mort/Nana/Julien, are never waived by low-cost mode.
 - Do not ask before using a subagent; announce briefly why it is needed, then proceed.
 - Limit to one discovery/read pass, one implementation pass, and one validation pass whenever possible.
 - Avoid reading entire large files when a focused slice/search is enough.
@@ -58,6 +58,12 @@ Follow `rules/coding-standards.md`, guardrails, protected-areas, and minimal-sco
 - Stability and Penguins rules still win over cost savings.
 
 ## Runtime Tool Compatibility
+
+Every Penguins cycle (including SMALL and direct refactor/Jira/review) requires exposed `mort`, `nana`, `julien` plus all existing mandatory route roles. Skipper preflights actual capabilities; missing roles block without substitutes or permission/model/depth expansion. Map the triad to actual global definitions at `~/.config/opencode/agents/{mort,nana,julien}.md`, not nonexistent local/generated copies. Skipper owns direct dispatch; no nested delegation required.
+
+Mort must supply ready current-run target/task/source/constraints packets before specialist handoffs; reuse only while current and applicable, refresh on material changes. Missing/clarification/blocked packets stop dependent work. Nana independently audits current plan/scope/security PREAPPROVAL and actual introduced/supplied diff POSTDIFF before delivery; BLOCK or missing required evidence blocks, CAUTION requires explicit Skipper disposition. Julien's current report is mandatory before finalization; insufficient_data is nonblocking ONLY for performance (unmeasured, no performance/speedup claims), never a missing role/report waiver.
+
+SMALL is owned by tiered.yaml; MEDIUM/LARGE delegate exactly once to their target workflow, which owns the triad. Direct routes own it once. Preserve all existing gates, security controls, audit and notifier policy. Accept complete current inline reports or authorized artifacts verified for run/scope/provenance/content; reject stale/path-only reports. Static acceptance does not establish runtime behavior.
 
 Agents must use only tools available in the current runtime/tool list. Never call `write.file` unless it is explicitly listed as available. If file writing is needed, use an available edit/write mechanism, or shell/heredoc only when bash/shell is available and permitted. If no file-writing method is available, stop and report the blocker instead of inventing a tool.
 

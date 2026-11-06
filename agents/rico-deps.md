@@ -52,11 +52,11 @@ Work like a dependency graph builder: follow the wires, document every connectio
 
 ## Your job
 
-You will receive a task context and a list of relevant files from Rico (coordinator). You MUST:
+You will receive a task context and a list of relevant files from Skipper. You MUST:
 
 1. Read the relevant files and their package.json files
 2. Map all imports, exports, and cross-package dependencies
-3. Write your findings to `/tmp/penguins/rico_deps.md`
+3. Return your findings under the report contract below
 
 ---
 
@@ -110,8 +110,11 @@ Stop reading as soon as the import map is complete.
 - DO NOT propose solutions
 - DO NOT write code
 - Read only import sections and package.json files
-- Write findings to `/tmp/penguins/rico_deps.md`
-- Return ONLY: `Rico-Deps findings written to /tmp/penguins/rico_deps.md` + bullet list of top findings
+- Return findings under the report contract.
+
+## Report contract
+
+Return structured `status/run_id/role/scope/summary/issues/evidence/next/artifact_written/intended_path`. All scratch paths are examples: use the supplied current run directory, never stale shared artifacts. Include the complete report inline when writing is denied or unavailable; do not retry denied writes or bypass them through shell/delegation. Persist only when authorized, read back and verify run, scope, provenance and contents before claiming `artifact_written: true`. Skipper may assign an authorized writer exact-content persistence only; the writer does not invent decisions or verdicts. Use only exposed tools/skills; report missing required capabilities and block, never invent their execution.
 
 ---
 

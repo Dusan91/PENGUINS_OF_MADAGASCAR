@@ -234,3 +234,32 @@
 - **Why it failed**: Final wording was not gated by actual workflow status; malformed input/task indentation prevented parsing independently of wording edits.
 - **What to do instead**: Select exact event-specific endings, reserve success for successful validation, report notification evidence separately, and obtain explicit approval before repairing pre-existing structural issues. User approved indentation-only repair in this run; independent review remains pending.
 - **Affects**: Six approved finalization instruction sources; status-wording-20261104. No notifier or application changes.
+
+## 2026-11-05 - Compare routing representations and mandatory planning skills
+
+- Supplied lesson mechanically persisted by Private for optimize-20261105-01/correction-01, not a new writer finding.
+- 2026-11-05: Static classifier tests missed contradictory tier triggers and one-option text conflicted with mandatory planning skill. Compare both routing representations and loaded skill instructions; retain frozen-hash failures after authorized edits and explain provenance, never suppress evidence. Affects workflows/planner validation.
+- Supplied evidence: 864 modeled cases (192 valid, 672 modeled preflight blocked), 224 assertions pass; legacy82 has 80 pass and 2 expected frozen-hash failures, not all-pass. Historical harness-error evidence remains preserved. Supplied PASS_STATIC is not effective-runtime or measured-performance certification.
+
+## 2026-11-05 - Inspect agent visibility before declaring reload impossible
+
+- Supplied Skipper lesson, mechanically persisted by Private for integrate-agents-20261105-01; no new writer verdict.
+- What failed: agents existed, but hidden:true excluded them from the catalog per V2 documentation. The earlier claim that dynamic reload was impossible was incorrect.
+- What to do instead: inspect visibility, use documented reload, and verify the actual runtime catalog before resuming mandatory roles. Visibility is not permission; preserve model and security settings.
+- Scope: kowalski-risk/melman-ts visibility edits accepted statically by Skipper after supplied independent Melman PASS_STATIC; prior-content preservation attributed to Private hash evidence. Runtime loading remains unverified and overall integration remains BLOCKED_CAPABILITY, not Julien/Mort/Nana integration success.
+
+## 2026-11-05 - Structural gates do not prove audited-plan identity or evidence propagation
+
+- Supplied Skipper lesson, mechanically persisted by Private for integrate-agents-20261105-01/stage2; not a new writer verdict.
+- What failed: 256 structural static checks did not establish immutable Nana-reviewed plan identity at SMALL approval or explicit Nana pre/post plan/scope/actual-diff evidence propagation. Maurice FAIL remains controlling despite supplied Melman-ts PASS_STATIC and Nana CAUTION.
+- Why: Dependency ordering and literal triadOwners assertions do not prove that approval consumes the exact audited plan or that a specialist actually receives required evidence; static structure is not runtime certification.
+- What to do instead: Assert immutable reviewed-plan identity, require re-audit on changes, and explicitly wire Nana evidence inputs. Pass current inline Mort handoffs directly from the main orchestrator instead of attempting nested session retrieval that exceeds the runtime depth limit. Obtain user correction authorization before editing after FAIL.
+- Affects: tiered/refactor/Jira routing, specialist handoffs, Private structural checks and Skipper approval. No final Melman or delivery approval; Julien insufficient_data means performance unmeasured, with no speedup claim.
+
+## 2026-11-05 - Preserve failure history when evidence-wiring corrections pass
+
+- Supplied Skipper lesson mechanically persisted by Private for integrate-agents-20261105-01/correction01 acceptance; no new writer verdict.
+- What failed: Original structural gate assertions missed audited-plan identity and Nana evidence input wiring. A malformed empty patch was rejected before writes; no bypass occurred. Nested Mort packet retrieval hit a depth limit before inline context resolved it.
+- What to do instead: Bind approval to retained immutable reviewed content or a verified run/scope/provenance digest, block changed plans until re-audit, explicitly supply actual diff/approval/scope/rules evidence and test missing/stale/mismatched inputs. Main orchestrator should supply current inline Mort packets directly rather than require nested retrieval.
+- Correction checks are source-anchored static/model evidence, not runtime proof. Preserve original FAIL alongside later authorized correction and independent PASS_STATIC; do not rewrite earlier reviewer authorship or report-time pending status. Julien's report preceded final Melman PASS and remains performance insufficient_data/unmeasured, not a speedup claim.
+- Affects: Workflow evidence propagation, immutable approval identity, static acceptance boundaries and mechanical finalization. Administrative integration accepted statically; unrelated application Task and runtime/performance remain unverified.

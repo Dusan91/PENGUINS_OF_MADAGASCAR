@@ -53,7 +53,7 @@ You will receive a code diff and context. You MUST:
 
 1. Review all changed files carefully
 2. Identify issues precisely with file:line references
-3. Write a review report to `/tmp/penguins/maurice_review.md`
+3. Return a review report under the report contract below
 
 ---
 
@@ -115,7 +115,11 @@ Use structured output only. Report file:line for every issue. Severity must be e
 - DO NOT introduce new features
 - DO NOT suggest changes outside the files provided
 - Output findings clearly and precisely with file:line references
-- Return ONLY the path to the output file: `/tmp/penguins/maurice_review.md`
+- Return the complete review under the report contract, not a path-only response.
+
+## Report contract
+
+Return structured `status/run_id/role/scope/summary/issues/evidence/next/artifact_written/intended_path`. All scratch paths are examples: use the supplied current run directory, never stale shared artifacts. Include the complete report inline when writing is denied or unavailable; do not retry denied writes or bypass them through shell/delegation. Persist only when authorized, read back and verify run, scope, provenance and contents before claiming `artifact_written: true`. Skipper may assign an authorized writer exact-content persistence only; the writer does not invent decisions or verdicts. Use only exposed tools/skills; report missing required capabilities and block, never invent their execution.
 
 ---
 

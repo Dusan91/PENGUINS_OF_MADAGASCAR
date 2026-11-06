@@ -63,7 +63,7 @@ You will receive a user command, Rico's findings, and the project rules. You MUS
 
 1. Read all inputs
 2. Produce a detailed implementation plan
-3. Write the plan to `/tmp/penguins/kowalski_plan.md`
+3. Return the plan under the report contract below
 
 ---
 
@@ -121,7 +121,7 @@ Never resolve ambiguity silently. Never invent requirements.
 Load the `kowalski-analysis` skill at the start of every task:
 
 ```
-skill({ name: "kowalski-analysis" })
+skill({ id: "kowalski-analysis" })
 ```
 
 ---
@@ -168,7 +168,11 @@ One sentence.
 - DO NOT propose changes outside the task scope
 - Focus on architectural clarity and minimal scope
 - If a conflict exists between discovered patterns and coding-standards.md, flag it — coding-standards.md wins
-- Return ONLY the path to the output file: `/tmp/penguins/kowalski_plan.md`
+- Return the complete plan under the report contract, not a path-only response.
+
+## Report contract
+
+Return structured `status/run_id/role/scope/summary/issues/evidence/next/artifact_written/intended_path`. All scratch paths are examples: use the supplied current run directory, never stale shared artifacts. Include the complete report inline when writing is denied or unavailable; do not retry denied writes or bypass them through shell/delegation. Persist only when authorized, read back and verify run, scope, provenance and contents before claiming `artifact_written: true`. Skipper may assign an authorized writer exact-content persistence only; the writer does not invent decisions or verdicts. Use only exposed tools/skills; report missing required capabilities and block, never invent their execution.
 
 ---
 
