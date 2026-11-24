@@ -1,6 +1,6 @@
 # Notification Network Exception
 
-External network access remains forbidden in Penguins workflow sessions except for the narrow notification exception documented here.
+External network access remains forbidden in Penguins workflow sessions except for the explicitly scoped exceptions documented here.
 
 ## Allowed Exception
 
@@ -8,7 +8,7 @@ Standing user permission activates this exception for future sessions: Skipper m
 
 Fresh explicit session restrictions and higher-priority runtime restrictions take precedence over this local policy. The 2026-11-02 cleanup-session prohibition is historical, not a standing ban on new sessions. Never bypass tool approval or sandbox controls.
 
-The only allowed external network request is:
+The only external network request allowed by the Telegram notifier exception is:
 
 - `POST https://api.telegram.org/bot<token>/sendMessage` through `tools/notify.mjs`
 
@@ -52,4 +52,21 @@ Direct ad-hoc network calls to Telegram remain forbidden.
 
 This permission does not authorize bot polling/launch or changes to credentials or environment files. Use the existing notifier and credentials only.
 
-Network calls to any other external service remain forbidden.
+Network calls outside the explicitly scoped exceptions in this policy remain forbidden.
+
+## Agenza dependency registry exception
+
+- For the Agenza Tiered Workflow task only, permit pnpm add/install invoked from /Users/dusanmilenkovic/Desktop/projects/agenza to fetch package metadata and tarballs over HTTPS from registry.npmjs.org.
+- Approved direct additions: yaml in apps/api and @tanstack/react-query in apps/web. Access may include their required transitive dependencies and metadata needed to resolve existing locked workspace dependencies. No unrelated dependency upgrades.
+- Use --ignore-scripts. No lifecycle scripts, pnpm run scripts, git/URL dependencies, other registries, or redirects to another host are authorized. Stop if the package manager requires any excluded access.
+- No credentials, registry configuration, environment, tool permissions or sandbox settings may be changed. All unrelated network access, browser tools and WebFetch remain forbidden. Existing Telegram and local-embeddings exceptions remain unchanged.
+- This future instruction-file exception does not override instructions already loaded at higher priority in an active session, tool approval, sandbox controls, or fresh session restrictions. No downloads are authorized by editing this file in the current session.
+
+## Local embeddings exception
+
+- Allow downloading Ollama from its official distribution.
+- Allow downloading only Qwen3-Embedding-0.6B from the verified model registry.
+- Allow local installation and running Ollama with cloud features disabled.
+- Allow embedding requests only to the local loopback service.
+- Never send source code, memory documents, or queries to external embedding APIs.
+- No other network access or permission expansion is authorized.

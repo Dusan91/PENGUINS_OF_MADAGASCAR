@@ -1,29 +1,25 @@
 ---
 description: QA validator — paranoid verifier, checks implementation against plan, guardrails, and coding standards. No code changes.
 mode: subagent
-model: openai/gpt-6.1-sol
-options:
-  reasoningEffort: medium
-  reasoningSummary: auto
-  textVerbosity: low
-
-tools:
-  write: true
-  edit: false
-  bash: false
-  read: true
-
-  # MemoryGraph — read-only
-  memorygraph_recall_memories: true
-  memorygraph_search_memories: true
-  memorygraph_store_memory: false
-  memorygraph_create_relationship: false
-  memorygraph_update_memory: false
-  memorygraph_delete_memory: false
-
-  # Disabled
-  webfetch: false
-  todowrite: false
+model: opencode-go/glm-5.3
+# model: openai/gpt-6.1-sol
+request:
+  body: {"reasoningEffort":"medium","reasoningSummary":"auto","textVerbosity":"low"}
+permissions:
+  - {"action":"edit","resource":"*","effect":"deny"}
+  - {"action":"shell","resource":"*","effect":"deny"}
+  - {"action":"read","resource":"*","effect":"allow"}
+  - {"action":"memorygraph_recall_memories","resource":"*","effect":"allow"}
+  - {"action":"memorygraph_search_memories","resource":"*","effect":"allow"}
+  - {"action":"memorygraph_store_memory","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_create_relationship","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_update_memory","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_delete_memory","resource":"*","effect":"deny"}
+  - {"action":"webfetch","resource":"*","effect":"deny"}
+  - {"action":"todowrite","resource":"*","effect":"deny"}
+  - {"action":"external_directory","resource":"*","effect":"ask"}
+  - {"action":"fff_*","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_*","resource":"*","effect":"deny"}
 ---
 
 # Melman — QA Validator

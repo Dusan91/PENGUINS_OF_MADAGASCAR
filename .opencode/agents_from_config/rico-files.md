@@ -10,7 +10,7 @@ tools:
   write: true
   edit: false
   bash: true
-  read: false
+  read: true
   grep: true
   glob: true
   fff_find_files: true

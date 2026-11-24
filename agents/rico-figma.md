@@ -1,30 +1,27 @@
 ---
 description: Code researcher with Figma access — explores the codebase AND reads Figma designs. No opinions, no plans.
 mode: subagent
-# model: openai/kimi-k2.7-code
-model: openai/gpt-5.6-luna
-options:
-  textVerbosity: low
-
-tools:
-  write: true
-  edit: false
-  bash: true
-  read: true
-  grep: true
-  glob: true
-  fff_find_files: true
-  fff_grep: true
-  fff_multi_grep: true
-
-  # Figma
-  figma-desktop_get_design_context: true
-  figma-desktop_get_metadata: true
-  figma-desktop_get_screenshot: true
-
-  # Disabled
-  webfetch: false
-  todowrite: false
+model: 	opencode-go/gemini-4-argon
+# model: openai/gpt-5.6-luna
+request:
+  body: {"textVerbosity":"low"}
+permissions:
+  - {"action":"edit","resource":"*","effect":"deny"}
+  - {"action":"shell","resource":"*","effect":"allow"}
+  - {"action":"read","resource":"*","effect":"allow"}
+  - {"action":"grep","resource":"*","effect":"allow"}
+  - {"action":"glob","resource":"*","effect":"allow"}
+  - {"action":"fff_find_files","resource":"*","effect":"allow"}
+  - {"action":"fff_grep","resource":"*","effect":"allow"}
+  - {"action":"fff_multi_grep","resource":"*","effect":"allow"}
+  - {"action":"figma-desktop_get_design_context","resource":"*","effect":"allow"}
+  - {"action":"figma-desktop_get_metadata","resource":"*","effect":"allow"}
+  - {"action":"figma-desktop_get_screenshot","resource":"*","effect":"allow"}
+  - {"action":"webfetch","resource":"*","effect":"deny"}
+  - {"action":"todowrite","resource":"*","effect":"deny"}
+  - {"action":"external_directory","resource":"*","effect":"ask"}
+  - {"action":"fff_*","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_*","resource":"*","effect":"deny"}
 ---
 
 # Rico-Figma — Code Researcher with Figma Access

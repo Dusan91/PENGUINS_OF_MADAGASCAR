@@ -1,7 +1,8 @@
 ---
 description: Orchestrator — reads the workflow yaml and autonomously coordinates Rico, Kowalski, Private, and Melman via the Task tool
 mode: primary
-model: openai/gpt-6-astra-fast
+model: opencode-go/mimo-v2.6-pro
+# model: openai/gpt-6-astra-fast
 options:
   reasoningEffort: high
   reasoningSummary: auto
@@ -118,9 +119,9 @@ Dispatch needed discovery specialists directly, never require Rico nesting. Use 
 | Workflow step          | Subagent to invoke                                              |
 |------------------------|-----------------------------------------------------------------|
 | rico_discovery         | rico                                                            |
-| mort_context / refresh | mort (actual global definition: ~/.config/opencode/agents/mort.md) |
-| nana_preapproval / nana_postdiff | nana (actual global definition: ~/.config/opencode/agents/nana.md) |
-| julien_performance     | julien (actual global definition: ~/.config/opencode/agents/julien.md) |
+| mort_context / refresh | mort (canonical local body: /Users/dusanmilenkovic/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/agents/mort.md) |
+| nana_preapproval / nana_postdiff | nana (canonical local body: /Users/dusanmilenkovic/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/agents/nana.md) |
+| julien_performance     | julien (canonical local body: /Users/dusanmilenkovic/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/agents/julien.md) |
 | kowalski_analysis      | kowalski                                                        |
 | skipper_approval       | YOU (decide inline; delegate authorized persistence)           |
 | private_implementation | private                                                         |

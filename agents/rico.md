@@ -1,39 +1,33 @@
 ---
 description: Code researcher — explores the codebase, reports facts about files, patterns, and constraints. No opinions, no plans.
 mode: subagent
-# # model: openai/kimi-k2.7-code
-model: openai/gpt-5.6-luna
-options:
-  textVerbosity: low
-
-tools:
-  write: true
-  edit: false
-  bash: true
-  read: true
-  grep: true
-  glob: true
-  fff_find_files: true
-  fff_grep: true
-  fff_multi_grep: true
-
-  # MemoryGraph — read-only
-  memorygraph_recall_memories: true
-  memorygraph_search_memories: true
-  memorygraph_store_memory: false
-  memorygraph_create_relationship: false
-  memorygraph_update_memory: false
-  memorygraph_delete_memory: false
-
-  # Disabled
-  webfetch: false
-  todowrite: false
-
-permission:
-  task:
-    "rico-files": allow
-    "rico-patterns": allow
-    "rico-deps": allow
+model: opencode-go/mimo-v2.6-flash
+# model: openai/gpt-5.6-luna
+request:
+  body: {"textVerbosity":"low"}
+permissions:
+  - {"action":"edit","resource":"*","effect":"deny"}
+  - {"action":"shell","resource":"*","effect":"allow"}
+  - {"action":"read","resource":"*","effect":"allow"}
+  - {"action":"grep","resource":"*","effect":"allow"}
+  - {"action":"glob","resource":"*","effect":"allow"}
+  - {"action":"fff_find_files","resource":"*","effect":"allow"}
+  - {"action":"fff_grep","resource":"*","effect":"allow"}
+  - {"action":"fff_multi_grep","resource":"*","effect":"allow"}
+  - {"action":"memorygraph_recall_memories","resource":"*","effect":"allow"}
+  - {"action":"memorygraph_search_memories","resource":"*","effect":"allow"}
+  - {"action":"memorygraph_store_memory","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_create_relationship","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_update_memory","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_delete_memory","resource":"*","effect":"deny"}
+  - {"action":"webfetch","resource":"*","effect":"deny"}
+  - {"action":"todowrite","resource":"*","effect":"deny"}
+  - {"action":"subagent","resource":"rico-files","effect":"allow"}
+  - {"action":"subagent","resource":"rico-patterns","effect":"allow"}
+  - {"action":"subagent","resource":"rico-deps","effect":"allow"}
+  - {"action":"external_directory","resource":"*","effect":"ask"}
+  - {"action":"fff_*","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_*","resource":"*","effect":"deny"}
 ---
 
 # Rico — Code Researcher

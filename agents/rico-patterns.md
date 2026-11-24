@@ -1,24 +1,23 @@
 ---
 description: Rico specialist — reads file contents and extracts coding patterns, conventions, component structure, state management, and styling used in the codebase. Read-only. Invoked by Rico coordinator in parallel.
 mode: subagent
-# model: openai/kimi-k2.7-code
-model: openai/gpt-6-astra-fast
+model: 	opencode-go/mimo-v2.6-flash
+# model: openai/gpt-6-astra-fast
 hidden: true
-options:
-  textVerbosity: low
-
-tools:
-  write: true
-  edit: false
-  bash: true
-  read: true
-  grep: true
-  glob: true
-  fff_grep: true
-
-  # Disabled
-  webfetch: false
-  todowrite: false
+request:
+  body: {"textVerbosity":"low"}
+permissions:
+  - {"action":"edit","resource":"*","effect":"deny"}
+  - {"action":"shell","resource":"*","effect":"allow"}
+  - {"action":"read","resource":"*","effect":"allow"}
+  - {"action":"grep","resource":"*","effect":"allow"}
+  - {"action":"glob","resource":"*","effect":"allow"}
+  - {"action":"fff_grep","resource":"*","effect":"allow"}
+  - {"action":"webfetch","resource":"*","effect":"deny"}
+  - {"action":"todowrite","resource":"*","effect":"deny"}
+  - {"action":"external_directory","resource":"*","effect":"ask"}
+  - {"action":"fff_*","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_*","resource":"*","effect":"deny"}
 ---
 
 # Rico-Patterns — Pattern Analyst

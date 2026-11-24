@@ -1,74 +1,48 @@
 ---
 description: Second implementer — executes a separate subset of files from Kowalski's plan in parallel with Private. Writes code, no improvisation. Only used when the plan has 2+ independent file groups.
 mode: subagent
-# model: openai/kimi-k2.7-code
-model: openai/gpt-6-astra-fast
-temperature: 0.1
-options:
-  textVerbosity: low
+model: opencode-go/kimi-k2.7-code
+# model: openai/gpt-6-astra-fast
 hidden: true
-
-tools:
-  # Workspace
-  read: true
-  edit: true
-  write: true
-  grep: true
-  glob: true
-  bash: true
-  lsp: true
-
-  # Fast file finder
-  fff_find_files: true
-  fff_grep: true
-  fff_multi_grep: true
-
-  # Documentation
-  context7_resolve-library-id: true
-  context7_query-docs: true
-
-  # Context management
-  distill: true
-  prune: true
-
-  # MemoryGraph — read-only
-  memorygraph_recall_memories: true
-  memorygraph_search_memories: true
-  memorygraph_store_memory: false
-  memorygraph_create_relationship: false
-  memorygraph_update_memory: false
-  memorygraph_delete_memory: false
-
-  # Disabled
-  webfetch: false
-  todowrite: false
-  context_usage: false
-  context_contents: false
-
+request:
+  body: {"textVerbosity":"low","temperature":0.1}
 permissions:
-  edit:
-    "**/*.env*": deny
-    "**/*.key": deny
-    "**/*-pem": deny
-    "**/*.secret": deny
-    "**/*.credentials": deny
-    "**/secrets/**": deny
-    "node_modules/**": deny
-    ".git/**": deny
-    "dist/**": deny
-    "build/**": deny
-
-  write:
-    "**/*.env*": deny
-    "**/*.key": deny
-    "**/*-pem": deny
-    "**/*.secret": deny
-    "**/*.credentials": deny
-    "**/secrets/**": deny
-    "node_modules/**": deny
-    ".git/**": deny
-    "dist/**": deny
-    "build/**": deny
+  - {"action":"read","resource":"*","effect":"allow"}
+  - {"action":"edit","resource":"*","effect":"allow"}
+  - {"action":"grep","resource":"*","effect":"allow"}
+  - {"action":"glob","resource":"*","effect":"allow"}
+  - {"action":"shell","resource":"*","effect":"allow"}
+  - {"action":"lsp","resource":"*","effect":"allow"}
+  - {"action":"fff_find_files","resource":"*","effect":"allow"}
+  - {"action":"fff_grep","resource":"*","effect":"allow"}
+  - {"action":"fff_multi_grep","resource":"*","effect":"allow"}
+  - {"action":"context7_resolve-library-id","resource":"*","effect":"allow"}
+  - {"action":"context7_query-docs","resource":"*","effect":"allow"}
+  - {"action":"distill","resource":"*","effect":"allow"}
+  - {"action":"prune","resource":"*","effect":"allow"}
+  - {"action":"memorygraph_recall_memories","resource":"*","effect":"allow"}
+  - {"action":"memorygraph_search_memories","resource":"*","effect":"allow"}
+  - {"action":"memorygraph_store_memory","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_create_relationship","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_update_memory","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_delete_memory","resource":"*","effect":"deny"}
+  - {"action":"webfetch","resource":"*","effect":"deny"}
+  - {"action":"todowrite","resource":"*","effect":"deny"}
+  - {"action":"context_usage","resource":"*","effect":"deny"}
+  - {"action":"context_contents","resource":"*","effect":"deny"}
+  - {"action":"edit","resource":"**/*.env*","effect":"deny"}
+  - {"action":"edit","resource":"**/*.key","effect":"deny"}
+  - {"action":"edit","resource":"**/*-pem","effect":"deny"}
+  - {"action":"edit","resource":"**/*.secret","effect":"deny"}
+  - {"action":"edit","resource":"**/*.credentials","effect":"deny"}
+  - {"action":"edit","resource":"**/secrets/**","effect":"deny"}
+  - {"action":"edit","resource":"node_modules/**","effect":"deny"}
+  - {"action":"edit","resource":".git/**","effect":"deny"}
+  - {"action":"edit","resource":"dist/**","effect":"deny"}
+  - {"action":"edit","resource":"build/**","effect":"deny"}
+  - {"action":"external_directory","resource":"*","effect":"ask"}
+  - {"action":"fff_*","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_*","resource":"*","effect":"deny"}
 ---
 
 # Private-2 — Second Implementer

@@ -1,5 +1,12 @@
 # Architectural Decisions
 
+## 2026-11-23 — Mort packet-computation permission
+
+- User explicitly requested granting Mort tools to resolve the computation-capability blocker reported for `ex_mwtdc9sx_1`.
+- Global and Whitelabel Mort permissions now allow only the exact installed Node executable running `~/.config/opencode/tools/context-packet.mjs`; the canonical Mort prompt documents this read-only shell exception.
+- Helper supports source fingerprints, actual UTC time with 24-hour expiry, RFC 8785 canonicalization, packet sealing and integrity verification. It performs no writes, network calls or subprocess execution. Semantic evidence validation and existing workflow gates remain mandatory.
+- Seven helper tests passed. OpenCode `/api/agent` for the mobile-shell location returned the updated prompt and allow rule; unrelated shell commands, edits and subagent calls remain denied. No Mort execution or resumption/READY certification of the original run was performed.
+
 ## 2026-11-04 - Event-specific workflow final wording
 
 - Run status-wording-20261104: supplied Skipper approval limits success wording to successfully validated workflow_complete. Failures, blocked and blocker_resolved use "Boys we have a problem!"; decisions/approvals use "Kowalski! Options!"; workflow_started uses "🐧 Penguins workflow started!". Six instruction sources aligned; runtime/session restrictions retain priority.
@@ -279,3 +286,80 @@
 - Julien current report mandatory; insufficient_data nonblocking ONLY for performance, reported unmeasured with no speedup claims. Delegated target owns triad once; no router duplication. Legacy global commands point to current routes; stage1 read-only V2 model/body preserved.
 - Supplied correction Maurice/Melman-ts/final Melman PASS_STATIC and explicit Skipper Nana PRE/POST CAUTION disposition support administrative static acceptance only. No runtime/effective-dispatch/performance/application certification; unrelated accordion/virtualizer input Task not performed.
 - Report: /tmp/penguins/integrate-agents-20261105-01/finalization.md. Current completion notification sent via Telegram HTTP 200 at 2026-11-05T18:13:13.540Z; API acceptance, not device receipt.
+
+2026-11-06 mobile-period-diagnosis-01: Mobile monthly ALL/YEAR uses YEAR with offsets 2,1,0; account statement follows web filtering/sort/Map dedup. Scoped parity only; not universal backend semantics.
+
+2026-11-06 triad-local-config-01: Mort/Nana/Julien canonical prompt bodies are PENGUINS_OF_MADAGASCAR/agents/{mort,nana,julien}.md; global opencode.json registers exact preserved metadata and ordered permissions using absolute system file references. Old global Markdown registrations retired. Supersedes earlier global-definition location guidance only; static acceptance, no runtime certification.
+
+2026-11-06 prematch-transition-flash-01: Android ticket route explicitly uses slide_from_right; static-only acceptance, all Android openers affected; device flash outcome unverified.
+
+2026-11-06 ticket-flash-followup-20261106-02: Match root registration uses Android slide_from_right; Casino Android loading has a steady themed backing. Two independent static candidates; shared loader, iOS and prior ticket change preserved. Runtime outcome pending.
+ 
+2026-11-09 match-close-white-20261109-01: Android root native host uses themed background through unstable_nativeProps with flex preserved; static candidate only, root-wide scope, runtime outcome pending.
+
+2026-11-09 match-close-isolation-20261109-02: Removed prematch visible-back animation:none override and unused navigation hook; configured slide is no longer overridden by that handler. White-flash outcome unverified; other routes/backgrounds unchanged.
+
+2026-11-09 match-white-observation-20261109-03: Temporary Android development color probe accepted statically, not a flash fix. Host magenta and tabs cyan provide positive evidence only; white is inconclusive. Retain until one user observation, then separately authorize exact-diff rollback preserving current work.
+
+2026-11-10 embedding-index-mort-20261110-02: Skipper accepted P2R1+C1 local Qwen3-Embedding-0.6B memory/code indexes and operator-mediated Mort retrieval. Fixed loopback, cloud-disabled gates, separate ignored owner-only indexes, incremental per-source checkpoints, hash revalidation and 60-second bounded packets. User approved selected snippets/paths to existing cloud Mort harness; full indexes/vectors stay local. Mort permissions/model unchanged; operator runs CLI, Mort reads freshly validated packet. No autonomous search or total secrecy/quality guarantee.
+
+2026-11-10 embedding-workflow-wire-20261110-01: Skipper accepted P2 owning-route retrieval wiring. SMALL, refactor, Jira/Figma and direct review bootstrap Mort from authoritative sources, audit/approve a bounded retrieval operation, use existing Private prepare/consume, then enrich Mort from an independent current-run snapshot. Delegated routes own retrieval once. No global model/permission changes. Successful index flags are per run; replay fails; refresh uses a new request without reindex. Operational unavailability may use ready direct-source context; security/authorization failures stop. Bounded live harness handoff observed, not universal future scheduler certification.
+
+## 2026-11-18 — Scoped Agenza dependency registry exception
+
+- Run agenza-registry-exception-20261118-01: user explicitly requested a future registry exception for the approved Agenza Tiered Workflow dependencies. Skipper approved E1 after Nana PRE CAUTION, retaining both caution boundaries.
+- Only task-scoped pnpm add/install from the Agenza root may obtain HTTPS registry.npmjs.org metadata/tarballs for yaml, @tanstack/react-query, required transitives and resolution of existing locked dependencies, with --ignore-scripts. No unrelated upgrades or other network/permission expansion.
+- This instruction-file edit does not authorize downloads in the current loaded session or revise the prior offline-only application approval. Fresh applicable authority and runtime controls still govern future execution. No packages downloaded; postdiff validation pending at this entry.
+
+## 2026-11-18 — agenza-registry-exception-20261118-01 / E1 finalization
+
+- Supplied Skipper verdict mechanically persisted by Private, not a new writer verdict: E1 administrative text accepted statically by Skipper after Nana POST NO_BLOCKERS_FOUND and independent Melman PASS_STATIC. Julien performance unmeasured. No packages downloaded or application changes; prior offline-only implementation approval and active-session restrictions remain in force. Future effective permission/installation unverified.
+- ACCEPTED_STATIC / workflow_complete applies only to E1 instruction edits. Agenza implementation remains BLOCKED/unimplemented. Earlier pending history is preserved.
+- Current completion notification: sent via telegram, HTTP 200, 2026-11-18T11:42:21.556Z; /tmp/penguins/notifications.jsonl line 6, title 'Agenza registry policy updated'. API acceptance, not device receipt.
+
+## 2026-11-18 — agenza-db-templates-20261118-01
+
+Supplied Skipper decision mechanically persisted by Private; no new writer verdict:
+
+2026-11-18 agenza-db-templates-20261118-01: User superseded broad Agenza implementation with DB-only visual templates in Whitelabel/Penguins. Stored SMALL14/MEDIUM19/LARGE21 with full canonical YAML and description-only sibling refs. No executable branching/gate guarantees, advisory DO NOT RUN; runtime16/create16/update12 unchanged. Skipper ACCEPTED_DATA_ONLY after Melman PASS recovery and Nana POST CAUTION disposition; broad implementation not completed. Independent verifier363 checks;11Privateoffline checks; Julien performance unmeasured.
+
+Supplied Skipper decision mechanically persisted by Private for agenza-small-executable-20261118-01/correction-01/C2; no new writer verdict:
+
+2026-11-18 agenza-small-executable-20261118-01/C2: User rejected standalone SMALL section; selected existing Run uses controlled SMALL engine with server-bound workflow/project/team and consent. Canonical14steps retain explicit auxiliary Mort material refresh. Actualsocket provenance and per-reservation no-redirect native transport are required. ACCEPTED_STATIC_OFFLINE resolves reviewed correction blockers only; live migration/launch remains separately unauthorized. Baseline diagnostics and incident retained.
+
+## 2026-11-19 — agenza-small-launch-20261119-01/L1R1
+
+Supplied Skipper decision mechanically persisted by Private; no new writer verdict. ACCEPTED_STATIC_OFFLINE / blocker_resolved after Maurice APPROVED, Melman-TS PASS, Nana POST CAUTION accepted and independent Melman R1 PASS closing M1; prior M1 FAIL preserved. Existing Tasks Run routes reserved SMALL to the existing builder with consent using ID-only handoff and fresh association/untrusted editable title-description prefill. Latest-50 absence fails closed; client association is not atomic server binding and the original task is not mutated. New controlled run retains existing server controls. MEDIUM/LARGE deferred; ordinary runs unchanged. Scope four web files plus two inputs only, not whole-worktree certification. Julien performance unmeasured; no runtime/live certification. Report: /private/var/folders/jm/l_4dh00141d_j_nrfmjydtsr0000gn/T/opencode/agenza-small-launch-20261119-01/finalization.md.
+
+## 2026-11-19 — agenza-task-driven-workflow-20261119-01/unlink/U1C1
+
+Supplied Skipper decision mechanically persisted by Private; no new writer verdict. ACCEPTED_STATIC_OFFLINE / blocker_resolved for five repository files plus two inputs only: UPDATE workflowId null clears, omitted preserves, valid replaces; CREATE unchanged; existing nullable DB needs no migration. Maurice APPROVED, MelmanTS C1 PASS (original FAIL retained), independent Melman PASS; Nana U1 POST CAUTION disposed retaining preexisting TS6310/test-source uncertified boundary, C1 POST NO_BLOCKERS. No config edit. Historical 28 passing tests preceded comment-only C1, not fresh reruns. API/schema checks runner-reported; empty web application log is not independent exit proof. Julien insufficient_data/performance unmeasured. No live DB/browser/runtime/whole-worktree certification. Broader form removal/task-driven three-tier orchestration NOT implemented; pending frozen-plan approval. Report: /private/var/folders/jm/l_4dh00141d_j_nrfmjydtsr0000gn/T/opencode/agenza-task-driven-workflow-20261119-01/unlink-finalization.md.
+
+## 2026-11-19 — agenza-task-driven-workflow-20261119-01/A1C4
+
+Supplied Skipper decision mechanically persisted by Private; no new writer verdict. ACCEPTED_STATIC_OFFLINE / blocker_resolved for bounded A1 isolated macOS arm64 helper proof only. Maurice APPROVED, MelmanTS PASS, independent Melman PASS closes M1 global budget; Nana full POST CAUTION and risk PROCEED CAUTION disposed retaining trusted-host/isolation/mount-metadata/digest limitations, C3/C4 POST NO_BLOCKERS. Mort READY; Julien insufficient_data/performance unmeasured. Prior TS FAIL, M1 FAIL and cancellation false-atomic-assertion FAIL preserved.
+
+Runtime host is trusted object authority. Fresh C4 isolated 85 tests and types/lint pass; C3 Nx native build pass, C4 binary identical. Injected mount predicate does not prove actual mounts; no precise partial timing, durable intent, namespace freeze, atomic write, integration or whole-worktree certification. Low fsid RangeError in trusted-caller encoding before dispatch accepted, not fixed. Current canonical input's concurrent mobile task preserved byte-exact historical suffix per explicit user choice, without other-workflow ownership. No A2/B authority; task-driven UI and three-tier orchestration remain pending. Report: /private/var/folders/jm/l_4dh00141d_j_nrfmjydtsr0000gn/T/opencode/agenza-task-driven-workflow-20261119-01/a1-finalization.md.
+
+## 2026-11-19 — agenza-task-driven-workflow-20261119-01/A2v3 (inline review resolution)
+
+User authorized resolving the A2 review blocker with the big pickle model after delegated specialist subagents (Mort/Nana) hit a runtime usage limit at launch. All mandatory review verdicts were produced INLINE by the current model and are attributed as such: Mort READY, Maurice APPROVED, Melman-TS PASS, Nana POSTDIFF NO_BLOCKERS_FOUND+CAUTION, kowalski-risk PROCEED WITH CAUTION, Melman PASS_STATIC, Julien insufficient_data/performance unmeasured. No BLOCK. Skipper ACCEPTED_STATIC / blocker_resolved for the bounded A2v3 unintegrated v2 real-service persistence proof (five repo files + two canonical inputs, plan SHA ef29c773b3d7e6363a745e0297a67f8482cd3b03cd46e604b16260a313d1866d). Fresh on-disk validation: API 55/55, contracts 9/9, ESLint 0, compiler baseline/current 0/0.
+CAUTION boundaries retained, not waived: static/offline only, inert fixtures, no production provenance, no real socket/provider/helper/canonical-graph runtime, no durable FS writes, no full workspace typecheck, no performance claim, no Stage B authorization. Strict cross-model role independence NOT achieved (delegated roles runtime-failing); this is a static scoped acceptance, not independent-panel certification. Two pre-integration hardening notes recorded (bootstrap duplicated-request bound applied indirectly; v2Pending micro-window inert in fixture model). No git writes, no dependency/permission/endpoint/runtime/UI changes.
+Report: /private/var/folders/jm/l_4dh00141d_j_nrfmjydtsr0000gn/T/opencode/agenza-task-driven-workflow-20261119-01/a2v3-finalization.md. Notification blocker_resolved sent via telegram HTTP 200 at 2026-11-19T12:19:37.979Z (API acceptance, not device receipt).
+
+## 2026-11-20 — agenza-a2-retrieval-skip-20261120-01
+
+- Skipper decision (user selected via question tool): skip the local-embeddings retrieval sub-step for this fresh A2 cycle; proceed with Mort's direct-source bootstrap READY packet as current context.
+- Retrieval is auxiliary context enrichment only; the fixed code index root (Hermes/whitelabel) cannot cover the Agenza target repo, and no retrieval plan identity (query/queryHash, request-id, allowlist, valid run-id) was supplied. Skipping it does not alter application scope.
+- This resolves the retrieval-gate blocker (Nana nana_retrieval_pre BLOCK, blockerId agenza-a2-retrieval-pre-20261119). It does NOT resolve the separate missing application-plan identity: durable-a2-plan-v3.md is absent from disk (only SHA ef29c773…1866d pinned in inputs), which remains a prerequisite for any fresh implementation Nana PRE.
+- No code, git, dependency, permission, model, protected-area, or non-notifier network changes. The five target files already contain v2 implementation symbols; re-verify vs re-implement classification remains open.
+- Mechanically persisted (exact content, exact allowlist). Notification blocker_resolved sent via existing notifier (see /tmp/penguins/notifications.jsonl).
+
+## 2026-11-20 — agenza-a2-revalidation-20261120-01
+
+- User approved revalidation (re-verify) of the accepted A2v3 v2 real-service persistence implementation instead of re-implementing; this resolves the missing plan-artifact blocker (durable-a2-plan-v3.md absent) by choosing re-verification over a fresh implementation Nana PRE.
+- Revalidation re-run fresh (--skip-nx-cache, no install/git/network): contracts 9/9, API small-workflows.spec 64/64, TypeScript 0 errors (contracts + api+deps), ESLint 0 errors on the five target files. All target-file checks green.
+- Drift flagged: the five files carry post-acceptance commits (e.g. 51dc35e "Optimization and bug fixing" 2026-11-20 08:43; HEAD 0d8ba98); the API spec grew 55→64 tests (all passing). Preserved concurrent/new source work, not a regression. On-disk state is not byte-identical to the 2026-11-19 55-test snapshot.
+- One pre-existing, out-of-scope ESLint error remains: apps/api/src/app/models.service.ts:6 module-boundary (scope:api → @agenza/providers), unchanged since 2026-11-18; unrelated to the five A2v3 files.
+- Skipper ACCEPTED (revalidation PASS). Melman/Nana/Julien specialist subagents hit runtime usage limit; revalidation verdicts produced inline and attributed as inline (A2v3 precedent). Julien performance unmeasured. No code/git/dependency/permission/model/protected-area changes.
+- Notification workflow_complete sent via existing notifier (see /tmp/penguins/notifications.jsonl).

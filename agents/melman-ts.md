@@ -1,22 +1,20 @@
 ---
 description: Melman specialist — checks TypeScript types, lint rules, and import correctness in the implementation. Read-only. Invoked by Skipper in parallel with Melman.
 mode: subagent
-model: openai/gpt-5.6-luna
-hidden: true
-options:
-  reasoningEffort: medium
-  reasoningSummary: auto
-  textVerbosity: low
-
-tools:
-  write: true
-  edit: false
-  bash: true
-  read: true
-
-  # Disabled
-  webfetch: false
-  todowrite: false
+model: opencode-go/gpt-6-luna
+# model: openai/gpt-5.6-luna
+hidden: false
+request:
+  body: {"reasoningEffort":"medium","reasoningSummary":"auto","textVerbosity":"low"}
+permissions:
+  - {"action":"edit","resource":"*","effect":"deny"}
+  - {"action":"shell","resource":"*","effect":"allow"}
+  - {"action":"read","resource":"*","effect":"allow"}
+  - {"action":"webfetch","resource":"*","effect":"deny"}
+  - {"action":"todowrite","resource":"*","effect":"deny"}
+  - {"action":"external_directory","resource":"*","effect":"ask"}
+  - {"action":"fff_*","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_*","resource":"*","effect":"deny"}
 ---
 
 # Melman-TS — TypeScript Validator

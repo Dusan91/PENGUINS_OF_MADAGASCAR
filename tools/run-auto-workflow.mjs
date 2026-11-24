@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
 import { spawn } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readFileSync, statSync } from 'node:fs';
 import { homedir } from 'node:os';
-import { dirname, resolve } from 'node:path';
+import { dirname, isAbsolute, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -21,10 +21,25 @@ function expandTilde(text) {
   return text.replace(/~(?=[/\\])/g, homedir());
 }
 
-const workspace = process.env.PENGUINS_WORKSPACE || '/Users/dusanmilenkovic/Desktop/Hermes/whitelabel';
+const workspaceInput = process.env.PENGUINS_WORKSPACE;
+if (!workspaceInput?.trim()) {
+  console.error('run-auto-workflow: PENGUINS_WORKSPACE is required (absolute workspace directory).');
+  process.exit(1);
+}
+const workspace = expandTilde(workspaceInput);
+try {
+  if (!isAbsolute(workspace) || !statSync(workspace).isDirectory()) {
+    throw new Error('not an absolute directory');
+  }
+} catch {
+  console.error('run-auto-workflow: PENGUINS_WORKSPACE must name an existing absolute directory.');
+  process.exit(1);
+}
 const penguinsRoot = process.env.PENGUINS_ROOT || resolve(__dirname, '..');
 const opencodeBin = process.env.OPENCODE_BIN || 'opencode';
-const timeoutMs = parseInt(process.env.PENGUINS_OPENCODE_TIMEOUT_MS || '600000', 10);
+// Raised from 10 to 30 minutes: Penguins MEDIUM/LARGE workflow cycles regularly
+// outlive the old limit and the SIGTERM below surfaced as "opencode CLI exit 143".
+const timeoutMs = parseInt(process.env.PENGUINS_OPENCODE_TIMEOUT_MS || '1800000', 10);
 
 const commandFilePath = '/Users/dusanmilenkovic/.config/opencode/commands/auto-workflow.md';
 
@@ -53,11 +68,21 @@ try {
   ].join(' ');
 }
 
-const agentName = process.env.PENGUINS_OPENCODE_AGENT || '';
-const args = ['run'];
-if (agentName) {
-  args.push('--agent', agentName);
-}
+// Apply to both the command-file and fallback prompts. These are instructions
+// to the orchestrator, not runtime interception of its dependent dispatches.
+prompt += '\n\nLauncher execution requirements:\n' + [
+  'The explicitly selected target workspace is: ' + workspace,
+  'Confirm the task targets this workspace before dispatch; conflicting target instructions block execution.',
+  'Successful tool completion or CLI exit is not an accepted agent verdict.',
+  'Before each dependent dispatch, inspect every prerequisite verdict and its current-run evidence.',
+  'On BLOCK, BLOCKED, FAIL, REJECTED, missing required evidence, or an unknown verdict, STOP dispatch.',
+  'Do not launch dependent implementation, review, validation, delivery, or finalization steps after a failed prerequisite.',
+  'Do not report workflow_complete or send a success notification after a failed or unresolved gate.',
+  'Report the blocking prerequisite and evidence; resume only after it is resolved and revalidated.',
+].join('\n');
+
+const agentName = process.env.PENGUINS_OPENCODE_AGENT?.trim() || 'skipper';
+const args = ['run', '--agent', agentName];
 
 if (process.env.PENGUINS_OPENCODE_AUTO !== 'false') {
   args.push('--auto');
@@ -85,7 +110,14 @@ function cleanupTimers() {
 
 function handleClose(code) {
   cleanupTimers();
-  process.exit(forcedExit ? 124 : code == null ? 1 : code);
+  // No verified Penguins verdict contract is available from this CLI. Text
+  // (including a success phrase) and transport completion cannot certify gates.
+  // Fail closed even for apparent success: callers must inspect current evidence.
+  // Exit 2 means UNKNOWN, not a proven workflow failure; never auto-retry on it.
+  if (!forcedExit && code === 0) {
+    console.error('run-auto-workflow: workflow result UNKNOWN; CLI exited 0 but no verified workflow verdict is available. Review current-run evidence; do not automatically retry. Exiting 2.');
+  }
+  process.exit(forcedExit ? 124 : code === 0 ? 2 : code == null ? 1 : code);
 }
 
 child.on('error', (err) => {

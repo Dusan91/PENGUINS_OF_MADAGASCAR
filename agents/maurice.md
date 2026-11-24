@@ -1,21 +1,19 @@
 ---
 description: Code reviewer — reviews diffs for bugs, standards violations, hidden behavior changes, and risks. No code changes.
 mode: subagent
-model: openai/gpt-5.6-luna
-options:
-  reasoningEffort: medium
-  reasoningSummary: auto
-  textVerbosity: low
-
-tools:
-  write: true
-  edit: false
-  bash: false
-  read: true
-
-  # Disabled
-  webfetch: false
-  todowrite: false
+# model: openai/gpt-5.6-luna
+model: opencode-go/mimo-v2.6-flash
+request:
+  body: {"reasoningEffort":"medium","reasoningSummary":"auto","textVerbosity":"low"}
+permissions:
+  - {"action":"edit","resource":"*","effect":"deny"}
+  - {"action":"shell","resource":"*","effect":"deny"}
+  - {"action":"read","resource":"*","effect":"allow"}
+  - {"action":"webfetch","resource":"*","effect":"deny"}
+  - {"action":"todowrite","resource":"*","effect":"deny"}
+  - {"action":"external_directory","resource":"*","effect":"ask"}
+  - {"action":"fff_*","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_*","resource":"*","effect":"deny"}
 ---
 
 # Maurice — Code Reviewer

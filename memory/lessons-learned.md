@@ -1,5 +1,12 @@
 # Lessons Learned
 
+## 2026-11-23 — Packet policy does not provide computation capability
+
+- **What failed**: Mort repeatedly reported missing source fingerprints, timestamps and packet hashes despite an existing TTL/hash contract.
+- **Why it failed**: Global deny-by-default permissions, a project-local shell deny and the canonical prompt all prohibited computation.
+- **What to do instead**: Align the prompt and effective global/project permissions with a narrowly permitted read-only helper. Verify the loaded agent definition and executable behavior; policy text alone is not a capability check.
+- **Affected areas**: Mort configuration, canonical prompt and context packet handoffs. The original blocked run still requires fresh evidence validation.
+
 > This file records mistakes, failed approaches, and hard-won discoveries.
 > Agents MUST read this before starting any task.
 > Agents MUST write here when a task reveals a non-obvious constraint or failure mode.
@@ -263,3 +270,55 @@
 - What to do instead: Bind approval to retained immutable reviewed content or a verified run/scope/provenance digest, block changed plans until re-audit, explicitly supply actual diff/approval/scope/rules evidence and test missing/stale/mismatched inputs. Main orchestrator should supply current inline Mort packets directly rather than require nested retrieval.
 - Correction checks are source-anchored static/model evidence, not runtime proof. Preserve original FAIL alongside later authorized correction and independent PASS_STATIC; do not rewrite earlier reviewer authorship or report-time pending status. Julien's report preceded final Melman PASS and remains performance insufficient_data/unmeasured, not a speedup claim.
 - Affects: Workflow evidence propagation, immutable approval identity, static acceptance boundaries and mechanical finalization. Administrative integration accepted statically; unrelated application Task and runtime/performance remain unverified.
+
+2026-11-06: Earlier mobile mocks preserved incorrect request assumptions because full web helper semantics were not compared. Verify reference request bodies and production projection before writing regression expectations. Affected: mobile transaction history.
+
+2026-11-06: Retire-before-register migration plan was blocked because it could remove mandatory roles. Instead validate bodies and backups, install equivalent JSON while originals remain, verify, then retire originals; rollback restores globals first. Affected: triad agent configuration.
+
+2026-11-06: Review misread identical TS diagnostic lines; compare exact raw lines/hashes before declaring regressions. M1/M2 corrected on independent retry; historical FAIL preserved. Area: diagnostic QA.
+
+2026-11-06: Ticket-only animation did not resolve user-reported flashes; later videos show distinct match and Casino signatures. Trace actual route/layers before changing options; do not repeat build questions after Metro/Expo Go confirmation. Areas: mobile navigation/loading QA.
+ 
+2026-11-09: Current source drift invalidated fixed-baseline assumptions during PRE. Snapshot live source immediately before applying a patch, stop on drift, and preserve user changes instead of restoring historical values. Area: mobile navigation review.
+
+2026-11-09: Trace the actual close handler before adding background fixes; a dynamic animation:none override conflicted with configured sliding. Source conflict is verified, white-flash causality is not. Area: mobile navigation.
+
+2026-11-09: Repeated visual candidates did not establish the flash cause. Use bounded observable diagnostics, avoid claiming missing color rules out covered layers, and do not invoke ADB local TCP under the network ban. Area: Android visual diagnosis.
+
+2026-11-09 skeleton-20261109-7b34: Initial validation failed because baseline/diff and raw check outputs were absent from handoff. Supply exact introduced diff, baseline provenance, command/cwd/results initially; recovery passed static inspection. Affected: specialist evidence handoffs.
+
+2026-11-09 | info-slug-20261109-a7c41 | Failed assumption: JavaScript WebView navigation callbacks alone establish provider-only Android navigation. Why: installed RNCWebViewClient permits loads on callback timeout/interruption, as Nana found by source inspection; no exploit was executed. Instead: verify installed native enforcement before approving a fail-closed media design; helper tests/string wiring checks do not certify native security. Also test real route resolvers for inherited keys and reuse required themed wrappers. Affected: mobile info renderer/model and workflow security planning.
+
+2026-11-10 local-embedding-install-20261110: Background download completion was not handed back by a finished child; recover existing terminal output before any duplicate transfer. Offline stapler attempted CloudKit and could not validate under denied network; report notarization unverified, never bypass security. Ollama installed manifest adds original-registry provenance layer; compare original references and blob hashes rather than byte equality alone.
+
+2026-11-10 embedding-index-mort-20261110-02: Collection-level commits violated approved per-source checkpoint semantics; reviewers blocked delivery. Corrected checkpoints retain completed progress and incomplete prior records, defer deletion until full success, and are covered by failure/resume tests. Supply complete frozen plans inline to reviewers initially: plan names/implementation reports alone caused an avoidable final QA evidence blocker. Packet smoke read returned two usable references with remaining output truncated; do not claim complete retrieval quality.
+
+2026-11-10 embedding-workflow-wire-20261110-01: Private initially blocked because Mort READY was asserted without the full packet. Supply complete current target/task/source/constraints packet inline, not status-only. Persist exact approved plan and supplied approval before reviewer handoff to avoid missing-plan evidence blockers. Shared packet races require run/request-bound immutable snapshots, fresh consume and replay rejection; TTL remains point-in-time.
+
+2026-11-18 agenza-tiered-impl-20261118-01/R1: Registry exception and user install approval did not establish the Nana-required pre-install host/redirect confinement. Current shell schema supplied no enforcing control; registry selection, --ignore-scripts and retrospective logs are not confinement evidence. Verify an existing compatible mechanism or obtain a separately reviewed policy revision before retrying; do not change env/config/permissions/sandbox or claim registry outage. Affects dependency installation preflight and Skipper/Nana handoff.
+
+## 2026-11-18 — agenza-small-executable-20261118-01/correction-01/C2
+
+Supplied Skipper lessons mechanically persisted by Private; historical failures retained.
+
+- Mock isolation: establish the complete mocked transitive import graph and constructor identity BEFORE connect. T1 vi.mock ws isolation failed before connect, with possible DNS/WebSocket attempt to synthetic in-memory.invalid; no successful delivery evidenced and network-free execution cannot be certified. Never run the failed harness again; retain failed logs and permanent exclusion. Use reviewed inert closed graphs/no host-network facilities for trusted-channel code, disclose VM limits; later T2 execution is neither retroactive compliance nor OS isolation. Affects trusted-channel test harnesses and validation reporting.
+- Provenance/cleanup: payload identity is not actual sender identity. Verify socket lease/generation/attempt before persistence; cancellation request is not acknowledgment. Use attempt-specific timer/listener cleanup with assertions before test drain. Affects SMALL transport, reservation lifecycle and tests.
+- Provider disclosure: URL pinning is not redirect enforcement. Use SMALL-only injected redirect:error and a terminal policy/retry latch on all native paths, with actual retry tests. Never diagnose rejected-body secrets. Affects native SMALL provider factories and disclosure-boundary tests.
+
+## 2026-11-19 — agenza-small-launch-20261119-01/L1R1
+
+Supplied Skipper lesson mechanically persisted by Private; no new writer finding. Prior M1 FAIL preserved separately from independent R1 PASS.
+
+2026-11-19 L1: Query-core5.108 cancelled refetch may resolve reverted cached data even throwOnError; successstatus alone not freshvalidation. Require successful lookup generation and retain cancellation regression. Malformedresponse tests must feed identical payloads to both parent normal and child no-store requests; isolatingbadpayload to child maskedparentrows.filter crash. Validate all workflowrows andoptional numericstepscount before state.
+
+## 2026-11-19 — agenza-task-driven-workflow-20261119-01/A1C4
+
+Supplied Skipper lessons mechanically persisted by Private; no new writer finding. Prior failures retained.
+- What failed: flat incomplete-only inventory assertions missed global-budget overrun. Instead guard the global inventory budget before every read/recursive entry; test the actual shared counter in the compiled production routine. Affects native helper inventory and isolated tests.
+- What failed: cancellation test assumed before-or-after atomicity. Cancellation between write/truncate may leave 'aftere'; the uncertain protocol must not assert atomicity. Retain actual bytes, no accepted result, no retries and child reaping. Observation does not prove precise mutation timing or durability. Affects native write cancellation proof and acceptance claims.
+
+## 2026-11-19 — agenza-task-driven-workflow-20261119-01/A2v2
+
+Supplied Skipper lesson mechanically persisted by Private; no new writer verdict.
+
+A2 proposal working path was revised after PRE BLOCK before separate versioned snapshot; prior unapproved content has no retained standalone byte identity. Freeze unique versioned path and hash BEFORE each audit; current v2 will be freshly reviewed, no old approval reused.

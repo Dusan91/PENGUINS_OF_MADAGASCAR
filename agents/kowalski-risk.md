@@ -1,22 +1,20 @@
 ---
 description: Kowalski specialist — evaluates risks, guardrails compliance, and protected area violations for a given implementation plan. No code, no planning. Invoked by Skipper in parallel with Kowalski.
 mode: subagent
-model: openai/gpt-5.6-luna
-hidden: true
-options:
-  reasoningEffort: medium
-  reasoningSummary: auto
-  textVerbosity: low
-
-tools:
-  write: true
-  edit: false
-  bash: false
-  read: true
-
-  # Disabled
-  webfetch: false
-  todowrite: false
+model: opencode-go/glm-5.3
+# model: openai/gpt-5.6-luna
+hidden: false
+request:
+  body: {"reasoningEffort":"medium","reasoningSummary":"auto","textVerbosity":"low"}
+permissions:
+  - {"action":"edit","resource":"*","effect":"deny"}
+  - {"action":"shell","resource":"*","effect":"deny"}
+  - {"action":"read","resource":"*","effect":"allow"}
+  - {"action":"webfetch","resource":"*","effect":"deny"}
+  - {"action":"todowrite","resource":"*","effect":"deny"}
+  - {"action":"external_directory","resource":"*","effect":"ask"}
+  - {"action":"fff_*","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_*","resource":"*","effect":"deny"}
 ---
 
 # Kowalski-Risk — Risk Analyst

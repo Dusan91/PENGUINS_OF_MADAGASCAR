@@ -1,26 +1,25 @@
 ---
 description: Rico specialist — fast file finder. Uses glob and grep to locate relevant files, exports, and entry points. Read-only. Invoked by Rico coordinator in parallel.
 mode: subagent
-# model: openai/kimi-k2.7-code
-model: openai/gpt-5.6-luna
+model: openai/kimi-k2.7-code
+# model: openai/gpt-5.6-luna
 hidden: true
-options:
-  textVerbosity: low
-
-tools:
-  write: true
-  edit: false
-  bash: true
-  read: false
-  grep: true
-  glob: true
-  fff_find_files: true
-  fff_grep: true
-  fff_multi_grep: true
-
-  # Disabled
-  webfetch: false
-  todowrite: false
+request:
+  body: {"textVerbosity":"low"}
+permissions:
+  - {"action":"edit","resource":"*","effect":"deny"}
+  - {"action":"shell","resource":"*","effect":"allow"}
+  - {"action":"read","resource":"*","effect":"deny"}
+  - {"action":"grep","resource":"*","effect":"allow"}
+  - {"action":"glob","resource":"*","effect":"allow"}
+  - {"action":"fff_find_files","resource":"*","effect":"allow"}
+  - {"action":"fff_grep","resource":"*","effect":"allow"}
+  - {"action":"fff_multi_grep","resource":"*","effect":"allow"}
+  - {"action":"webfetch","resource":"*","effect":"deny"}
+  - {"action":"todowrite","resource":"*","effect":"deny"}
+  - {"action":"external_directory","resource":"*","effect":"ask"}
+  - {"action":"fff_*","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_*","resource":"*","effect":"deny"}
 ---
 
 # Rico-Files — File Discovery Specialist

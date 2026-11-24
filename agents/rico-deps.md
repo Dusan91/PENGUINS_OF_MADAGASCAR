@@ -1,25 +1,24 @@
 ---
 description: Rico specialist — maps imports, package.json dependencies, barrel exports, and cross-package boundaries. Read-only. Invoked by Rico coordinator in parallel.
 mode: subagent
-# model: openai/kimi-k2.7-code
-model: openai/gpt-5.6-luna
+model: opencode-go/gpt-6-luna
+# model: openai/gpt-5.6-luna
 hidden: true
-options:
-  textVerbosity: low
-
-tools:
-  write: true
-  edit: false
-  bash: true
-  read: true
-  grep: true
-  glob: true
-  fff_grep: true
-  fff_find_files: true
-
-  # Disabled
-  webfetch: false
-  todowrite: false
+request:
+  body: {"textVerbosity":"low"}
+permissions:
+  - {"action":"edit","resource":"*","effect":"deny"}
+  - {"action":"shell","resource":"*","effect":"allow"}
+  - {"action":"read","resource":"*","effect":"allow"}
+  - {"action":"grep","resource":"*","effect":"allow"}
+  - {"action":"glob","resource":"*","effect":"allow"}
+  - {"action":"fff_grep","resource":"*","effect":"allow"}
+  - {"action":"fff_find_files","resource":"*","effect":"allow"}
+  - {"action":"webfetch","resource":"*","effect":"deny"}
+  - {"action":"todowrite","resource":"*","effect":"deny"}
+  - {"action":"external_directory","resource":"*","effect":"ask"}
+  - {"action":"fff_*","resource":"*","effect":"deny"}
+  - {"action":"memorygraph_*","resource":"*","effect":"deny"}
 ---
 
 # Rico-Deps — Dependency Mapper

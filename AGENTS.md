@@ -59,7 +59,7 @@ Follow `rules/coding-standards.md`, guardrails, protected-areas, and minimal-sco
 
 ## Runtime Tool Compatibility
 
-Every Penguins cycle (including SMALL and direct refactor/Jira/review) requires exposed `mort`, `nana`, `julien` plus all existing mandatory route roles. Skipper preflights actual capabilities; missing roles block without substitutes or permission/model/depth expansion. Map the triad to actual global definitions at `~/.config/opencode/agents/{mort,nana,julien}.md`, not nonexistent local/generated copies. Skipper owns direct dispatch; no nested delegation required.
+Every Penguins cycle (including SMALL and direct refactor/Jira/review) requires exposed `mort`, `nana`, `julien` plus all existing mandatory route roles. Skipper preflights actual capabilities; missing roles block without substitutes or permission/model/depth expansion. Map the triad to canonical local bodies at `/Users/dusanmilenkovic/Desktop/ai_agents/PENGUINS_OF_MADAGASCAR/agents/{mort,nana,julien}.md`, registered in `~/.config/opencode/opencode.json`. Skipper owns direct dispatch; no nested delegation required.
 
 Mort must supply ready current-run target/task/source/constraints packets before specialist handoffs; reuse only while current and applicable, refresh on material changes. Missing/clarification/blocked packets stop dependent work. Nana independently audits current plan/scope/security PREAPPROVAL and actual introduced/supplied diff POSTDIFF before delivery; BLOCK or missing required evidence blocks, CAUTION requires explicit Skipper disposition. Julien's current report is mandatory before finalization; insufficient_data is nonblocking ONLY for performance (unmeasured, no performance/speedup claims), never a missing role/report waiver.
 
